@@ -10,7 +10,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "mocha --reporter spec",
+    "postinstall": "npm rebuild node-sass"
   },
   "dependencies": {
     "async": "^2.3.0",
