@@ -561,7 +561,7 @@ exports.getLob = (req, res, next) => {
  */
 
 exports.getFileUpload = (req, res) => {
-  res.render('api/upload', {
+  res.render('api/ui_upload', {
     title: 'File Upload'
   });
 };

@@ -1,0 +1,21 @@
+extends ../ui_layout
+
+block content
+
+  .row
+    .column
+      h1.ui.header File Upload
+
+      .ui.buttons
+        button.ui.button(href='https://github.com/expressjs/multer', target='_blank')
+          | Multer Documentation
+        button.ui.button(href='http://codepen.io/search/pens?q=custom+file+upload&limit=all&type=type-pens', target='_blank')
+          | Customize File Upload
+
+      h3 File Upload Form
+        p All files will be uploaded to "/uploads" directory.
+        form(role='form', enctype='multipart/form-data', method='POST')
+          .form-group
+            label.control-label File Input
+            input(type='file', name='myFile')
+          button.ui.button(type='submit') Submit

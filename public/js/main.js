@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
-  // Place JavaScript code here...
+  $('.message .close')
+  .on('click', function() {
+    $(this)
+      .closest('.message')
+      .transition('fade')
+    ;
+  });
 
 });

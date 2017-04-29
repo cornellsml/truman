@@ -18,18 +18,29 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
-const multer = require('multer');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const multer = require('multer');
+//Math.random().toString(36)+'00000000000000000').slice(2, 10) + Date.now()
+
+var m_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads') ,
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+//const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const upload= multer({ storage: m_options });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.load({ path: '.env' });
 
 /**
  * Controllers (route handlers).
  */
+const actorsController = require('./controllers/actors');
+const scriptController = require('./controllers/script');
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
@@ -85,6 +96,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
 app.use((req, res, next) => {
   if (req.path === '/api/upload') {
     next();
@@ -92,12 +104,15 @@ app.use((req, res, next) => {
     lusca.csrf()(req, res, next);
   }
 });
+
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
@@ -112,7 +127,11 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use('/semantic',express.static(path.join(__dirname, 'semantic'), { maxAge: 31557600000 }));
+
+app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.
@@ -135,6 +154,14 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
+//See actors
+app.get('/actors', actorsController.getActors);
+
+app.get('/user/:userId', actorsController.getActor);
+
+//getScript
+app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);
+
 /**
  * API examples routes.
  */
@@ -142,7 +169,10 @@ app.get('/api', apiController.getApi);
 app.get('/api/lastfm', apiController.getLastfm);
 app.get('/api/nyt', apiController.getNewYorkTimes);
 app.get('/api/aviary', apiController.getAviary);
+
+//isAuthorized exmaple
 app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
+
 app.get('/api/stripe', apiController.getStripe);
 app.post('/api/stripe', apiController.postStripe);
 app.get('/api/scraping', apiController.getScraping);
@@ -162,8 +192,12 @@ app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 app.get('/api/lob', apiController.getLob);
+
+///Upload files and get them back
 app.get('/api/upload', apiController.getFileUpload);
 app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
+
+
 app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
 app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
 app.get('/api/google-maps', apiController.getGoogleMaps);

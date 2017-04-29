@@ -50,6 +50,7 @@ exports.postLogin = (req, res, next) => {
 /**
  * GET /logout
  * Log out.
+ TODO - add code to take survey?? or check if you have seen experinetal post yet
  */
 exports.logout = (req, res) => {
   req.logout();
@@ -86,9 +87,12 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
+  var result = ['control', 'ui', 'notify', 'both'][Math.floor(Math.random() * 4)]
+
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    group: result
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {

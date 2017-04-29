@@ -1,19 +1,18 @@
 {
-  "name": "hackathon-starter",
-  "version": "4.3.0",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "truman",
+  "version": "1.0.0",
+  "description": "A fake social network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/difrad/truman.git"
   },
-  "author": "Sahat Yalkabov",
+  "author": "Dominic DiFranzo",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js",
-    "test": "mocha --reporter spec",
-    "postinstall": "npm rebuild node-sass"
+    "dev": "nodemon app.js"
   },
   "dependencies": {
+    "async": "^2.3.0",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
@@ -55,6 +54,7 @@
     "paypal-rest-sdk": "^1.7.0",
     "pug": "^2.0.0-beta6",
     "request": "^2.78.0",
+    "semantic-ui": "^2.2.10",
     "stripe": "^4.12.0",
     "tumblr.js": "^1.1.1",
     "twilio": "^3.3.1-edge",
@@ -67,6 +67,7 @@
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-import": "^2.1.0",
     "mocha": "^3.1.2",
+    "nodemon": "^1.11.0",
     "sinon": "^2.0.0",
     "sinon-mongoose": "^1.3.0",
     "supertest": "^3.0.0"

@@ -1,0 +1,38 @@
+extends ui_layout
+  
+block content
+  
+  .four.wide.column 
+    .ui.card
+      .image
+        if user.profile.picture
+          img(src=user.profile.picture)
+        else
+          img(src=user.gravatar(60))
+      .content
+        a.header= user.profile.name || user.email || user.id
+
+  .eight.wide.column 
+    .ui.fluid.left.icon.input
+      input(type='text', placeholder='Share your meal')
+      i.write.icon
+    each val in script
+      .ui.fluid.card
+        .content
+          .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
+          |  
+          img.ui.avatar.image(src=val.actor.profile.picture)
+          span=val.actor.profile.name
+        .image
+          img(src=val.picture)
+        .content
+          .description=val.body
+        .three.ui.bottom.attached.icon.buttons
+          button.ui.button
+            i.reply.icon
+          |  
+          button.negative.ui.button
+            i.flag.icon
+          |  
+          button.ui.button
+            i.heart.icon

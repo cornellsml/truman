@@ -1,0 +1,26 @@
+.ui.fixed.inverted.menu
+  .ui.container
+    a.header.item(href='/')
+      img(src='/logo.svg', width=25)
+      | Fodee
+    |  
+    a.item(href='#') Home
+    a.item(href='/api') API Examples
+    a.item(href='/contact') Contact
+    .right.menu
+      if !user
+        a.item(href='/login') Login
+        a.item(href='/signup') Create Account
+      else
+        .ui.simple.dropdown.item
+          if user.profile.picture
+            img(src=user.profile.picture)
+          else
+            img(src=user.gravatar(60))
+          |
+          span= user.profile.name || user.email || user.id
+          i.dropdown.icon
+          .menu
+            a.item(href='/account') My Account
+            .divider
+            a.item(href='/logout') Logout

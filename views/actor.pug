@@ -1,0 +1,10 @@
+extends ui_layout
+
+block content
+	.ui.main.text.container
+		h3= actor.profile.name
+
+		ul
+			li= actor.profile.location
+			li: img(src=actor.profile.picture, class='profile', width='100', height='100')
+			li= actor.profile.bio
