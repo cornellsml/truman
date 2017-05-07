@@ -1,6 +1,8 @@
 extends ui_layout
   
 block content
+
+  
   
   .computer.only.tablet.only.four.wide.column 
     .ui.card
@@ -23,6 +25,12 @@ block content
       i.big.photo.link.icon
     each val in script
       .ui.fluid.card
+        .ui.dimmer
+          .content
+            .center
+              h2.ui.inverted.icon.header
+                i.unhide.icon
+                |  You&apos;ve read this!
         if val.reply
           .content
             .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"

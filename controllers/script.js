@@ -20,8 +20,6 @@ exports.getScript = (req, res) => {
     .where('time').lte(time_diff)
     .sort('-time')
     .populate('actor')
-    //.populate('reply')
-    //.populate('reply.actor')
     .populate({ 
      path: 'reply',
      populate: {

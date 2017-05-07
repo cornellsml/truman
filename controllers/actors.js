@@ -39,8 +39,8 @@ exports.getActor = (req, res, next) => {
     ////this is not solving the problem FUCKKKKK@
    if (act == null) {console.log("NULLLLLLLLLLL");  var myerr = new Error('Record not found!'); return next(myerr); }
 
-    console.log(act);
-    console.log("&&&&&&&&&&&&&&&&&&&&&");
+    //console.log(act);
+    //console.log("&&&&&&&&&&&&&&&&&&&&&");
 
     Script.find({ actor: act.id})
     .where('time').lte(time_diff)
@@ -56,8 +56,8 @@ exports.getActor = (req, res, next) => {
     .exec(function (err, script_feed) {
       if (err) { console.log(err); return next(err); }
       
-      console.log("::::::Script::::");
-      console.log(script_feed);
+      //console.log("::::::Script::::");
+      //console.log(script_feed);
       res.render('actor', { script: script_feed, actor: act });
     });
 
