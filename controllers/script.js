@@ -20,6 +20,15 @@ exports.getScript = (req, res) => {
     .where('time').lte(time_diff)
     .sort('-time')
     .populate('actor')
+    //.populate('reply')
+    //.populate('reply.actor')
+    .populate({ 
+     path: 'reply',
+     populate: {
+       path: 'actor',
+       model: 'Actor'
+     } 
+  })
     .exec(function (err, script_feed) {
       if (err) { return next(err); }
       //Successful, so render

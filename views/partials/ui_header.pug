@@ -1,12 +1,10 @@
-.ui.fixed.inverted.menu
+.ui.fixed.menu
   .ui.container
     a.header.item(href='/')
-      img(src='/logo.svg', width=25)
+      img(src='/logo.svg', id='logo')
       | Fodee
     |  
     a.item(href='#') Home
-    a.item(href='/api') API Examples
-    a.item(href='/contact') Contact
     .right.menu
       if !user
         a.item(href='/login') Login

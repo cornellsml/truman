@@ -1,10 +1,85 @@
 extends ui_layout
-
+  
 block content
-	.ui.main.text.container
-		h3= actor.profile.name
+  
+  .computer.only.tablet.only.four.wide.column 
+    .ui.card
+      .image
+        if actor.profile.picture
+          img(src=actor.profile.picture)
+        else
+          img(src=user.gravatar(60))
+      .content
+        a.header= actor.profile.name
+        .meta="@"+actor.username
+        .description=actor.profile.bio
+        .description 
+          i.marker.icon
+          span=actor.profile.location
+      .two.ui.bottom.attached.icon.buttons
+          button.ui.button(data-tooltip='Block User', data-position='bottom left')
+            i.ban.icon
+          |  
+          button.ui.button(data-tooltip='Report User', data-position='bottom right')
+            i.flag.icon
 
-		ul
-			li= actor.profile.location
-			li: img(src=actor.profile.picture, class='profile', width='100', height='100')
-			li= actor.profile.bio
+
+  .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column 
+    each val in script
+      .ui.fluid.card
+        if val.reply
+          .content
+            .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
+            |  
+            img.ui.avatar.image(src=val.actor.profile.picture)
+            span=val.actor.profile.name
+          .content
+            .description=val.body
+          .extra.content
+            .ui.fluid.card
+              .content
+                .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.reply.time))/(1000*60*60)) + "h ago"
+                |  
+                img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                span=val.reply.actor.profile.name
+              if val.reply.picture
+                .image
+                  img(src="/"+val.reply.picture)
+              .content
+                .description=val.reply.body
+          .three.ui.bottom.attached.icon.buttons
+            .ui.animated.button(tabindex='0')
+              .visible.content
+                i.reply.icon
+              .hidden.content Reply to Post
+            .ui.vertical.animated.button(tabindex='0')
+              .visible.content
+                i.flag.icon
+              .hidden.content Report Post
+            .ui.animated.fade.button(tabindex='0')
+              .visible.content
+                i.like.icon
+              .hidden.content Like Post
+        else
+          .content
+            .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
+            |  
+            img.ui.avatar.image(src=val.actor.profile.picture)
+            span=val.actor.profile.name
+          .image
+            img(src="/"+val.picture)
+          .content
+            .description=val.body
+          .three.ui.bottom.attached.icon.buttons
+            .ui.animated.button(tabindex='0')
+              .visible.content
+                i.reply.icon
+              .hidden.content Reply to Post
+            .ui.vertical.animated.button(tabindex='0')
+              .visible.content
+                i.flag.icon
+              .hidden.content Report Post
+            .ui.animated.fade.button(tabindex='0')
+              .visible.content
+                i.like.icon
+              .hidden.content Like Post

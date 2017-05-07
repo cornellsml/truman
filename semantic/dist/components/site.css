@@ -13,7 +13,7 @@
              Page
 *******************************/
 
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic&subset=latin');
 html,
 body {
   height: 100%;
@@ -26,11 +26,11 @@ body {
   padding: 0px;
   overflow-x: hidden;
   min-width: 320px;
-  background: #FFFFFF;
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  line-height: 1.4285em;
-  color: rgba(0, 0, 0, 0.87);
+  background: #F9F9F9;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.33;
+  color: #212121;
   font-smoothing: antialiased;
 }
 
@@ -44,27 +44,27 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  line-height: 1.28571429em;
-  margin: calc(2rem -  0.14285714em ) 0em 1rem;
-  font-weight: bold;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  line-height: 1.33em;
+  margin: calc(2rem -  0.165em ) 0em 1rem;
+  font-weight: 400;
   padding: 0em;
 }
 h1 {
   min-height: 1rem;
-  font-size: 2rem;
+  font-size: 2.25rem;
 }
 h2 {
-  font-size: 1.71428571rem;
+  font-size: 2rem;
 }
 h3 {
-  font-size: 1.28571429rem;
+  font-size: 1.75rem;
 }
 h4 {
-  font-size: 1.07142857rem;
+  font-size: 1.5rem;
 }
 h5 {
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 h1:first-child,
 h2:first-child,
@@ -87,8 +87,8 @@ h5:last-child {
 *******************************/
 
 p {
-  margin: 0em 0em 1em;
-  line-height: 1.4285em;
+  margin: 0em 0em 1.53em;
+  line-height: 1.7em;
 }
 p:first-child {
   margin-top: 0em;
@@ -102,11 +102,11 @@ p:last-child {
 --------------------*/
 
 a {
-  color: #4183C4;
+  color: #009FDA;
   text-decoration: none;
 }
 a:hover {
-  color: #1e70bf;
+  color: #00b2f3;
   text-decoration: none;
 }
 
@@ -118,40 +118,34 @@ a:hover {
 
 /* Site */
 ::-webkit-selection {
-  background-color: #CCE2FF;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: #009FDA;
+  color: #FFFFFF;
 }
 ::-moz-selection {
-  background-color: #CCE2FF;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: #009FDA;
+  color: #FFFFFF;
 }
 ::selection {
-  background-color: #CCE2FF;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: #009FDA;
+  color: #FFFFFF;
 }
 
 /* Form */
 textarea::-webkit-selection,
 input::-webkit-selection {
   background-color: rgba(100, 100, 100, 0.4);
-  color: rgba(0, 0, 0, 0.87);
+  color: #212121;
 }
 textarea::-moz-selection,
 input::-moz-selection {
   background-color: rgba(100, 100, 100, 0.4);
-  color: rgba(0, 0, 0, 0.87);
+  color: #212121;
 }
 textarea::selection,
 input::selection {
   background-color: rgba(100, 100, 100, 0.4);
-  color: rgba(0, 0, 0, 0.87);
+  color: #212121;
 }
-
-
-/*******************************
-        Global Overrides
-*******************************/
-
 
 
 /*******************************

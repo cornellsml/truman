@@ -87,6 +87,7 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
+  //random assignment of experimental group
   var result = ['control', 'ui', 'notify', 'both'][Math.floor(Math.random() * 4)]
 
   const user = new User({

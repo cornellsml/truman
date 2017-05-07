@@ -1,16 +1,3 @@
-{
-    "class": "normal",
-    "profile": 
-
-    {
-  		"name": "Aliya Jacobi",
- 		"age": 44,
-  		"picture": "https://s3.amazonaws.com/uifaces/faces/twitter/scrapdnb/128.jpg",
-  		"bio": "Laborum sed qui. Et aut praesentium qui voluptas aut dolorem.",
-  		"location": "Lake Jeffrey,MD"
-	}
-}
-
 
 {
     "class": "normal",
@@ -19,7 +6,7 @@
 
     {
   		"name": "Zackary Steuber",
- 		"age": 29,
+ 		  "age": 29,
   		"picture": "https://s3.amazonaws.com/uifaces/faces/twitter/perretmagali/128.jpg",
   		"bio": "Iure numquam dicta distinctio et neque voluptatem. Aut ex sequi ipsa. Eligendi est enim. Nostrum corrupti similique ut est repellat est voluptatibus accusamus aut.",
   		"location": "Edgardoborough,VT"
