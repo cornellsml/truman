@@ -1,24 +1,52 @@
-.ui.borderless.fixed.menu
-  .ui.container
-    a.header.item(href='/')
-      img(src='/logo.svg', id='logo')
-      | Fodee
-    |  
-    a.item(href='#') Home
-    .right.menu
-      if !user
-        a.item(href='/login') Login
-        a.item(href='/signup') Create Account
-      else
-        .ui.simple.dropdown.item
-          if user.profile.picture
-            img(src=user.profile.picture)
-          else
-            img(src=user.gravatar(60))
-          |
-          span= user.profile.name || user.email || user.id
-          i.dropdown.icon
-          .menu
-            a.item(href='/account') My Account
-            .divider
-            a.item(href='/logout') Logout
+.computer.only.tablet.only.row 
+  .ui.borderless.fixed.menu
+    .ui.container
+      a.item(href='/')
+        img.ui.tiny.image(src='/logo.png', id='logo')
+      |  
+      .right.menu
+        if !user
+          a.item(href='/login') Login
+          a.item(href='/signup') Create Account
+        else
+          a.item(href='/notifications') 
+            i.big.alarm.icon
+          .ui.simple.dropdown.item
+            if user.profile.picture
+              img.ui.mini.spaced.circular.image(src=user.profile.picture)
+            else
+              img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+            |
+            span= user.profile.name || user.email || user.id
+            i.dropdown.icon
+            .menu
+              a.item(href='/account') My Account
+              .divider
+              a.item(href='/logout') Logout
+.mobile.only.row
+  .ui.fluid.top.fixed.four.item.menu
+    a.item(href='/')
+      img.ui.tiny.image(src='/logo.png', id='logo')
+    if !user
+      a.item(href='/login') Login
+      a.item(href='/signup') Create Account
+    else
+      a.item(href='/newpost') 
+        i.big.edit.icon
+      a.item(href='/notifications') 
+        i.big.alarm.icon
+      .ui.simple.dropdown.item
+        if user.profile.picture
+          img.ui.mini.spaced.circular.image(src=user.profile.picture)
+        else
+          img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+        i.dropdown.icon
+        .menu
+          a.item(href='/account') My Account
+          .divider
+          a.item(href='/logout') Logout
+
+
+
+
+

@@ -19,8 +19,9 @@ $(document).ready(function() {
 
     onPassed: {
       '20%': function(calculations) {
-        // do something at 30%
+        // do something at 20%
         console.log(":::::Now passing:::::");
+        //console.log(calculations);
         $(this).dimmer({
                  closable: false
                 })
