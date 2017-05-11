@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
@@ -8,11 +9,13 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
 
-  numPosts: { type: Number, default: 0 },
+  numPosts: { type: Number, default: 0 }, //not including replys
 
   turkID: String,
 
-  group: String,
+  group: String, //full group type
+  ui: String,    //just UI type (no or ui)
+  notify: String, //notification type (now, low or high)
 
   facebook: String,
   twitter: String,
@@ -23,10 +26,29 @@ const userSchema = new mongoose.Schema({
   steam: String,
   tokens: Array,
 
+  posts: [new Schema({
+    postID: Number,  //exludes replys?
+    body: {type: String, default: '', trim: true},
+    picture: String,
+    reply: {type: Schema.ObjectId, ref: 'Script'},
+    absTime: Date,
+    relativeTime: {type: Number}
+    })],
+
+  feedAction: [new Schema({
+        post: {type: Schema.ObjectId, ref: 'Script'},
+        startTime: Number,
+        readTime : Number,
+        flagTime  : Number,
+        likeTime  : Number,
+        replyTime  : Number
+    }, {_id: true})],
+
   profile: {
     name: String,
     gender: String,
     location: String,
+    bio: String,
     website: String,
     picture: String
   }

@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 const express = require('express');
+const _ = require('lodash');
 const compression = require('compression');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -161,6 +162,7 @@ app.get('/user/:userId', actorsController.getActor);
 
 //getScript
 app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);
+app.post('/feed', passportConfig.isAuthenticated, scriptController.postUpdateFeedAction);
 
 /**
  * API examples routes.

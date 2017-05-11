@@ -54,7 +54,7 @@ exports.postLogin = (req, res, next) => {
  */
 exports.logout = (req, res) => {
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 };
 
 /**
@@ -88,12 +88,14 @@ exports.postSignup = (req, res, next) => {
   }
 
   //random assignment of experimental group
-  var result = ['control', 'ui', 'notify', 'both'][Math.floor(Math.random() * 4)]
-
+  var result = ['no:no', 'no:low', 'no:high', 'ui:no', 'ui:low', 'ui:high'][Math.floor(Math.random() * 6)]
+  var resultArray = result.split(':');
   const user = new User({
     email: req.body.email,
     password: req.body.password,
-    group: result
+    group: result,
+    ui: resultArray[0], //ui or no
+    notify: resultArray[1] //no, low or high
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -278,16 +280,16 @@ exports.postReset = (req, res, next) => {
   const sendResetPasswordEmail = (user) => {
     if (!user) { return; }
     const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
+      service: 'SendPulse',
       auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
+        user: process.env.SENDPULSE_USER,
+        pass: process.env.SENDPULSE_PASSWORD
       }
     });
     const mailOptions = {
       to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Your Hackathon Starter password has been changed',
+      from: 'admin@eatsnap.love',
+      subject: 'Your eatsnap.love password has been changed',
       text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
     };
     return transporter.sendMail(mailOptions)
@@ -352,16 +354,16 @@ exports.postForgot = (req, res, next) => {
     if (!user) { return; }
     const token = user.passwordResetToken;
     const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
+      service: 'SendPulse',
       auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
+        user: process.env.SENDPULSE_USER,
+        pass: process.env.SENDPULSE_PASSWORD
       }
     });
     const mailOptions = {
       to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Reset your password on Hackathon Starter',
+      from: 'admin@eatsnap.love',
+      subject: 'Reset your password on eatsnap.love',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
         http://${req.headers.host}/reset/${token}\n\n
