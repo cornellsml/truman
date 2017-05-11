@@ -59,32 +59,9 @@ $(document).ready(function() {
     once       : false,
     continuous : false,
 
-    //user=user.id, postID=val.id
-    /*
-    onPassed: {
-      '20%': function(calculations) {
-        // do something at 20%
-        var postID = $(this).attr( "postID" );
-        var read = Date.now();
-        console.log(":::::Now passing TOP:::::");
-       // console.log("&&&&&START POST - post "+postID+" is READ at time "+read);
-        //console.log(calculations);
-        console.log("Dimmer is now: "+$(this).dimmer('is active'));
-        $(this).dimmer({
-                 closable: false
-                })
-                .dimmer('show');
-
-        //add later code that checked if this is dimmed already and if so, does not send POST
-        console.log("AFTER Dimmer is now: "+$(this).dimmer('is active'));
-        $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-      }
-    },*/
-
     onBottomVisibleReverse:function(calculations) {
-        // do something at 30%
         console.log(":::::Now passing onBottomVisibleReverse:::::");
-        if (!($(this).dimmer('is active')))
+        if (!($(this).dimmer('is active')) && ($(this).attr( "ui" )=='ui'))
         {
           console.log("::::passing::::DIMMING NOW::::::::");
           var postID = $(this).attr( "postID" );
@@ -100,7 +77,7 @@ $(document).ready(function() {
 
         }
         else
-          {console.log("::::passing::::Already dimmed - do nothing");}
+          {console.log("::::passing::::Already dimmed - do nothing - OR NO UI");}
 
       },
 
@@ -108,7 +85,7 @@ $(document).ready(function() {
         // do something at 30%
         console.log("::::::::::Now Seen::::::::::");
         //console.log("Now Seen :::: Dimmer is now: "+$(this).dimmer('is active'));
-        if (!($(this).dimmer('is active')))
+        if (!($(this).dimmer('is active')) && ($(this).attr( "ui" )=='ui'))
         {
           var userID = $(this).attr( "user" );
           var postID = $(this).attr( "postID" );
@@ -124,9 +101,7 @@ $(document).ready(function() {
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
         else
-          {console.log("@@@@@@@START Already dimmed - do nothing");}
-
-
+          {console.log("@@@@@@@START Already dimmed - do nothing - OR NO UI");}
 
         }
       

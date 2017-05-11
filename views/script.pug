@@ -24,43 +24,48 @@ block content
       input(type='text', placeholder='Share your meal')
       i.big.photo.link.icon
     each val in script
-      .ui.fluid.card.dim(user=user.id, postID=val.id)
-        if val.read
-          .ui.active.dimmer
-            .content
-              .center
-                h2.ui.inverted.icon.header
-                  i.unhide.icon
-                  |  You&apos;ve read this!
-                br
-                h3.ui.inverted.icon.header
-                  img.ui.avatar.image(src=val.actor.profile.picture)
-                  span=" "+val.actor.profile.name+" "
-                  | has been notified
+      .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify)
+        if user.ui == 'ui'
+          if val.read 
+            .ui.active.dimmer
+              .content
+                .center
+                  h2.ui.inverted.icon.header
+                    i.unhide.icon
+                    |  You&apos;ve read this!
                   br
-                  if val.reply
-                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
-                    span=" "+val.reply.actor.profile.name+" "
-                    | has been notified
+                  if user.notify != no
+                    h3.ui.inverted.icon.header
+                      img.ui.avatar.image(src=val.actor.profile.picture)
+                      span=" "+val.actor.profile.name+" "
+                      | has been notified
+                      br
+                      if val.reply
+                        img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                        span=" "+val.reply.actor.profile.name+" "
+                        | has been notified
+                      br
                   br
                   button.ui.button.reread Read Again?                
-        else 
-          .ui.dimmer
-            .content
-              .center
-                h2.ui.inverted.icon.header
-                  i.unhide.icon
-                  |  You&apos;ve read this!
-                br
-                h3.ui.inverted.icon.header
-                  img.ui.avatar.image(src=val.actor.profile.picture)
-                  span=" "+val.actor.profile.name+" "
-                  | has been notified
+          else 
+            .ui.dimmer
+              .content
+                .center
+                  h2.ui.inverted.icon.header
+                    i.unhide.icon
+                    |  You&apos;ve read this!
                   br
-                  if val.reply
-                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
-                    span=" "+val.reply.actor.profile.name+" "
-                    | has been notified
+                  if user.notify != no
+                    h3.ui.inverted.icon.header
+                      img.ui.avatar.image(src=val.actor.profile.picture)
+                      span=" "+val.actor.profile.name+" "
+                      | has been notified
+                      br
+                      if val.reply
+                        img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                        span=" "+val.reply.actor.profile.name+" "
+                        | has been notified
+                      br
                   br
                   button.ui.button.reread Read Again?
 
