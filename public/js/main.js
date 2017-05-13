@@ -81,16 +81,15 @@ $(document).ready(function() {
 
       },
 
+    ////First time Card is up to be viewed
     onBottomVisible:function(calculations) {
-        // do something at 30%
         console.log("::::::::::Now Seen::::::::::");
         //console.log("Now Seen :::: Dimmer is now: "+$(this).dimmer('is active'));
         if (!($(this).dimmer('is active')) && ($(this).attr( "ui" )=='ui'))
         {
-          var userID = $(this).attr( "user" );
           var postID = $(this).attr( "postID" );
           var start = Date.now();
-          console.log("@@@@@@@@@@@@START POST - User "+userID+" has seen post "+postID+" at time "+start);
+          console.log("UI!!!! @@@@@@@@@@@@START POST UI has seen post "+postID+" at time "+start);
           //console.log("Token is "+ $('meta[name="csrf-token"]').attr('content'));
           //add start time to postActions for this user. post to /feed/
           /*
@@ -100,6 +99,12 @@ $(document).ready(function() {
 
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
+        //if not UI, we still need to time start, read, etc
+        else if (($(this).attr( "ui" )!='ui') && )
+        {
+
+        }
+
         else
           {console.log("@@@@@@@START Already dimmed - do nothing - OR NO UI");}
 

@@ -24,7 +24,7 @@ block content
       input(type='text', placeholder='Share your meal')
       i.big.photo.link.icon
     each val in script
-      .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify)
+      .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread')
         if user.ui == 'ui'
           if val.read 
             .ui.active.dimmer
