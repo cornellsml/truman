@@ -38,25 +38,25 @@ exports.getScript = (req, res) => {
           if(feedIndex!=-1)
           {
 
-            if (user.feedAction[feedIndex].readTime)
+            if (user.feedAction[feedIndex].readTime[0])
             { 
               script_feed[key].read = true;
               console.log("Post: %o has been READ", script_feed[key].id);
             }
 
-            if (user.feedAction[feedIndex].flagTime)
+            if (user.feedAction[feedIndex].flagTime[0])
             { 
               script_feed[key].flag = true;
               console.log("Post %o has been FLAGGED", script_feed[key].id);
             }
 
-            if (user.feedAction[feedIndex].likeTime)
+            if (user.feedAction[feedIndex].likeTime[0])
             { 
               script_feed[key].like = true;
               console.log("Post %o has been LIKED", script_feed[key].id);
             }
 
-            if (user.feedAction[feedIndex].replyTime)
+            if (user.feedAction[feedIndex].replyTime[0])
             { 
               script_feed[key].reply = true;
               console.log("Post %o has been REPLIED", script_feed[key].id);
@@ -93,11 +93,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
     //somehow user does not exist here
     if (err) { return next(err); }
 
-    console.log("postID is  ", req.body.postID);
-    //find the object from the right post in feed 
+    console.log("@@@@@@@@@@@ TOP postID is  ", req.body.postID);
 
+    //find the object from the right post in feed 
     var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == req.body.postID; });
-    //var feedIndex = _.findIndex(user.feedAction, ['post', req.body.postID]);
 
     //console.log("index is  ", feedIndex);
 
@@ -108,6 +107,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
       var cat = new Object();
       cat.post = req.body.postID;
       cat.startTime = req.body.start;
+      cat.rereadTimes = 0;
       //add new post into feedAction
       user.feedAction.push(cat);
 
@@ -117,39 +117,90 @@ exports.postUpdateFeedAction = (req, res, next) => {
       //we found the right post, and feedIndex is the right index for it
       console.log("####### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
-      //if item is empty, then fill it, else move on
-      if ((!user.feedAction[feedIndex].startTime)&& req.body.start)
+      //update to new StartTime
+      if (req.body.start && (req.body.start > user.feedAction[feedIndex].startTime))
       { 
-        //this should never run or happen
-        console.log("@@@@USER.feedAction.startTime  ", user.feedAction[feedIndex].startTime);
-        user.feedAction[feedIndex].startTime = req.body.start || '';
-        console.log("adding START time now which is  ", req.body.start); 
+        console.log("%%%%%% USER.feedAction.startTime  ", user.feedAction[feedIndex].startTime);
+        user.feedAction[feedIndex].startTime = req.body.start;
+        user.feedAction[feedIndex].rereadTimes++;
+        console.log("%%%%%% NEW START time is now  ", user.feedAction[feedIndex].startTime);
+        console.log("%%%%%% reRead counter is now  ", user.feedAction[feedIndex].rereadTimes); 
 
       }
 
-      if ((!user.feedAction[feedIndex].readTime)&&req.body.read)
+      //array of readTimes is empty and we have a new READ event
+      else if ((!user.feedAction[feedIndex].readTime)&&req.body.read && (req.body.read > user.feedAction[feedIndex].startTime))
       { 
-        user.feedAction[feedIndex].readTime = req.body.read || '';
-        console.log("adding READ time now which is  ", req.body.read);
+        let read = req.body.read - user.feedAction[feedIndex].startTime
+        console.log("!!!!!New FIRST READ Time: ", read);
+        user.feedAction[feedIndex].readTime = [read];
+        console.log("!!!!!adding FIRST READ time [0] now which is  ", user.feedAction[feedIndex].readTime[0]);
       }
 
-      if ((!user.feedAction[feedIndex].flagTime)&&req.body.flag)
+      //Already have a readTime Array, New READ event, need to add this to readTime array
+      else if ((user.feedAction[feedIndex].readTime)&&req.body.read && (req.body.read > user.feedAction[feedIndex].startTime))
       { 
-        user.feedAction[feedIndex].flagTime = req.body.flag || '';
-        console.log("adding FLAG time now which is  ", req.body.flag);
+        let read = req.body.read - user.feedAction[feedIndex].startTime
+        console.log("%%%%%Add new Read Time: ", read);
+        user.feedAction[feedIndex].readTime.push(read);
       }
 
-      if ((!user.feedAction[feedIndex].likeTime)&&req.body.like)
+      //array of flagTime is empty and we have a new (first) Flag event
+      else if ((!user.feedAction[feedIndex].flagTime)&&req.body.flag && (req.body.flag > user.feedAction[feedIndex].startTime))
       { 
-        user.feedAction[feedIndex].likeTime = req.body.like || '';
-        console.log("adding LIKE time now which is  ", req.body.like);
+        let flag = req.body.flag - user.feedAction[feedIndex].startTime
+        console.log("!!!!!New FIRST FLAG Time: ", flag);
+        user.feedAction[feedIndex].flagTime = [flag];
+        console.log("!!!!!adding FIRST FLAG time [0] now which is  ", user.feedAction[feedIndex].flagTime[0]);
       }
 
-      if ((!user.feedAction[feedIndex].replyTime)&&req.body.reply)
+      //Already have a flagTime Array, New FLAG event, need to add this to flagTime array
+      else if ((user.feedAction[feedIndex].flagTime)&&req.body.flag && (req.body.flag > user.feedAction[feedIndex].startTime))
       { 
-        user.feedAction[feedIndex].replyTime = req.body.reply || '';
-        console.log("adding REPLY time now which is  ", req.body.reply);
+        let flag = req.body.flag - user.feedAction[feedIndex].startTime
+        console.log("%%%%%Add new FLAG Time: ", flag);
+        user.feedAction[feedIndex].flagTime.push(flag);
       }
+
+      //array of likeTime is empty and we have a new (first) LIKE event
+      else if ((!user.feedAction[feedIndex].likeTime)&&req.body.like && (req.body.like > user.feedAction[feedIndex].startTime))
+      { 
+        let like = req.body.like - user.feedAction[feedIndex].startTime
+        console.log("!!!!!!New FIRST LIKE Time: ", like);
+        user.feedAction[feedIndex].likeTime = [like];
+        console.log("!!!!!!!adding FIRST LIKE time [0] now which is  ", user.feedAction[feedIndex].likeTime[0]);
+      }
+
+      //Already have a likeTime Array, New LIKE event, need to add this to likeTime array
+      else if ((user.feedAction[feedIndex].likeTime)&&req.body.like && (req.body.like > user.feedAction[feedIndex].startTime))
+      { 
+        let like = req.body.like - user.feedAction[feedIndex].startTime
+        console.log("%%%%%Add new LIKE Time: ", like);
+        user.feedAction[feedIndex].likeTime.push(like);
+      }
+
+      //array of replyTime is empty and we have a new (first) REPLY event
+      else if ((!user.feedAction[feedIndex].replyTime)&&req.body.reply && (req.body.reply > user.feedAction[feedIndex].startTime))
+      { 
+        let reply = req.body.reply - user.feedAction[feedIndex].startTime
+        console.log("!!!!!!!New FIRST REPLY Time: ", reply);
+        user.feedAction[feedIndex].replyTime = [reply];
+        console.log("!!!!!!!adding FIRST REPLY time [0] now which is  ", user.feedAction[feedIndex].replyTime[0]);
+      }
+
+      //Already have a replyTime Array, New REPLY event, need to add this to replyTime array
+      else if ((user.feedAction[feedIndex].replyTime)&&req.body.reply && (req.body.reply > user.feedAction[feedIndex].startTime))
+      { 
+        let reply = req.body.reply - user.feedAction[feedIndex].startTime
+        console.log("%%%%%Add new REPLY Time: ", reply);
+        user.feedAction[feedIndex].replyTime.push(reply);
+      }
+
+      else
+      {
+        console.log("Got a POST that did not fit anything. Possible Error.")
+      }
+
        console.log("####### END OF ELSE post at index "+ feedIndex);
 
     }

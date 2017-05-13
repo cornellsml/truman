@@ -47,7 +47,8 @@ $(document).ready(function() {
 
      var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
      var reread = Date.now();
-     console.log("***********REREAD: post "+postID+" at time "+reread);
+     console.log("##########REREAD######SEND TO DB######: post "+postID+" at time "+reread);
+     $.post( "/feed", { postID: postID, start: reread, _csrf : $('meta[name="csrf-token"]').attr('content') } );
      //maybe send this later, when we have a re-read event to time???
      //$.post( "/feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
@@ -59,11 +60,15 @@ $(document).ready(function() {
     once       : false,
     continuous : false,
 
+
+    //USER HAS NOW READ THE POST (READ EVENT)
     onBottomVisibleReverse:function(calculations) {
         console.log(":::::Now passing onBottomVisibleReverse:::::");
+
+        //As Long as Dimmer is not Active and We have a UI condistion - Dimm screen and send Post READ event
         if (!($(this).dimmer('is active')) && ($(this).attr( "ui" )=='ui'))
         {
-          console.log("::::passing::::DIMMING NOW::::::::");
+          console.log("::::UI passing::::DIMMING NOW::::::::");
           var postID = $(this).attr( "postID" );
           var read = Date.now();
           //actual dim the element
@@ -72,41 +77,52 @@ $(document).ready(function() {
                   })
                   .dimmer('show');
           //send post to server to update DB that we have now read this
-          console.log("::::passing::::SENDING POST TO DB::::::::");
+          console.log("::::UI passing::::SENDING POST TO DB::::::::");
           $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
 
         }
+
+        //if we are not in UI condistion, and we are reading, then send off Post to DB for new Read Time
+        else if ($(this).attr( "ui" )=='no')
+        {
+          console.log("::::NO UI passing:::");
+          var postID = $(this).attr( "postID" );
+          var read = Date.now();
+          //send post to server to update DB that we have now read this
+          console.log("::::NO UI passing::::SENDING POST TO DB::::::::");
+          $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+        }
+
+        //UI and DIMMED READ, which does not count as a READ
         else
           {console.log("::::passing::::Already dimmed - do nothing - OR NO UI");}
 
       },
 
-    ////First time Card is up to be viewed
+    ////POST IS NOW Visiable - START EVENT
     onBottomVisible:function(calculations) {
-        console.log("::::::::::Now Seen::::::::::");
-        //console.log("Now Seen :::: Dimmer is now: "+$(this).dimmer('is active'));
+        console.log("@@@@@@@ Now Seen @@@@@@@@@");
+        
+        //Post is not DIMMED (SO WE CAN SEE IT) - and We are in UI condistion - POST START EVENT to DB
         if (!($(this).dimmer('is active')) && ($(this).attr( "ui" )=='ui'))
         {
           var postID = $(this).attr( "postID" );
           var start = Date.now();
-          console.log("UI!!!! @@@@@@@@@@@@START POST UI has seen post "+postID+" at time "+start);
-          //console.log("Token is "+ $('meta[name="csrf-token"]').attr('content'));
-          //add start time to postActions for this user. post to /feed/
-          /*
-          cat.post = req.body.postID;
-          cat.startTime = req.body.start;
-          */
+          console.log("@@@@@@@ UI!!!! @@@@@@SENDING TO DB@@@@@@START POST UI has seen post "+postID+" at time "+start);
 
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
-        //if not UI, we still need to time start, read, etc
-        else if (($(this).attr( "ui" )!='ui') && )
+        //if not UI, we still need to Update DB with new START time
+        else if ($(this).attr( "ui" )=='no')
         {
-
+          var postID = $(this).attr( "postID" );
+          var start = Date.now();
+          console.log("@@@@@@@ NO UI!!!! @@@@@@SENDING TO DB@@@@@@START@@@@@@@ POST has seen post "+postID+" at time "+start)
+          $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
 
         else
-          {console.log("@@@@@@@START Already dimmed - do nothing - OR NO UI");}
+          {console.log("@@@@@@@ Now Seen @@@@@@@@@  START Already dimmed - do nothing - OR NO UI");}
 
         }
       

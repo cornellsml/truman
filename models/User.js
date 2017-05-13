@@ -37,11 +37,13 @@ const userSchema = new mongoose.Schema({
 
   feedAction: [new Schema({
         post: {type: Schema.ObjectId, ref: 'Script'},
-        startTime: Number,
-        readTime : Number,
-        flagTime  : Number,
-        likeTime  : Number,
-        replyTime  : Number
+        postClass: String,
+        rereadTimes: Number, //number of times post has been viewed by user
+        startTime: Number, //always the newest startTime (full date in ms)
+        readTime : [Number],
+        flagTime  : [Number],
+        likeTime  : [Number],
+        replyTime  : [Number]
     }, {_id: true})],
 
   profile: {
