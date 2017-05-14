@@ -1,24 +1,25 @@
 extends ../ui_layout
 
 block content
-  .page-header
-    h3 Sign in
-  form.form-horizontal(method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='email') Email
-      .col-sm-7
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-    .form-group
-      label.col-sm-3.control-label(for='password') Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', required)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.col-sm-3.btn.btn-primary(type='submit')
-          i.fa.fa-user
-          | Login
-        a.btn.btn-link(href='/forgot') Forgot your password?
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        hr
+  .computer.only.tablet.only.eight.wide.column
+    img.ui.fluid.image(src='/homepage.jpg')
+  
+
+  .eight.wide.computer.eight.wide.tablet.sixteen.wide.mobile.column
+    h2.ui.header Sign in
+    form.ui.form(method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .field
+        label(for='email') Email
+        input(type='email', name='email', id='email', placeholder='Email', autofocus, required).field
+      .field
+        label(for='password') Password
+        input(type='password', name='password', id='password', placeholder='Password', required)
+      button.ui.button(type='submit') Login
+      a(href='/forgot') Forgot your password?
+    .ui.horizontal.divider
+      | Or
+    .center.aligned.column
+      .ui.big.green.labeled.icon.button.signup
+        i.signup.icon
+        |   Sign Up

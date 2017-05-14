@@ -9,6 +9,17 @@ $(document).ready(function() {
     ;
   });
 
+  //make checkbox work
+  $('.ui.checkbox')
+  .checkbox()
+;
+
+  //Sign Up Button
+  $('.ui.big.green.labeled.icon.button.signup')
+  .on('click', function() {
+    window.location.href='/signup';
+  });
+
   //this is the LIKE button
   $('.ui.animated.fade.button')
   .on('click', function() {
@@ -83,6 +94,7 @@ $(document).ready(function() {
         }
 
         //if we are not in UI condistion, and we are reading, then send off Post to DB for new Read Time
+        //Maybe kill this so we don't fill the DB with all this stuff. Seems kind of silly (or only do like 10, etc)
         else if ($(this).attr( "ui" )=='no')
         {
           console.log("::::NO UI passing:::");

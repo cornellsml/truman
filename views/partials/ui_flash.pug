@@ -1,14 +1,12 @@
 .row
   if messages.errors
-    .alert.alert-danger.fade.in
-      button.close(type='button', data-dismiss='alert')
-        i.fa.fa-times-circle-o
+    .ui.negative.message
+      i.close.icon
       for error in messages.errors
         div= error.msg
   if messages.info
-    .alert.alert-info.fade.in
-      button.close(type='button', data-dismiss='alert')
-        i.fa.fa-times-circle-o
+    .ui.warning.message
+      i.close.icon
       for info in messages.info
         div= info.msg
   if messages.success
