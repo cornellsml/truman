@@ -29,7 +29,9 @@ exports.getScript = (req, res) => {
         if (err) { return next(err); }
         //Successful, so render
         //console.log(script_feed);
+
         //update script feed to see if reading and posts has already happened
+        var flagged_index = [];
         for (var key in script_feed) {
           //check if read/liked/etc
           var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[key].id; });
@@ -44,12 +46,6 @@ exports.getScript = (req, res) => {
               console.log("Post: %o has been READ", script_feed[key].id);
             }
 
-            if (user.feedAction[feedIndex].flagTime[0])
-            { 
-              script_feed[key].flag = true;
-              console.log("Post %o has been FLAGGED", script_feed[key].id);
-            }
-
             if (user.feedAction[feedIndex].likeTime[0])
             { 
               script_feed[key].like = true;
@@ -62,7 +58,19 @@ exports.getScript = (req, res) => {
               console.log("Post %o has been REPLIED", script_feed[key].id);
             }
 
+            //If this post has been flagged - remove it from FEED array (script_feed)
+            if (user.feedAction[feedIndex].flagTime[0])
+            { 
+              flagged_index.push(key);
+              console.log("Post %o has been FLAGGED", script_feed[key].id);
+            }
+
           }
+        }
+
+        for (var i = flagged_index.length -1; i >= 0; i--)
+        {
+          script_feed.splice(flagged_index[i],1);
         }
 
 

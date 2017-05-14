@@ -37,14 +37,15 @@ $(document).ready(function() {
   //this is the FLAG button
   $('.ui.vertical.animated.button')
   .on('click', function() {
-    $(this)
-      .toggleClass( "red" )
-    ;
 
      var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
      var flag = Date.now();
      console.log("***********FLAG: post "+postID+" at time "+flag);
      $.post( "/feed", { postID: postID, flag: flag, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+     console.log("Removing Post content now!");
+      $(this).closest( ".ui.fluid.card.dim" )
+      .html('<div class="content"> <div class="meta">You have flagged and reported this post. The admins will review this post further. We are sorry you had this experience.</div> </div>');
+    ;
 
   });
 
