@@ -111,9 +111,11 @@ exports.postUpdateFeedAction = (req, res, next) => {
     if(feedIndex==-1)
     {
       //Post does not exist yet in User DB, so we have to add it now
-      console.log("$$$$$$$$$$$$Making new feedAction Object! at post ", req.body.postID);
+      console.log("$$$$$Making new feedAction Object! at post ", req.body.postID);
       var cat = new Object();
       cat.post = req.body.postID;
+      if(!(req.body.start))
+        {console.log("!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!No start")}
       cat.startTime = req.body.start;
       cat.rereadTimes = 0;
       //add new post into feedAction
@@ -123,7 +125,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
     else
     {
       //we found the right post, and feedIndex is the right index for it
-      console.log("####### FOUND post "+req.body.postID+" at index "+ feedIndex);
+      console.log("##### FOUND post "+req.body.postID+" at index "+ feedIndex);
 
       //update to new StartTime
       if (req.body.start && (req.body.start > user.feedAction[feedIndex].startTime))
