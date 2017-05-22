@@ -13,7 +13,56 @@ $(document).ready(function() {
   $('.ui.checkbox')
   .checkbox();
 
+  //get add new feed post modal to work
+  $("#newpost").click(function () {
+    $('.ui.small.modal').modal('show');
+});
 
+  $('.ui.feed.form')
+  .form({
+    on: 'blur',
+    fields: {
+      body: {
+        identifier  : 'body',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please some text'
+          }
+        ]
+      },
+      picinput: {
+        identifier  : 'picinput',
+        rules: [
+          {
+            type: 'empty',
+            prompt : 'Please enter a picture'
+          }
+        ]
+      },
+    }
+  })
+;
+
+function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            console.log("Now changing a photo");
+            reader.onload = function (e) {
+                $('#imgInp').attr('src', e.target.result);
+                console.log("FILE is "+ e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#picinput").change(function(){
+        console.log("@@@@@ changing a photo");
+        readURL(this);
+    });
+
+//add humanized time to all posts
 $('.right.floated.time.meta').each(function() {
     var ms = parseInt($(this).text(), 10);
     let time = new Date(ms);
@@ -150,120 +199,6 @@ $('.right.floated.time.meta').each(function() {
   })
 ;//WTF!!!
 
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-(function () {
-  'use strict';
-
-  var FileUploader = function () {
-    function FileUploader() {
-      _classCallCheck(this, FileUploader);
-    }
-
-    _createClass(FileUploader, [{
-      key: 'cache',
-      value: function cache() {
-        this.$fileInput = document.querySelector('input');
-        this.$img = document.querySelector('img');
-        this.$label = document.querySelector('label');
-      }
-    }, {
-      key: 'events',
-      value: function events() {
-        if(this.$fileInput && this.$img && this.$label)
-        {
-        this.$fileInput.addEventListener('change', this._handleInputChange.bind(this));
-        this.$img.addEventListener('load', this._handleImageLoaded.bind(this));
-        this.$label.addEventListener('dragenter', this._handleDragEnter.bind(this));
-        this.$label.addEventListener('dragleave', this._handleDragLeave.bind(this));
-        this.$label.addEventListener('drop', this._handleDrop.bind(this));
-        }
-      }
-    }, {
-      key: 'init',
-      value: function init() {
-        this.cache();
-        this.events();
-      }
-    }, {
-      key: '_handleDragEnter',
-      value: function _handleDragEnter(e) {
-        e.preventDefault();
-
-        if (!this.$label.classList.contains('dragging')) {
-          this.$label.classList.add('dragging');
-        }
-      }
-    }, {
-      key: '_handleDragLeave',
-      value: function _handleDragLeave(e) {
-        e.preventDefault();
-
-        if (this.$label.classList.contains('dragging')) {
-          this.$label.classList.remove('dragging');
-        }
-      }
-    }, {
-      key: '_handleDrop',
-      value: function _handleDrop(e) {
-        e.preventDefault();
-        this.$label.classList.remove('dragging');
-
-        this.$img.files = e.dataTransfer.files;
-        this._handleInputChange();
-      }
-    }, {
-      key: '_handleImageLoaded',
-      value: function _handleImageLoaded() {
-        if (!this.$img.classList.contains('loaded')) {
-          this.$img.classList.add('loaded');
-        }
-      }
-    }, {
-      key: '_handleInputChange',
-      value: function _handleInputChange(e) {
-        var file = undefined !== e ? e.target.files[0] : this.$img.files[0];
-
-        var pattern = /image-*/;
-        var reader = new FileReader();
-
-        if (!file.type.match(pattern)) {
-          alert('invalid format');
-          return;
-        }
-
-        this.$img.src = "";
-
-        reader.onload = this._handleReaderLoaded.bind(this);
-
-        if (this.$label.classList.contains('loaded')) {
-          this.$label.classList.remove('loaded');
-        }
-
-        this.$label.classList.add('loading');
-
-        reader.readAsDataURL(file);
-      }
-    }, {
-      key: '_handleReaderLoaded',
-      value: function _handleReaderLoaded(e) {
-        var reader = e.target;
-        this.$img.src = reader.result;
-        this.$label.classList.remove('loading');
-        this.$label.classList.add('loaded');
-      }
-    }]);
-
-    return FileUploader;
-  }();
-
-  var fileUploader = new FileUploader();
-  fileUploader.init();
-})();
 
 
 });

@@ -25,12 +25,29 @@ const multer = require('multer');
 
 var m_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads') ,
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
+    cb(null, prefix + file.originalname);
+  }
+});
+
+var userpost_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads/user_post') ,
+  filename: function (req, file, cb) {
+    var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
+    cb(null, prefix + file.originalname);
+  }
+});
+
+var useravatar_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads/user_post') ,
+  filename: function (req, file, cb) {
+    var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
+    cb(null, prefix + file.originalname);
   }
 });
 
 //const upload = multer({ dest: path.join(__dirname, 'uploads') });
 const upload= multer({ storage: m_options });
+const userpostupload= multer({ storage: userpost_options });
+const useravatarupload= multer({ storage: useravatar_options });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -145,6 +162,8 @@ app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 })
  * Primary app routes.
  */
 app.get('/', passportConfig.isAuthenticated, scriptController.getScript);
+
+
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

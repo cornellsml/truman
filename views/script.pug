@@ -6,6 +6,7 @@ block content
   
   .computer.only.tablet.only.four.wide.column 
     .ui.card
+      //- this is the for user card - does not show up on mobile
       .image
         if user.profile.picture
           img(src=user.profile.picture)
@@ -15,7 +16,8 @@ block content
         a.header= user.profile.name || user.email || user.id
 
   .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column 
-    .ui.fluid.left.labeled.right.icon.input
+    //- Input for creating new post at top of feed
+    #newpost.ui.fluid.left.labeled.right.icon.input
       .ui.label
         if user.profile.picture
           img.ui.avatar.image(src=user.profile.picture)
@@ -24,7 +26,9 @@ block content
       input(type='text', placeholder='Share your meal')
       i.big.photo.link.icon
     each val in script
+      //- create a card for each post in val
       .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread')
+        //- dimmer DIV for flagging
         .ui.dimmer.flag
               .content
                 .center
@@ -34,7 +38,9 @@ block content
                     h3.ui.inverted.header
                       span="The admins will review this post further. We are sorry you had this experience."
         if user.ui == 'ui'
+          //- if user is in UI condistion - add read dimmer to post
           if val.read 
+            //- if user has already READ this post before - set dimmer to active (turn it on)
             .ui.inverted.active.read.dimmer
               .content
                 .center
@@ -55,7 +61,8 @@ block content
                       br
                   br
                   button.ui.black.button.reread Read Again?                
-          else 
+          else
+            //- user has not read this post, but is in UI condistion, so add dimmer, but don't turn it on
             .ui.inverted.read.dimmer
               .content
                 .center
@@ -78,6 +85,7 @@ block content
                   button.ui.black.button.reread Read Again?
 
         if val.reply
+          //- if post is a reply post - add the post and populate the reply as well
           .content
             .right.floated.time.meta= (user.createdAt.getTime() + val.time)
             |
@@ -120,6 +128,7 @@ block content
                   i.like.icon
                 .hidden.content Like Post
         else
+          //- not a reply post - visualize like normal
           .content
             .right.floated.time.meta= (user.createdAt.getTime() + val.time)
             |  
@@ -149,3 +158,22 @@ block content
                 .visible.content
                   i.like.icon
                 .hidden.content Like Post
+
+    //- This is for the Model that creats new content
+    .ui.small.modal
+      i.close.icon
+      .header Add a New Post
+      .content
+        form#postform.ui.feed.form
+          input(type='hidden', name='_csrf', value=_csrf)
+          .field
+            textarea(rows='2', placeholder='Share your meal', name='body')
+          .field.image-upload
+            label(for='picinput')
+              .image.content
+                img#imgInp.ui.fluid.image(src='http://goo.gl/pB9rpQ')
+            input#picinput(type='file', accept='image/*', capture='camera')
+          .ui.error.message
+      .actions
+        .ui.green.submit.button Submit
+        input.ui.button(type='submit', value='Submit2', form='postform')

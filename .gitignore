@@ -16,6 +16,9 @@ tmp
 #Build
 public/css/main.css
 
+#user_uploads
+uploads/user_post
+
 # API keys and secrets
 .env
 
