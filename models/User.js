@@ -17,17 +17,10 @@ const userSchema = new mongoose.Schema({
   ui: String,    //just UI type (no or ui)
   notify: String, //notification type (now, low or high)
 
-  facebook: String,
-  twitter: String,
-  google: String,
-  github: String,
-  instagram: String,
-  linkedin: String,
-  steam: String,
   tokens: Array,
 
   posts: [new Schema({
-    postID: Number,  //exludes replys?
+    postID: Number,  //number for this post (1,2,3...) maybe reply get -1
     body: {type: String, default: '', trim: true},
     picture: String,
     reply: {type: Schema.ObjectId, ref: 'Script'},
