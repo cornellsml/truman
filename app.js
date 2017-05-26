@@ -32,7 +32,8 @@ var m_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads
 
 var userpost_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads/user_post') ,
   filename: function (req, file, cb) {
-    var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
+    var lastsix = req.user.id.substr(req.user.id.length - 6);
+    var prefix = lastsix + Math.random().toString(36).slice(2, 10);
     cb(null, prefix + file.originalname);
   }
 });
@@ -123,7 +124,9 @@ app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if ((req.path === '/api/upload') || (req.path === '/post/new')) {
+    console.log("Not checking CSRF - out path now");
+    //console.log("request is " + req);
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -153,6 +156,13 @@ app.use((req, res, next) => {
   next();
 });
 
+var csrf = lusca({ csrf: true });
+function check(req, res, next) {
+    console.log("Body is now ");
+    console.log(req.body);
+    next();
+}
+
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/semantic',express.static(path.join(__dirname, 'semantic'), { maxAge: 31557600000 }));
 
@@ -162,6 +172,9 @@ app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 })
  * Primary app routes.
  */
 app.get('/', passportConfig.isAuthenticated, scriptController.getScript);
+app.post('/post/new', userpostupload.single('picinput'), check, csrf, scriptController.newPost);
+
+//app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 
 
 app.get('/login', userController.getLogin);

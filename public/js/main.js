@@ -14,10 +14,11 @@ $(document).ready(function() {
   .checkbox();
 
   //get add new feed post modal to work
-  $("#newpost").click(function () {
+  $("#newpost, a.item.newpost").click(function () {
     $('.ui.small.modal').modal('show');
 });
 
+  //new post validator (picture and text can not be empty)
   $('.ui.feed.form')
   .form({
     on: 'blur',
@@ -27,7 +28,7 @@ $(document).ready(function() {
         rules: [
           {
             type   : 'empty',
-            prompt : 'Please some text'
+            prompt : 'Please add some text about what you ate'
           }
         ]
       },
@@ -36,7 +37,7 @@ $(document).ready(function() {
         rules: [
           {
             type: 'empty',
-            prompt : 'Please enter a picture'
+            prompt : 'Please click on Camera Icon to add a photo'
           }
         ]
       },
@@ -47,10 +48,10 @@ $(document).ready(function() {
 function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            console.log("Now changing a photo");
+            //console.log("Now changing a photo");
             reader.onload = function (e) {
                 $('#imgInp').attr('src', e.target.result);
-                console.log("FILE is "+ e.target.result);
+                //console.log("FILE is "+ e.target.result);
             }
             
             reader.readAsDataURL(input.files[0]);
@@ -58,7 +59,7 @@ function readURL(input) {
     }
     
     $("#picinput").change(function(){
-        console.log("@@@@@ changing a photo");
+        //console.log("@@@@@ changing a photo");
         readURL(this);
     });
 
@@ -76,7 +77,7 @@ $('.right.floated.time.meta').each(function() {
   });
 
   //this is the LIKE button
-  $('.ui.animated.fade.button')
+  $('.like.button')
   .on('click', function() {
     $(this)
       .toggleClass( "red" )
@@ -90,7 +91,7 @@ $('.right.floated.time.meta').each(function() {
   });
 
   //this is the FLAG button
-  $('.ui.vertical.animated.button')
+  $('.flag.button')
   .on('click', function() {
 
      var post = $(this).closest( ".ui.fluid.card.dim");

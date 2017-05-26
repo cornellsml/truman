@@ -9,6 +9,8 @@
           a.item(href='/login') Login
           a.item(href='/signup') Create Account
         else
+          a.item.newpost
+            i.big.edit.icon
           a.item(href='/notifications') 
             i.big.alarm.icon
           .ui.simple.dropdown.item
@@ -31,7 +33,7 @@
       a.item(href='/login') Login
       a.item(href='/signup') Create Account
     else
-      a.item(href='/newpost') 
+      a.item.newpost
         i.big.edit.icon
       a.item(href='/notifications') 
         i.big.alarm.icon

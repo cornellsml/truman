@@ -12,7 +12,18 @@ exports.getScript = (req, res) => {
   var time_diff = Date.now() - req.user.createdAt;
   console.log("time_diff  is now "+time_diff);
 
-  User.findById(req.user.id, (err, user) => {
+  
+  User.findById(req.user.id)
+  .populate({ 
+       path: 'posts.reply',
+       model: 'Script',
+       populate: {
+         path: 'actor',
+         model: 'Actor'
+       } 
+    })
+  .exec(function (err, user) {
+  //User.findById(req.user.id, (err, user) => {
 
     Script.find()
       .where('time').lte(time_diff)
@@ -31,52 +42,81 @@ exports.getScript = (req, res) => {
         //console.log(script_feed);
 
         //update script feed to see if reading and posts has already happened
-        var flagged_index = [];
-        for (var key in script_feed) {
-          //check if read/liked/etc
-          var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[key].id; });
+        var finalfeed = [];
 
-          //we found a matching post
-          if(feedIndex!=-1)
-          {
-
-            if (user.feedAction[feedIndex].readTime[0])
-            { 
-              script_feed[key].read = true;
-              console.log("Post: %o has been READ", script_feed[key].id);
-            }
-
-            if (user.feedAction[feedIndex].likeTime[0])
-            { 
-              script_feed[key].like = true;
-              console.log("Post %o has been LIKED", script_feed[key].id);
-            }
-
-            if (user.feedAction[feedIndex].replyTime[0])
-            { 
-              script_feed[key].reply = true;
-              console.log("Post %o has been REPLIED", script_feed[key].id);
-            }
-
-            //If this post has been flagged - remove it from FEED array (script_feed)
-            if (user.feedAction[feedIndex].flagTime[0])
-            { 
-              flagged_index.push(key);
-              console.log("Post %o has been FLAGGED", script_feed[key].id);
-            }
-
-          }
-        }
-
-        for (var i = flagged_index.length -1; i >= 0; i--)
+        if(!user.posts)
         {
-          script_feed.splice(flagged_index[i],1);
+          user.posts = [];
         }
 
+        while(script_feed.length || user.posts.length) {
+          console.log(typeof user.posts[0] === 'undefined');
+          //console.log(user.posts[0].relativeTime);
+          //console.log(feed[0].time);
+          if(typeof script_feed[0] === 'undefined') {
+              console.log("Script_Feed is empty, push user.posts");
+              finalfeed.push(user.posts[0]);
+              user.posts.splice(0,1);
+          }
+          else if(!(typeof user.posts[0] === 'undefined') && (script_feed[0].time < user.posts[0].relativeTime)){
+              console.log("Push user.posts");
+              finalfeed.push(user.posts[0]);
+              user.posts.splice(0,1);
+          }
+          else{
+            console.log("ELSE PUSH FEED");
+            var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
+             
+            if(feedIndex!=-1)
+            {
+              console.log("WE HAVE AN ACTION!!!!!");
 
-        res.render('script', { script: script_feed });
+              if (user.feedAction[feedIndex].readTime[0])
+              { 
+                script_feed[0].read = true;
+                console.log("Post: %o has been READ", script_feed[0].id);
+              }
 
-      });
+              if (user.feedAction[feedIndex].likeTime[0])
+              { 
+                script_feed[0].like = true;
+                console.log("Post %o has been LIKED", script_feed[0].id);
+              }
+
+              if (user.feedAction[feedIndex].replyTime[0])
+              { 
+                script_feed[0].reply = true;
+                console.log("Post %o has been REPLIED", script_feed[0].id);
+              }
+
+              //If this post has been flagged - remove it from FEED array (script_feed)
+              if (user.feedAction[feedIndex].flagTime[0])
+              { 
+                script_feed.splice(0,1);
+                console.log("Post %o has been FLAGGED", script_feed[0].id);
+              }
+              else
+              {
+                console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
+                finalfeed.push(script_feed[0]);
+                script_feed.splice(0,1);
+              }
+
+              }//end of IF we found Feed_action
+
+              else
+              {
+                console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
+                finalfeed.push(script_feed[0]);
+                script_feed.splice(0,1);
+              }
+            }//else in while loop
+      }//while loop
+
+
+      res.render('script', { script: finalfeed });
+
+      });//end of Script.find()
 
     
   });//end of User.findByID
@@ -89,6 +129,71 @@ exports.getScriptPost = (req, res) => {
 		console.log(post);
 		res.render('script_post', { post: post });
 	});
+};
+
+/*
+##############
+NEW POST
+#############
+*/
+exports.newPost = (req, res) => {
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+
+    var lastFive = user.id.substr(user.id.length - 5);
+    console.log(lastFive +" just called to create a new post");
+    //console.log("OG file name is "+req.file.originalname);
+    //console.log("Actual file name is "+req.file.filename);
+    console.log("Text Body of Post is "+req.body.body);
+
+    var post = new Object();
+    post.body = req.body.body;
+    post.absTime = Date.now();
+    post.relativeTime = post.absTime - user.createdAt;
+
+    //if numPost never existed yet, make it here - should never happen in new users
+    if (!(user.numPosts) && user.numPosts != 0)
+    {
+      user.numPosts = 0;
+      console.log("numPost is "+user.numPosts);
+    }
+
+    if (req.file)
+    {
+      post.picture = req.file.filename
+      post.postID = user.numPosts;
+      user.numPost = user.numPosts + 1;
+      console.log("numPost is now "+user.numPosts);
+      user.posts.unshift(post);
+      console.log("CREATING NEW POST!!!");
+    }
+
+    else if (req.body.reply)
+    {
+      post.reply = req.body.reply
+      post.postID = -1; //all reply posts get -1 as ID
+      user.posts.unshift(post);
+      console.log("CREATING REPLY");
+    }
+
+    else
+    {
+      console.log("@#@#@#@#@#@#@#ERROR: Oh Snap, Made a Post but not reply or Pic")
+    }
+
+    
+
+
+    user.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      //req.flash('success', { msg: 'Profile information has been updated.' });
+      res.redirect('/');
+    });
+
+  });
 };
 
 /**

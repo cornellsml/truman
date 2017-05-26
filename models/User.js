@@ -20,9 +20,10 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   posts: [new Schema({
-    postID: Number,  //number for this post (1,2,3...) maybe reply get -1
+    postID: Number,  //number for this post (1,2,3...) reply get -1
     body: {type: String, default: '', trim: true},
     picture: String,
+
     reply: {type: Schema.ObjectId, ref: 'Script'},
     absTime: Date,
     relativeTime: {type: Number}
@@ -91,3 +92,13 @@ userSchema.methods.gravatar = function gravatar(size) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
+/* Garbage snips
+    new Schema({ //{type: Schema.ObjectId, ref: 'Script'},
+      body: {type: String, default: '', trim: true},
+      picture: String,
+      time: Number,
+      actorName: String,
+      actorPicture: String,
+      actorUserName: String}),
+    */

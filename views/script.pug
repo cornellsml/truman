@@ -26,154 +26,225 @@ block content
       input(type='text', placeholder='Share your meal')
       i.big.photo.link.icon
     each val in script
-      //- create a card for each post in val
-      .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread')
-        //- dimmer DIV for flagging
-        .ui.dimmer.flag
-              .content
-                .center
-                  h2.ui.inverted.icon.header
-                    i.red.flag.icon
-                    |  You&apos;ve flagged this!
-                    h3.ui.inverted.header
-                      span="The admins will review this post further. We are sorry you had this experience."
-        if user.ui == 'ui'
-          //- if user is in UI condistion - add read dimmer to post
-          if val.read 
-            //- if user has already READ this post before - set dimmer to active (turn it on)
-            .ui.inverted.active.read.dimmer
-              .content
-                .center
-                  h2.ui.icon.header
-                    i.unhide.icon
-                    |  You&apos;ve read this!
-                  br
-                  if user.notify != no
-                    h3.ui.icon.header
-                      img.ui.avatar.image(src=val.actor.profile.picture)
-                      span=" "+val.actor.profile.name+" "
-                      | has been notified
-                      br
-                      if val.reply
-                        img.ui.avatar.image(src=val.reply.actor.profile.picture)
-                        span=" "+val.reply.actor.profile.name+" "
-                        | has been notified
-                      br
-                  br
-                  button.ui.black.button.reread Read Again?                
+      //- create a card for each post in val (if by user make the card a little different)
+      if val.relativeTime
+        .ui.fluid.card(postID=val.id, ui=user.ui, notify=user.notify)
+          if val.reply
+            //- if post is a reply post - add the post and populate the reply as well
+            .content
+              .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+              |
+              a.ui.avatar.image(href='/me')
+                if user.profile.picture
+                  img(src=user.profile.picture)
+                else
+                  img(src=user.gravatar(60))
+              a(href='/me')
+                span=user.profile.name || user.email || user.id
+            .content
+              .description=val.body
+            .extra.content
+              .ui.fluid.card
+                .content
+                  .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
+                  |
+                  a(href='/user/'+val.reply.actor.username)   
+                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                    span=val.reply.actor.profile.name
+                if val.reply.picture
+                  .image
+                    img(src='/user_post/'+val.reply.picture)
+                .content
+                  .description=val.reply.body
+            .three.ui.bottom.attached.icon.buttons
+              .ui.animated.button(tabindex='0')
+                .visible.content
+                  i.reply.icon
+                .hidden.content Reply to Post
+              .ui.vertical.animated.button(tabindex='1')
+                .visible.content
+                  i.flag.icon
+                .hidden.content Report Post
+              .ui.animated.fade.button(tabindex='2')
+                .visible.content
+                  i.like.icon
+                .hidden.content Like Post
           else
-            //- user has not read this post, but is in UI condistion, so add dimmer, but don't turn it on
-            .ui.inverted.read.dimmer
-              .content
-                .center
-                  h2.ui.icon.header
-                    i.unhide.icon
-                    |  You&apos;ve read this!
-                  br
-                  if user.notify != no
-                    h3.ui.icon.header
-                      img.ui.avatar.image(src=val.actor.profile.picture)
-                      span=" "+val.actor.profile.name+" "
-                      | has been notified
-                      br
-                      if val.reply
-                        img.ui.avatar.image(src=val.reply.actor.profile.picture)
-                        span=" "+val.reply.actor.profile.name+" "
+            .content
+              .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
+              |  
+              a.ui.avatar.image(href='/me')
+                if user.profile.picture
+                  img(src=user.profile.picture)
+                else
+                  img(src=user.gravatar(60))
+              a(href='/me')
+                span=user.profile.name || user.email || user.id
+            .image
+              img(src='/user_post/'+val.picture)
+            .content
+              .description=val.body
+            .three.ui.bottom.attached.icon.buttons
+              .ui.animated.button(tabindex='0')
+                .visible.content
+                  i.reply.icon
+                .hidden.content Reply to Post
+              .ui.vertical.animated.button(tabindex='1')
+                .visible.content
+                  i.flag.icon
+                .hidden.content Report Post
+              .ui.animated.fade.button(tabindex='2')
+                .visible.content
+                  i.like.icon
+                .hidden.content Like Post
+      //-THIS is for posts by Actors, not the USER
+      else
+        .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread')
+          //- dimmer DIV for flagging
+          .ui.dimmer.flag
+                .content
+                  .center
+                    h2.ui.inverted.icon.header
+                      i.red.flag.icon
+                      |  You&apos;ve flagged this!
+                      h3.ui.inverted.header
+                        span="The admins will review this post further. We are sorry you had this experience."
+          if user.ui == 'ui'
+            //- if user is in UI condistion - add read dimmer to post
+            if val.read 
+              //- if user has already READ this post before - set dimmer to active (turn it on)
+              .ui.inverted.active.read.dimmer
+                .content
+                  .center
+                    h2.ui.icon.header
+                      i.unhide.icon
+                      |  You&apos;ve read this!
+                    br
+                    if user.notify != no
+                      h3.ui.icon.header
+                        img.ui.avatar.image(src=val.actor.profile.picture)
+                        span=" "+val.actor.profile.name+" "
                         | has been notified
-                      br
-                  br
-                  button.ui.black.button.reread Read Again?
+                        br
+                        if val.reply
+                          img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                          span=" "+val.reply.actor.profile.name+" "
+                          | has been notified
+                        br
+                    br
+                    button.ui.black.button.reread Read Again?                
+            else
+              //- user has not read this post, but is in UI condistion, so add dimmer, but don't turn it on
+              .ui.inverted.read.dimmer
+                .content
+                  .center
+                    h2.ui.icon.header
+                      i.unhide.icon
+                      |  You&apos;ve read this!
+                    br
+                    if user.notify != no
+                      h3.ui.icon.header
+                        img.ui.avatar.image(src=val.actor.profile.picture)
+                        span=" "+val.actor.profile.name+" "
+                        | has been notified
+                        br
+                        if val.reply
+                          img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                          span=" "+val.reply.actor.profile.name+" "
+                          | has been notified
+                        br
+                    br
+                    button.ui.black.button.reread Read Again?
 
-        if val.reply
-          //- if post is a reply post - add the post and populate the reply as well
-          .content
-            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-            |
-            a.ui.avatar.image(href='/user/'+val.actor.username)
-              img(src=val.actor.profile.picture)
-            a(href='/user/'+val.actor.username)
-              span=val.actor.profile.name
-          .content
-            .description=val.body
-          .extra.content
-            .ui.fluid.card
-              .content
-                .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
-                |
-                a(href='/user/'+val.reply.actor.username)   
-                  img.ui.avatar.image(src=val.reply.actor.profile.picture)
-                  span=val.reply.actor.profile.name
-              if val.reply.picture
-                .image
-                  img(src=val.reply.picture)
-              .content
-                .description=val.reply.body
-          .three.ui.bottom.attached.icon.buttons
-            .ui.animated.button(tabindex='0')
-              .visible.content
-                i.reply.icon
-              .hidden.content Reply to Post
-            .ui.vertical.animated.button(tabindex='1')
-              .visible.content
-                i.flag.icon
-              .hidden.content Report Post
-            if val.like
-              .ui.animated.fade.red.button(tabindex='2')
+          if val.reply
+            //- if post is a reply post - add the post and populate the reply as well
+            .content
+              .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+              |
+              a.ui.avatar.image(href='/user/'+val.actor.username)
+                img(src=val.actor.profile.picture)
+              a(href='/user/'+val.actor.username)
+                span=val.actor.profile.name
+            .content
+              .description=val.body
+            .extra.content
+              .ui.fluid.card
+                .content
+                  .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
+                  |
+                  a(href='/user/'+val.reply.actor.username)   
+                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                    span=val.reply.actor.profile.name
+                if val.reply.picture
+                  .image
+                    img(src=val.reply.picture)
+                .content
+                  .description=val.reply.body
+            .three.ui.bottom.attached.icon.buttons
+              .ui.animated.reply.button(tabindex='0')
                 .visible.content
-                  i.like.icon
-                .hidden.content Like Post
-            else
-              .ui.animated.fade.button(tabindex='2')
+                  i.reply.icon
+                .hidden.content Reply to Post
+              .ui.vertical.animated.flag.button(tabindex='1')
                 .visible.content
-                  i.like.icon
-                .hidden.content Like Post
-        else
-          //- not a reply post - visualize like normal
-          .content
-            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-            |  
-            a(href='/user/'+val.actor.username)
-              img.ui.avatar.image(src=val.actor.profile.picture)
-              span=val.actor.profile.name
-          .image
-            img(src=val.picture)
-          .content
-            .description=val.body
-          .three.ui.bottom.attached.icon.buttons
-            .ui.animated.button(tabindex='0')
-              .visible.content
-                i.reply.icon
-              .hidden.content Reply to Post
-            .ui.vertical.animated.button(tabindex='1')
-              .visible.content
-                i.flag.icon
-              .hidden.content Report Post
-            if val.like
-              .ui.animated.fade.red.button(tabindex='2')
+                  i.flag.icon
+                .hidden.content Report Post
+              if val.like
+                .ui.animated.fade.red.like.button(tabindex='2')
+                  .visible.content
+                    i.like.icon
+                  .hidden.content Like Post
+              else
+                .ui.animated.fade.like.button(tabindex='2')
+                  .visible.content
+                    i.like.icon
+                  .hidden.content Like Post
+          else
+            //- not a reply post - visualize like normal
+            .content
+              .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+              |  
+              a(href='/user/'+val.actor.username)
+                img.ui.avatar.image(src=val.actor.profile.picture)
+                span=val.actor.profile.name
+            .image
+              img(src=val.picture)
+            .content
+              .description=val.body
+            .three.ui.bottom.attached.icon.buttons
+              .ui.animated.reply.button(tabindex='0')
                 .visible.content
-                  i.like.icon
-                .hidden.content Like Post
-            else
-              .ui.animated.fade.button(tabindex='2')
+                  i.reply.icon
+                .hidden.content Reply to Post
+              .ui.vertical.animated.flag.button(tabindex='1')
                 .visible.content
-                  i.like.icon
-                .hidden.content Like Post
+                  i.flag.icon
+                .hidden.content Report Post
+              if val.like
+                .ui.animated.fade.red.like.button(tabindex='2')
+                  .visible.content
+                    i.like.icon
+                  .hidden.content Like Post
+              else
+                .ui.animated.fade.like.button(tabindex='2')
+                  .visible.content
+                    i.like.icon
+                  .hidden.content Like Post
 
     //- This is for the Model that creats new content
     .ui.small.modal
       i.close.icon
       .header Add a New Post
       .content
-        form#postform.ui.feed.form
+        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data')
           input(type='hidden', name='_csrf', value=_csrf)
           .field
             textarea(rows='2', placeholder='Share your meal', name='body')
           .field.image-upload
             label(for='picinput')
               .image.content
-                img#imgInp.ui.fluid.image(src='http://goo.gl/pB9rpQ')
-            input#picinput(type='file', accept='image/*', capture='camera')
+                img#imgInp.ui.fluid.image(src='/photo-camera.svg')
+            input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
           .ui.error.message
       .actions
-        .ui.green.submit.button Submit
-        input.ui.button(type='submit', value='Submit2', form='postform')
+        input.ui.green.button(type='submit', value='Submit', form='postform')
