@@ -127,6 +127,30 @@ exports.getAccount = (req, res) => {
 };
 
 /**
+ * GET /account
+ * Profile page.
+ */
+exports.getMe = (req, res) => {
+
+  User.findById(req.user.id)
+  .populate({ 
+       path: 'posts.reply',
+       model: 'Script',
+       populate: {
+         path: 'actor',
+         model: 'Actor'
+       } 
+    })
+  .exec(function (err, user) {
+
+    res.render('me', { posts: user.posts });
+
+  });
+
+
+};
+
+/**
  * POST /account/profile
  * Update profile information.
  */

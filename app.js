@@ -182,6 +182,9 @@ app.get('/tos', function (req, res) {
   });
 })
 
+//User's Page
+app.get('/me', passportConfig.isAuthenticated, userController.getMe);
+
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);

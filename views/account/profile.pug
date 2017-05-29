@@ -17,10 +17,10 @@ block content
         label(for='location') Location
         input.form-control(type='text', name='location', id='location', value=user.profile.location)
       .field
-        label(for='website') Website
-        input.form-control(type='text', name='website', id='website', value=user.profile.website)
+        label(for='bio') Bio
+        textarea(rows='2', name='bio', id='bio', value=user.profile.bio)
       .field
-        label.col-sm-3.control-label Gravatar
+        label.col-sm-3.control-label Profile Picture
         img(src=user.gravatar(), class='profile', width='100', height='100')
       button.ui.button(type='submit') Update Profile
 

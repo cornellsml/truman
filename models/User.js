@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  username: String,
 
   numPosts: { type: Number, default: 0 }, //not including replys
 
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema({
 
   group: String, //full group type
   ui: String,    //just UI type (no or ui)
-  notify: String, //notification type (now, low or high)
+  notify: String, //notification type (no, low or high)
 
   tokens: Array,
 
