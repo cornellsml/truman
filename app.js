@@ -176,6 +176,12 @@ app.post('/post/new', userpostupload.single('picinput'), check, csrf, scriptCont
 
 //app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 
+app.get('/tos', function (req, res) {
+  res.render('tos', {
+    title: 'TOS'
+  });
+})
+
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);

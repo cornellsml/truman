@@ -120,7 +120,7 @@ block content
                       i.unhide.icon
                       |  You&apos;ve read this!
                     br
-                    if user.notify != no
+                    if user.notify != 'no'
                       h3.ui.icon.header
                         img.ui.avatar.image(src=val.actor.profile.picture)
                         span=" "+val.actor.profile.name+" "
