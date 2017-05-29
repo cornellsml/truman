@@ -13,9 +13,18 @@ $(document).ready(function() {
   $('.ui.checkbox')
   .checkbox();
 
+  //get add new reply post modal to show
+  $('.reply.button').click(function () {
+    
+    let postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
+    $('#replyInput').attr("value", postID);
+
+    $(' .ui.small.reply.modal').modal('show');
+});
+
   //get add new feed post modal to work
   $("#newpost, a.item.newpost").click(function () {
-    $('.ui.small.modal').modal('show');
+    $(' .ui.small.post.modal').modal('show');
 });
 
   //new post validator (picture and text can not be empty)
@@ -40,7 +49,23 @@ $(document).ready(function() {
             prompt : 'Please click on Camera Icon to add a photo'
           }
         ]
-      },
+      }
+    }
+  });
+
+  $('.ui.reply.form')
+  .form({
+    on: 'blur',
+    fields: {
+      body: {
+        identifier  : 'body',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please add some text about what you ate'
+          }
+        ]
+      }
     }
   })
 ;

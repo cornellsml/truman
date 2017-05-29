@@ -141,8 +141,8 @@ exports.newPost = (req, res) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
 
-    var lastFive = user.id.substr(user.id.length - 5);
-    console.log(lastFive +" just called to create a new post");
+    //var lastFive = user.id.substr(user.id.length - 5);
+   // console.log(lastFive +" just called to create a new post");
     //console.log("OG file name is "+req.file.originalname);
     //console.log("Actual file name is "+req.file.filename);
     console.log("Text Body of Post is "+req.body.body);

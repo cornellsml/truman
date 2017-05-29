@@ -53,7 +53,7 @@ block content
                     span=val.reply.actor.profile.name
                 if val.reply.picture
                   .image
-                    img(src='/user_post/'+val.reply.picture)
+                    img(src=val.reply.picture)
                 .content
                   .description=val.reply.body
             .three.ui.bottom.attached.icon.buttons
@@ -231,8 +231,22 @@ block content
                     i.like.icon
                   .hidden.content Like Post
 
-    //- This is for the Model that creats new content
-    .ui.small.modal
+    //- New Reply Modal
+    .ui.small.reply.modal
+      i.close.icon
+      .header Reply to Post
+      .content
+        form#replyform.ui.reply.form(action='/post/new', method='POST', enctype='multipart/form-data')
+          input(type='hidden', name='_csrf', value=_csrf)
+          input#replyInput(type='hidden', name='reply', value='a')
+          .field
+            textarea(rows='2', placeholder='Add your Reply', name='body')
+          .ui.error.message
+      .actions
+        input.ui.green.button(type='submit', value='Submit', form='replyform')
+
+    //- New Post Modal
+    .ui.small.post.modal
       i.close.icon
       .header Add a New Post
       .content
