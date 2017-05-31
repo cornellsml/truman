@@ -9,6 +9,19 @@
     "body": "In quam ut accusantium. Sit sunt odio. At ut porro fuga quo est."
 }
 
+{
+    "_id": {
+        "$oid": "5900ee40734d1d6c1a2d53d3"
+    },
+    "class": "normal",
+    "actor": {
+        "$oid": "58f7bf1c734d1d33b327e7c9"
+    },
+    "time": 122100000000,
+    "picture": "IMG_20150805_191251.jpg",
+    "body": "Praesentium amet commodi est exercitationem eligendi. Omnis illo ratione magni maxime et doloremque reiciendis ea vel. Ad perspiciatis quis. Velit porro ipsa inventore molestiae quo at."
+}
+
 
 {
   "class": "normal",

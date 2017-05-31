@@ -77,6 +77,20 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 /**
+ * Helper method for validating user's password.
+ */
+userSchema.methods.getPosts = function getPosts() {
+  var temp = [];
+  for (var i = 0, len = this.posts.length; i < len; i++) {
+    if (this.posts[i].postID != -1)
+     temp.push(this.posts[i]);
+  }
+
+  return temp;
+
+};
+
+/**
  * Helper method for getting user's gravatar.
  */
 userSchema.methods.gravatar = function gravatar(size) {
