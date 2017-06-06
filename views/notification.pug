@@ -1,0 +1,54 @@
+extends ui_layout
+  
+block content
+
+  
+  
+  .computer.only.tablet.only.four.wide.column 
+    .ui.card
+      //- this is the for user card - does not show up on mobile
+      .image
+        if user.profile.picture
+          img(src=user.profile.picture)
+        else
+          img(src=user.gravatar(60))
+      .content
+        a.header= user.profile.name || user.email || user.id
+
+  .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
+    if notification_feed == -1
+      p You have no notifications. I guess no one likes you...jk! 😜
+    else
+      .ui.feed
+        each val in notification_feed
+          case val.action
+            when 'read'
+              if user.notify != 'no'
+                .event
+                  .label
+                    i.large.unhide.icon
+                  .content
+                    img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
+                    .extra.images
+                      each actor in val.actors
+                        a.ui.avatar.image(href='/user/'+actor.username)
+                          img(src=actor.profile.picture)
+                    if val.actors.length == 1
+                      .summary
+                        a(href='/user/'+val.actors[0].username)=val.actors[0].profile.name
+                        |   has read your post. 
+                        .date=val.time
+                    else 
+                      .summary
+                        a(href='/user/'+val.actors[0].username)=val.actors[0].profile.name
+                        |  and 
+                        a(href='#')=(val.actors.length-1)+" others "
+                        | have read your post.  
+                        .date=val.time
+                    
+                             
+            when 1
+              p you have very few friends
+            default
+        
+              
