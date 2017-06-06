@@ -89,7 +89,7 @@ function readURL(input) {
     });
 
 //add humanized time to all posts
-$('.right.floated.time.meta').each(function() {
+$('.right.floated.time.meta, .date').each(function() {
     var ms = parseInt($(this).text(), 10);
     let time = new Date(ms);
     $(this).text(humanized_time_span(time)); 

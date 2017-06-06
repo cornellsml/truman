@@ -62,6 +62,7 @@ const actorsController = require('./controllers/actors');
 const scriptController = require('./controllers/script');
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
+const notificationController = require('./controllers/notification');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 
@@ -184,6 +185,8 @@ app.get('/tos', function (req, res) {
 
 //User's Page
 app.get('/me', passportConfig.isAuthenticated, userController.getMe);
+
+app.get('/notifications', passportConfig.isAuthenticated, notificationController.getNotifications);
 
 
 app.get('/login', userController.getLogin);

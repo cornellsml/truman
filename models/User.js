@@ -86,6 +86,11 @@ userSchema.methods.getPosts = function getPosts() {
      temp.push(this.posts[i]);
   }
 
+  //sort to ensure that posts[x].postID == x
+  temp.sort(function (a, b) {
+    return a.postID - b.postID;
+  });
+
   return temp;
 
 };
