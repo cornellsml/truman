@@ -65,8 +65,54 @@ exports.getNotifications = (req, res) => {
             if(notification_feed[i].time <= time_diff)
             {
 
-              //do stuff for notification read junks
-              if (notification_feed[i].notificationType == "read")
+              //do stuff for notification (low) read junks
+              if ((notification_feed[i].notificationType == "read") && (notification_feed[i].actor.class != "high_read") && (user.notify != "no"))
+              {
+                var readKey = "read_"+ userPostID;
+
+                //find element in our final data structure
+                let notifyIndex = _.findIndex(final_notify, function(o) { return o.key == readKey; });
+
+                //this does not exist yet, so create it
+                if (notifyIndex == -1)
+                {
+                  let read_tmp = {};
+                  read_tmp.key = readKey;
+                  read_tmp.action = 'read';
+                  read_tmp.postID = userPostID;
+                  read_tmp.body = user_posts[userPostID].body;
+                  read_tmp.picture = user_posts[userPostID].picture;
+                  read_tmp.time = Date.parse(user_posts[userPostID].absTime) + notification_feed[i].time;
+                  console.log("TIME  is");
+                  console.log(read_tmp.time)
+                  read_tmp.actors = [];
+                  read_tmp.actors.push(notification_feed[i].actor);
+
+                  final_notify.push(read_tmp);
+                }
+
+                //find element and add actor/update time
+                else
+                {
+                  
+                  if (notification_feed[i].actor.class == "cohort")
+                    {
+                      final_notify[notifyIndex].actors.unshift(notification_feed[i].actor);
+                    }
+                  else
+                    {
+                      final_notify[notifyIndex].actors.push(notification_feed[i].actor);
+                    }
+
+                  if ((user_posts[userPostID].absTime + notification_feed[i].time) > final_notify[notifyIndex].time)
+                  { final_notify[notifyIndex].time = user_posts[userPostID].absTime + notification_feed[i].time;}
+                }
+
+
+              }//end of READ
+
+               //do stuff for notification (high) read junks
+              if ((notification_feed[i].notificationType == "read") && (notification_feed[i].actor.class == "high_read") && (user.notify == "high"))
               {
                 var readKey = "read_"+ userPostID;
 
@@ -145,9 +191,13 @@ exports.getNotifications = (req, res) => {
 
           }//end of for LOOP
 
+
+
           final_notify.sort(function (a, b) {
             return b.time - a.time;
           });
+
+
 
 
           res.render('notification', { notification_feed: final_notify });

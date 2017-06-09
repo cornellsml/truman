@@ -88,6 +88,68 @@ function readURL(input) {
         readURL(this);
     });
 
+/*
+LAZY LOADING OF USERS PROFLES IMAGES OF EXTRA USERS
+
+$('.extra.divided.items .image a img')
+.visibility({
+  type       : 'image',
+  transition : 'fade in',
+  initialCheck : false,
+  duration   : 1000
+});
+
+
+$('.extra.divided.items .image a img')
+  .visibility({
+    once       : true,
+    continuous : false,
+    //initialCheck : true,
+
+    onTopVisible:function(calculations) {
+      console.log($(this).attr('data-src'));
+      var newsrc = $(this).attr('data-src');
+      $(this).attr('src', newsrc);
+
+    }
+
+    });
+
+
+$('a.others').click(function () {
+  
+  let key = $(this).attr('key')
+  //.ui.long.test.modal(id=val.key)
+  //$('#replyInput').attr("value", postID);
+
+  $('.ui.long.extrausers.modal#'+key).modal('show');
+  $("img.tiny.circular.transition.visible").unveil();
+  //$('.extra.divided.items .image a img').visibility('refresh');
+});
+*/
+
+
+$('a.others').click(function(){
+  let key = $(this).attr('key');
+
+
+  $('.ui.long.extrausers.modal#'+key).modal({
+    onVisible: function() {
+      var el = document.querySelector('.ui.long.extrausers.modal#'+key+" div.ui.extra.divided.items");
+      var lazyLoad = new LazyLoad({
+         container: el /// <--- not sure if this works here, read below
+    });
+      
+      
+      
+    }
+  }).modal('show')  
+})
+
+
+
+
+
 //add humanized time to all posts
 $('.right.floated.time.meta, .date').each(function() {
     var ms = parseInt($(this).text(), 10);

@@ -23,28 +23,37 @@ block content
         each val in notification_feed
           case val.action
             when 'read'
-              if user.notify != 'no'
-                .event
-                  .label
-                    i.large.unhide.icon
-                  .content
-                    img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
-                    .extra.images
-                      each actor in val.actors
-                        a.ui.avatar.image(href='/user/'+actor.username)
-                          img(src=actor.profile.picture)
-                    if val.actors.length == 1
-                      .summary
-                        a(href='/user/'+val.actors[0].username)=val.actors[0].profile.name
-                        |   has read your post. 
-                        .date=val.time
-                    else 
-                      .summary
-                        a(href='/user/'+val.actors[0].username)=val.actors[0].profile.name
-                        |  and 
-                        a(href='#')=(val.actors.length-1)+" others "
-                        | have read your post.  
-                        .date=val.time
+              - var best = val.actors.splice(0, 5);
+              .event
+                .label
+                  i.large.unhide.icon
+                .content
+                  img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
+                  .extra.images
+                    each actor in best
+                      a.ui.avatar.image(href='/user/'+actor.username)
+                        img(src=actor.profile.picture)
+                  if best.length == 1
+                    .summary
+                      a(href='/user/'+best[0].username)=best[0].profile.name
+                      |   has read your post. 
+                      .date=val.time
+                  else 
+                    .summary
+                      a(href='/user/'+best[0].username)=best[0].profile.name
+                      |  and 
+                      a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
+                      | have read your post.  
+                      .date=val.time
+              .ui.small.long.extrausers.modal(id=val.key)
+                .image.content
+                  .ui.extra.divided.items
+                    each extra in val.actors
+                      .ui.centered.item
+                        .image
+                          a(href='/user/'+extra.username)
+                            img.ui.avatar.image(src='/avatar-icon.svg', data-original=extra.profile.picture)
+                            span=extra.profile.name
                     
                              
             when 1
