@@ -80,7 +80,9 @@ const app = express();
  * Connect to MongoDB.
  */
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+
+//mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connect(process.env.PRO_MONGODB_URI || process.env.PRO_MONGOLAB_URI);
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -168,6 +170,8 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 app.use('/semantic',express.static(path.join(__dirname, 'semantic'), { maxAge: 31557600000 }));
 
 app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'post_pictures'), { maxAge: 31557600000 }));
+app.use('/profile_pictures',express.static(path.join(__dirname, 'profile_pictures'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.

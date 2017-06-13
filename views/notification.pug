@@ -46,14 +46,36 @@ block content
                       | have read your post.  
                       .date=val.time
               .ui.small.long.extrausers.modal(id=val.key)
-                .image.content
-                  .ui.extra.divided.items
+                .image.centered.content
+                  .ui.extra.centered.divided.items
                     each extra in val.actors
-                      .ui.centered.item
-                        .image
-                          a(href='/user/'+extra.username)
-                            img.ui.avatar.image(src='/avatar-icon.svg', data-original=extra.profile.picture)
-                            span=extra.profile.name
+                      .item
+                        a.ui.tiny.image(href='/user/'+extra.username)
+                          img(src='/avatar-icon.svg', data-original=extra.profile.picture)
+                        .middle.aligned.content
+                          .header
+                            a(href='/user/'+extra.username)=extra.profile.name
+            when 'like'
+             - var best = val.actors.splice(0, 5);
+              .event
+                .label
+                  i.large.like.icon
+                .content
+                  img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
+                  .extra.images
+                    each actor in best
+                      a.ui.avatar.image(href='/user/'+actor.username)
+                        img(src=actor.profile.picture)
+                  if best.length == 1
+                    .summary
+                      a(href='/user/'+best[0].username)=best[0].profile.name
+                      |   has liked your post. 
+                      .date=val.time
+                  else 
+                    .summary
+                      a(href='/user/'+best[0].username)=best[0].profile.name+" and "+(best.length-1)+" others have liked your post." 
+                      .date=val.time  
+                              
                     
                              
             when 1

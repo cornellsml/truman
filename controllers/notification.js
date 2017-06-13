@@ -165,7 +165,7 @@ exports.getNotifications = (req, res) => {
                   like_tmp.postID = userPostID;
                   like_tmp.body = user_posts[userPostID].body;
                   like_tmp.picture = user_posts[userPostID].picture;
-                  like_tmp.time = user_posts[userPostID].absTime + notification_feed[i].time;
+                  like_tmp.time = Date.parse(user_posts[userPostID].absTime) + notification_feed[i].time;
                   like_tmp.actors = [];
                   like_tmp.actors.push(notification_feed[i].actor);
 
@@ -176,7 +176,7 @@ exports.getNotifications = (req, res) => {
                 else
                 {
                   final_notify[notifyIndex].actors.push(notification_feed[i].actor);
-                  final_notify[notifyIndex].time = user_posts[userPostID].absTime + notification_feed[i].time;
+                  final_notify[notifyIndex].time = Date.parse(user_posts[userPostID].absTime) + notification_feed[i].time;
                 }
 
 

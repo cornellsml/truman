@@ -8,12 +8,14 @@ function timeStringToNum (v) {
 
 const scriptSchema = new mongoose.Schema({
   body: {type: String, default: '', trim: true},
+  post_id: Number,
   class: String, //experimental or normal
   picture: String,
   actor: {type: Schema.ObjectId, ref: 'Actor'},
+
   reply: {type: Schema.ObjectId, ref: 'Script'},
-  time: { type: Number, set: timeStringToNum } //in millisecons
-}, { timestamps: true });
+  time: Number //in millisecons
+});
 
 
 const Script = mongoose.model('Script', scriptSchema);

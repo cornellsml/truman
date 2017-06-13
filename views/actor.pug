@@ -6,7 +6,7 @@ block content
     .ui.card
       .image
         if actor.profile.picture
-          img(src=actor.profile.picture)
+          img(src='/profile_pictures/'+actor.profile.picture)
         else
           img(src=user.gravatar(60))
       .content
@@ -31,7 +31,7 @@ block content
           .content
             .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
             |  
-            img.ui.avatar.image(src=val.actor.profile.picture)
+            img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
             span=val.actor.profile.name
           .content
             .description=val.body
@@ -40,7 +40,7 @@ block content
               .content
                 .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.reply.time))/(1000*60*60)) + "h ago"
                 |  
-                img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                 span=val.reply.actor.profile.name
               if val.reply.picture
                 .image
@@ -64,7 +64,7 @@ block content
           .content
             .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
             |  
-            img.ui.avatar.image(src=val.actor.profile.picture)
+            img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
             span=val.actor.profile.name
           .image
             img(src="/"+val.picture)

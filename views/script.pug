@@ -49,7 +49,7 @@ block content
                   .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
                   |
                   a(href='/user/'+val.reply.actor.username)   
-                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                    img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                     span=val.reply.actor.profile.name
                 if val.reply.picture
                   .image
@@ -122,12 +122,12 @@ block content
                     br
                     if user.notify != 'no'
                       h3.ui.icon.header
-                        img.ui.avatar.image(src=val.actor.profile.picture)
+                        img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
                         span=" "+val.actor.profile.name+" "
                         | has been notified
                         br
                         if val.reply
-                          img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                          img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                           span=" "+val.reply.actor.profile.name+" "
                           | has been notified
                         br
@@ -144,12 +144,12 @@ block content
                     br
                     if user.notify != no
                       h3.ui.icon.header
-                        img.ui.avatar.image(src=val.actor.profile.picture)
+                        img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
                         span=" "+val.actor.profile.name+" "
                         | has been notified
                         br
                         if val.reply
-                          img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                          img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                           span=" "+val.reply.actor.profile.name+" "
                           | has been notified
                         br
@@ -162,7 +162,7 @@ block content
               .right.floated.time.meta= (user.createdAt.getTime() + val.time)
               |
               a.ui.avatar.image(href='/user/'+val.actor.username)
-                img(src=val.actor.profile.picture)
+                img(src='/profile_pictures/'+val.actor.profile.picture)
               a(href='/user/'+val.actor.username)
                 span=val.actor.profile.name
             .content
@@ -173,7 +173,7 @@ block content
                   .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
                   |
                   a(href='/user/'+val.reply.actor.username)   
-                    img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                    img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                     span=val.reply.actor.profile.name
                 if val.reply.picture
                   .image
@@ -205,7 +205,7 @@ block content
               .right.floated.time.meta= (user.createdAt.getTime() + val.time)
               |  
               a(href='/user/'+val.actor.username)
-                img.ui.avatar.image(src=val.actor.profile.picture)
+                img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
                 span=val.actor.profile.name
             .image
               img(src=val.picture)
