@@ -1,6 +1,8 @@
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 const _ = require('lodash');
+const moment = require('moment');
+
 
 /**
  * GET /
@@ -10,6 +12,10 @@ exports.getScript = (req, res) => {
 
   //req.user.createdAt
   var time_diff = Date.now() - req.user.createdAt;
+  var today = moment();
+  var tomorrow = moment(today).add(1, 'days');
+  var time_limit = time_diff - 86400000; //one day in milliseconds
+
   console.log("time_diff  is now "+time_diff);
 
   
@@ -26,7 +32,7 @@ exports.getScript = (req, res) => {
   //User.findById(req.user.id, (err, user) => {
 
     Script.find()
-      .where('time').lte(time_diff)
+      .where('time').lte(time_diff).gte(time_limit)
       .sort('-time')
       .populate('actor')
       .populate({ 
