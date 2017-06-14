@@ -1,4 +1,5 @@
-$(document).ready(function() {
+//$(document).ready(function() {
+$(window).on("load", function() {
 
   //close messages from flash message
   $('.message .close')
