@@ -1,7 +1,7 @@
 //$(document).ready(function() {
 $(window).on("load", function() {
 
-  //close messages from flash message
+  //close messages from flash message 
   $('.message .close')
   .on('click', function() {
     $(this)
