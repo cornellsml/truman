@@ -96,7 +96,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(expressStatusMonitor());
-app.use(compression());
+//app.use(compression());
 app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public')
@@ -168,7 +168,6 @@ function check(req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/semantic',express.static(path.join(__dirname, 'semantic'), { maxAge: 31557600000 }));
-
 app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
 app.use(express.static(path.join(__dirname, 'post_pictures'), { maxAge: 31557600000 }));
 app.use('/profile_pictures',express.static(path.join(__dirname, 'profile_pictures'), { maxAge: 31557600000 }));
