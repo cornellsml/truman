@@ -10,6 +10,16 @@ html
     link(rel='shortcut icon', href='/favicon.png')
     link(rel='stylesheet', href='/css/main.css')
     link(rel='stylesheet', href='/semantic/dist/semantic.min.css')
+    script.
+      if ('serviceWorker' in navigator) {
+      console.log("Will the service worker register?");
+      navigator.serviceWorker.register('service-worker.js')
+      .then(function(reg){
+      console.log("Yes, it did.");
+      }).catch(function(err) {
+      console.log("No it didn't. This happened: ", err)
+      });
+      }
 
   body
     include partials/header
