@@ -145,7 +145,7 @@ $('a.others').click(function(){
       
     }
   }).modal('show')  
-})
+});
 
 
 

@@ -127,9 +127,9 @@ app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-  if ((req.path === '/api/upload') || (req.path === '/post/new')) {
+  if ((req.path === '/api/upload') || (req.path === '/post/new') || (req.path === '/account/profile')) {
     console.log("Not checking CSRF - out path now");
-    //console.log("request is " + req);
+    //console.log("@@@@@request is " + req);
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -178,6 +178,7 @@ app.use('/profile_pictures',express.static(path.join(__dirname, 'profile_picture
 app.get('/', passportConfig.isAuthenticated, scriptController.getScript);
 app.post('/post/new', userpostupload.single('picinput'), check, csrf, scriptController.newPost);
 
+app.post('/account/profile', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postUpdateProfile);
 //app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 
 app.get('/tos', function (req, res) {
@@ -188,7 +189,6 @@ app.get('/tos', function (req, res) {
 
 //User's Page
 app.get('/me', passportConfig.isAuthenticated, userController.getMe);
-
 app.get('/notifications', passportConfig.isAuthenticated, notificationController.getNotifications);
 
 
@@ -203,14 +203,13 @@ app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
+
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
+//app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
-app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 //See actors
-app.get('/actors', actorsController.getActors);
+//app.get('/actors', actorsController.getActors);
 
 app.get('/user/:userId', actorsController.getActor);
 
@@ -223,8 +222,6 @@ app.post('/feed', passportConfig.isAuthenticated, scriptController.postUpdateFee
  */
 app.get('/api', apiController.getApi);
 
-//isAuthorized exmaple
-//app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
 
 ///Upload files and get them back
 app.get('/api/upload', apiController.getFileUpload);

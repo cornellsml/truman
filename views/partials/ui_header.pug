@@ -15,7 +15,7 @@
             i.big.alarm.icon
           .ui.simple.dropdown.item
             if user.profile.picture
-              img.ui.mini.spaced.circular.image(src=user.profile.picture)
+              img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
             else
               img.ui.mini.spaced.circular.image(src=user.gravatar(60))
             |
@@ -39,7 +39,7 @@
         i.big.alarm.icon
       .ui.simple.dropdown.item
         if user.profile.picture
-          img.ui.mini.spaced.circular.image(src=user.profile.picture)
+          img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
         else
           img.ui.mini.spaced.circular.image(src=user.gravatar(60))
         i.dropdown.icon

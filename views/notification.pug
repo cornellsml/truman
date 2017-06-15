@@ -9,7 +9,7 @@ block content
       //- this is the for user card - does not show up on mobile
       .image
         if user.profile.picture
-          img(src=user.profile.picture)
+          img(src='/user_post/'+user.profile.picture)
         else
           img(src=user.gravatar(60))
       .content

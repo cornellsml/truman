@@ -9,7 +9,7 @@ block content
       //- this is the for user card - does not show up on mobile
       .image
         if user.profile.picture
-          img(src=user.profile.picture)
+          img(src='/user_post/'+user.profile.picture)
         else
           img(src=user.gravatar(60))
       .content
@@ -20,7 +20,7 @@ block content
     #newpost.ui.fluid.left.labeled.right.icon.input
       .ui.label
         if user.profile.picture
-          img.ui.avatar.image(src=user.profile.picture)
+          img.ui.avatar.image(src='/user_post/'+user.profile.picture)
         else
           img.ui.avatar.image(src=user.gravatar(60))
       input(type='text', placeholder='Share your meal')
@@ -36,7 +36,7 @@ block content
               |
               a.ui.avatar.image(href='/me')
                 if user.profile.picture
-                  img(src=user.profile.picture)
+                  img(src='/user_post/'+user.profile.picture)
                 else
                   img(src=user.gravatar(60))
               a(href='/me')
@@ -75,7 +75,7 @@ block content
               |  
               a.ui.avatar.image(href='/me')
                 if user.profile.picture
-                  img(src=user.profile.picture)
+                  img(src='/user_post/'+user.profile.picture)
                 else
                   img(src=user.gravatar(60))
               a(href='/me')

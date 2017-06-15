@@ -5,7 +5,7 @@ block content
   .sixteen.wide.column
     h3.ui.header Profile Information
 
-    form.ui.form(action='/account/profile', method='POST')
+    form.ui.form(action='/account/profile', method='POST', enctype='multipart/form-data')
       input(type='hidden', name='_csrf', value=_csrf)
       .field
         label(for='email') Email
@@ -18,10 +18,16 @@ block content
         input.form-control(type='text', name='location', id='location', value=user.profile.location)
       .field
         label(for='bio') Bio
-        textarea(rows='2', name='bio', id='bio', value=user.profile.bio)
-      .field
-        label.col-sm-3.control-label Profile Picture
-        img(src=user.gravatar(), class='profile', width='100', height='100')
+        textarea(rows='2', name='bio', id='bio')=user.profile.bio
+      .field.image-upload
+        //- label.col-sm-3.control-label Profile Picture (Click to Change)
+        //- img(src=user.gravatar(), class='profile', width='100', height='100')
+        label(for='picinput')="Profile Picture (Click to Change)"
+          if user.profile.picture
+            img#imgInp.ui.small.image(src='/user_post/'+user.profile.picture)
+          else
+            img#imgInp.ui.small.image(src=user.gravatar(60))
+        input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
       button.ui.button(type='submit') Update Profile
 
     h3.ui.header Change Password

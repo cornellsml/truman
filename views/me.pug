@@ -6,7 +6,7 @@ block content
     .ui.card
       .image
         if user.profile.picture
-          img(src=user.profile.picture)
+          img(src='/user_post/'+user.profile.picture)
         else
           img(src=user.gravatar(60))
       .content
@@ -30,7 +30,7 @@ block content
             |  
             a.ui.avatar.image(href='/me')
               if user.profile.picture
-                img(src=user.profile.picture)
+                img(src='/user_post/'+user.profile.picture)
               else
                 img(src=user.gravatar(60))
               a(href='/me')
@@ -70,7 +70,7 @@ block content
               if user.profile.picture
                 img(src=user.profile.picture)
               else
-                img(src=user.gravatar(60))
+                img(src='/user_post/'+user.gravatar(60))
             a(href='/me')
               span=user.profile.name || user.email || user.id
           .image
