@@ -74,7 +74,8 @@ html
             label(for='picinput')
               .image.content
                 img#imgInp.ui.fluid.image(src='/photo-camera.svg')
-            input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+            //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+            input#picinput(type='file', accept='image/*', name='picinput')
           .ui.error.message
       .actions
         input.ui.green.button(type='submit', name="foo", value='Submit', form='postform')
