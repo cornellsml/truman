@@ -61,6 +61,23 @@ html
       block content
 
     //include partials/ui_footer
+    //- New Post Modal
+    .ui.small.post.modal
+      i.close.icon
+      .header Add a New Post
+      .content
+        form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .field
+            textarea(rows='2', placeholder='Share your meal', name='body')
+          .field.image-upload
+            label(for='picinput')
+              .image.content
+                img#imgInp.ui.fluid.image(src='/photo-camera.svg')
+            input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+          .ui.error.message
+      .actions
+        input.ui.green.button(type='submit', name="foo", value='Submit', form='postform')
 
     script(src='/js/lib/jquery-3.1.1.min.js')
     script(src='/js/lib/humanized_time_span.js')

@@ -5,10 +5,10 @@ block content
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
-        if actor.profile.picture
-          img(src='/profile_pictures/'+actor.profile.picture)
+        if actor.class == 'high_read'
+          img(src=actor.profile.picture)
         else
-          img(src=user.gravatar(60))
+          img(src='/profile_pictures/'+actor.profile.picture)
       .content
         a.header= actor.profile.name
         .meta="@"+actor.username
