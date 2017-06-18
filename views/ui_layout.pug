@@ -14,7 +14,6 @@ html
     title #{title} - eatsnap.love
     link(rel='shortcut icon', href='/favicon.ico')
     link(rel='manifest', href='/manifest.json')
-    //link(rel='stylesheet', href='/css/main.css')
     link(rel='stylesheet', href='/semantic/dist/semantic.min.css')
     style(type='text/css').
       body {
@@ -29,6 +28,10 @@ html
       .main.container {
       margin-top: 5em;
       }
+      .ui.fluid.card > .content > .description
+      {
+      font-size: 1.05em;
+      }
       .wireframe {
       margin-top: 2em;
       }
@@ -36,7 +39,6 @@ html
       {
           display: none;
       }
-
       .image-upload img
       {
           cursor: pointer;

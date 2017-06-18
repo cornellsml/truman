@@ -11,13 +11,12 @@ block content
           img(src=user.gravatar(60))
       .content
         a.header= user.profile.name
-        .meta="@"+user.username
         .description=user.profile.bio
         .description 
           i.marker.icon
           span=user.profile.location
       .one.ui.bottom.attached.icon.buttons
-          button.ui.button(data-tooltip='Update Your Profile', data-position='bottom left')
+          button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon
 
 
@@ -68,7 +67,7 @@ block content
             |  
             a.ui.avatar.image(href='/me')
               if user.profile.picture
-                img(src=user.profile.picture)
+                img(src='/user_post/'+user.profile.picture)
               else
                 img(src='/user_post/'+user.gravatar(60))
             a(href='/me')

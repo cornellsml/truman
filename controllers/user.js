@@ -2,6 +2,7 @@ const bluebird = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
+const moment = require('moment');
 const User = require('../models/User');
 
 /**
@@ -37,6 +38,10 @@ exports.postLogin = (req, res, next) => {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', info);
+      return res.redirect('/login');
+    }
+    if (!(user.active)) {
+      req.flash('errors', { msg: 'Account is no longer active. Study is over' });
       return res.redirect('/login');
     }
     req.logIn(user, (err) => {
@@ -94,6 +99,7 @@ exports.postSignup = (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     group: result,
+    active: true,
     ui: resultArray[0], //ui or no
     notify: resultArray[1] //no, low or high
   });
@@ -346,6 +352,108 @@ exports.getForgot = (req, res) => {
   }
   res.render('account/forgot', {
     title: 'Forgot Password'
+  });
+};
+
+
+/**
+ * Mail A user a Reminder
+ * 
+ */
+var sendReminderEmail = function(user){
+    if (!user) { return; }
+    var u_name = user.profile.name || user.email || 'buddy';
+    const transporter = nodemailer.createTransport({
+      service: '"Mailgun"',
+      auth: {
+        user: process.env.MAILGUN_USER,
+        pass: process.env.MAILGUN_PASSWORD
+      },
+      debug: true
+    });
+
+    const mailOptions = {
+      to: user.email,
+      from: 'admin@eatsnap.love',
+      subject: 'Remember to Checkout 🍴📷.❤️ Today',
+      text: `Hey ${u_name},\n\n
+      Just wanted to remind you to visit https://eatsnap.love today.\n
+      Your participation in our study is a huge help in beta testing the app.
+      Remember to fully participate in the study you must:\n
+      * create one new post each day\n 
+      * login and view posts twice a day\n\n
+      Thanks again for all your help and participation!\n
+      Keep Eating, Snapping and Loving!\n 
+      🍴📷.❤️ Team
+      \n`
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              console.log('Error occurred');
+              console.log(error.message);
+              return;
+          }
+          console.log('Message sent successfully!');
+          console.log('Server responded with "%s"', info.response);
+          transporter.close();
+      });
+      
+  };
+
+/**
+ * GET /forgot
+ * Forgot Password page.
+ */
+exports.mailAllActiveUsers = () => {
+  console.log('$%^$%$#%$#$%%&^%&^%^&%&^$^%$%$^% MAILING ALL USERS NOW!!!!!!!!!!!!!!!'); 
+  User.find().where('active').equals(true).exec(    
+    function(err, users){
+    
+    // handle error
+    if (err) {
+      console.log('failed: ' + err);
+    } else {
+      // E-mail all active users
+      for (var i = users.length - 1; i >= 0; i--) {        
+        sendReminderEmail(users[i]);
+      }  
+    }    
+  });
+};
+
+
+/**
+ * GET /forgot
+ * Forgot Password page.
+ */
+exports.stillActive = () => {
+  User.find().where('active').equals(true).exec(    
+    function(err, users){
+    
+    // handle error
+    if (err) {
+      console.log('failed: ' + err);
+    } else {
+      // E-mail all active users
+      for (var i = users.length - 1; i >= 0; i--) {  
+        console.log("Looking at user "+users[i].email);      
+        var time_diff = Date.now() - users[i].createdAt;
+        var three_days = 259200000;
+
+        console.log("Time period is  "+time_diff);  
+        console.log("Three days is  "+three_days);
+        if (time_diff >= three_days)
+        {
+            users[i].active = false;
+            console.log("turning off user "+users[i].email);
+            users[i].save((err) => {
+              if (err) { return next(err); }
+              console.log("Success in turning off");
+            });
+        }
+        
+      }  
+    }    
   });
 };
 

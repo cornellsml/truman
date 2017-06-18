@@ -164,6 +164,12 @@ $('.right.floated.time.meta, .date').each(function() {
     window.location.href='/signup';
   });
 
+  //Edit button
+  $('.ui.editprofile.button')
+  .on('click', function() {
+    window.location.href='/account';
+  });
+
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
@@ -243,11 +249,14 @@ $('.right.floated.time.meta, .date').each(function() {
 
         //if we are not in UI condistion, and we are reading, then send off Post to DB for new Read Time
         //Maybe kill this so we don't fill the DB with all this stuff. Seems kind of silly (or only do like 10, etc)
-        else if ($(this).attr( "ui" )=='no')
+        else if (($(this).attr( "ui" )=='no') && ($(this).attr( "state" )=='unread'))
         {
           console.log("::::NO UI passing:::");
+          console.log("::::first time reading -> UNREAD:::");
           var postID = $(this).attr( "postID" );
           var read = Date.now();
+          //set to read now
+          $(this).attr( "state" , "read");
           //send post to server to update DB that we have now read this
           console.log("::::NO UI passing::::SENDING POST TO DB::::::::");
           $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
@@ -273,7 +282,7 @@ $('.right.floated.time.meta, .date').each(function() {
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
         //if not UI, we still need to Update DB with new START time
-        else if ($(this).attr( "ui" )=='no')
+        else if (($(this).attr( "ui" )=='no')&& ($(this).attr( "state" )=='unread'))
         {
           var postID = $(this).attr( "postID" );
           var start = Date.now();

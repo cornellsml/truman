@@ -1,16 +1,18 @@
-.row
-  if messages.errors
-    .ui.negative.message
-      i.close.icon
-      for error in messages.errors
-        div= error.msg
-  if messages.info
-    .ui.warning.message
-      i.close.icon
-      for info in messages.info
-        div= info.msg
-  if messages.success
-    .ui.positive.message
-      i.close.icon
-      for success in messages.success
-        div= success.msg
+.sixteen.wide.column 
+  .row
+    br
+    if messages.errors
+      .ui.negative.message
+        i.close.icon
+        for error in messages.errors
+          div= error.msg
+    if messages.info
+      .ui.warning.message
+        i.close.icon
+        for info in messages.info
+          div= info.msg
+    if messages.success
+      .ui.positive.message
+        i.close.icon
+        for success in messages.success
+          div= success.msg

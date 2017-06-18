@@ -12,11 +12,12 @@ exports.getScript = (req, res) => {
 
   //req.user.createdAt
   var time_diff = Date.now() - req.user.createdAt;
-  var today = moment();
-  var tomorrow = moment(today).add(1, 'days');
+  //var today = moment();
+  //var tomorrow = moment(today).add(1, 'days');
   var time_limit = time_diff - 86400000; //one day in milliseconds
 
   console.log("time_diff  is now "+time_diff);
+  console.log("time_limit  is now "+time_limit);
 
   
   User.findById(req.user.id)
@@ -45,7 +46,6 @@ exports.getScript = (req, res) => {
       .exec(function (err, script_feed) {
         if (err) { return next(err); }
         //Successful, so render
-        //console.log(script_feed);
 
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
@@ -55,10 +55,11 @@ exports.getScript = (req, res) => {
           user.posts = [];
         }
 
+        user.posts = user.getPostInPeriod(time_limit, time_diff);
         while(script_feed.length || user.posts.length) {
           console.log(typeof user.posts[0] === 'undefined');
           //console.log(user.posts[0].relativeTime);
-          //console.log(feed[0].time);
+          //console.log(feed[0].time)
           if(typeof script_feed[0] === 'undefined') {
               console.log("Script_Feed is empty, push user.posts");
               finalfeed.push(user.posts[0]);
@@ -80,6 +81,7 @@ exports.getScript = (req, res) => {
               if (user.feedAction[feedIndex].readTime[0])
               { 
                 script_feed[0].read = true;
+                script_feed[0].state = 'read';
                 console.log("Post: %o has been READ", script_feed[0].id);
               }
 

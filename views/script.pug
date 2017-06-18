@@ -14,6 +14,9 @@ block content
           img(src=user.gravatar(60))
       .content
         a.header= user.profile.name || user.email || user.id
+      .one.ui.bottom.attached.icon.buttons
+          button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
+            i.write.icon
 
   .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column 
     //- Input for creating new post at top of feed

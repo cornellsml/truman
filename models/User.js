@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
   username: String,
+  active: {type: Boolean, default: true},
 
   numPosts: { type: Number, default: 0 }, //not including replys
 
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   posts: [new Schema({
-    postID: Number,  //number for this post (1,2,3...) reply get -1
+    postID: Number,  //number for this post (1,2,3...) reply get -1 maybe should change to a String ID system
     body: {type: String, default: '', trim: true},
     picture: String,
 
@@ -94,6 +95,13 @@ userSchema.methods.getPosts = function getPosts() {
   return temp;
 
 };
+
+//get user posts within the min/max time period 
+userSchema.methods.getPostInPeriod = function(min, max) {
+    return this.posts.filter(function(item) {
+        return item.relativeTime >= min && item.relativeTime <= max;
+    });
+}
 
 /**
  * Helper method for getting user's gravatar.
