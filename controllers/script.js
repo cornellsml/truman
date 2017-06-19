@@ -32,6 +32,14 @@ exports.getScript = (req, res) => {
   .exec(function (err, user) {
   //User.findById(req.user.id, (err, user) => {
 
+    //User is no longer active - study is over
+    if (!user.active)
+    {
+      req.logout();
+      req.flash('errors', { msg: 'Account is no longer active. Study is over' });
+      res.redirect('/login');
+    }
+
     Script.find()
       .where('time').lte(time_diff).gte(time_limit)
       .sort('-time')

@@ -241,6 +241,11 @@ $('.right.floated.time.meta, .date').each(function() {
                    closable: false
                   })
                   .dimmer('show');
+                  
+          $(this).find(".ui.inverted.read.dimmer").dimmer({
+                   closable: false
+                  })
+                  .dimmer('show');
           //send post to server to update DB that we have now read this
           console.log("::::UI passing::::SENDING POST TO DB::::::::");
           $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
