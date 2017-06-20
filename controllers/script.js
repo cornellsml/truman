@@ -1,7 +1,6 @@
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 const _ = require('lodash');
-const moment = require('moment');
 
 
 /**
@@ -11,10 +10,16 @@ const moment = require('moment');
 exports.getScript = (req, res) => {
 
   //req.user.createdAt
-  var time_diff = Date.now() - req.user.createdAt;
+  var time_now = Date.now();
+  var time_diff = time_now - req.user.createdAt;
   //var today = moment();
   //var tomorrow = moment(today).add(1, 'days');
   var time_limit = time_diff - 86400000; //one day in milliseconds
+
+  var user_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  var userAgent = req.headers['user-agent']; 
+
+
 
   console.log("time_diff  is now "+time_diff);
   console.log("time_limit  is now "+time_limit);
@@ -40,6 +45,8 @@ exports.getScript = (req, res) => {
       res.redirect('/login');
     }
 
+    user.logUser(time_now, userAgent, user_ip);
+
     Script.find()
       .where('time').lte(time_diff).gte(time_limit)
       .sort('-time')
@@ -58,25 +65,24 @@ exports.getScript = (req, res) => {
         //update script feed to see if reading and posts has already happened
         var finalfeed = [];
 
-        if(!user.posts)
-        {
-          user.posts = [];
-        }
+        var user_posts = [];
 
-        user.posts = user.getPostInPeriod(time_limit, time_diff);
-        while(script_feed.length || user.posts.length) {
-          console.log(typeof user.posts[0] === 'undefined');
-          //console.log(user.posts[0].relativeTime);
+        //Look up Notifications??? And do this as well?
+
+        user_posts = user.getPostInPeriod(time_limit, time_diff);
+        while(script_feed.length || user_posts.length) {
+          console.log(typeof user_posts[0] === 'undefined');
+          //console.log(user_posts[0].relativeTime);
           //console.log(feed[0].time)
           if(typeof script_feed[0] === 'undefined') {
-              console.log("Script_Feed is empty, push user.posts");
-              finalfeed.push(user.posts[0]);
-              user.posts.splice(0,1);
+              console.log("Script_Feed is empty, push user_posts");
+              finalfeed.push(user_posts[0]);
+              user_posts.splice(0,1);
           }
-          else if(!(typeof user.posts[0] === 'undefined') && (script_feed[0].time < user.posts[0].relativeTime)){
-              console.log("Push user.posts");
-              finalfeed.push(user.posts[0]);
-              user.posts.splice(0,1);
+          else if(!(typeof user_posts[0] === 'undefined') && (script_feed[0].time < user_posts[0].relativeTime)){
+              console.log("Push user_posts");
+              finalfeed.push(user_posts[0]);
+              user_posts.splice(0,1);
           }
           else{
             console.log("ELSE PUSH FEED");
@@ -129,6 +135,13 @@ exports.getScript = (req, res) => {
             }//else in while loop
       }//while loop
 
+      user.save((err) => {
+        if (err) {
+          return next(err);
+        }
+        //req.flash('success', { msg: 'Profile information has been updated.' });
+      });
+
 
       res.render('script', { script: finalfeed });
 
@@ -175,6 +188,13 @@ exports.newPost = (req, res) => {
       console.log("numPost is "+user.numPosts);
     }
 
+    //if numPost never existed yet, make it here - should never happen in new users
+    if (!(user.numReplies) && user.numReplies != 0)
+    {
+      user.numReplies = 0;
+      console.log("numReplies is "+user.numReplies);
+    }
+
     if (req.file)
     {
       post.picture = req.file.filename
@@ -187,8 +207,9 @@ exports.newPost = (req, res) => {
 
     else if (req.body.reply)
     {
-      post.reply = req.body.reply
-      post.postID = -1; //all reply posts get -1 as ID
+      post.reply = req.body.reply;
+      user.numReplies = user.numReplies - 1;
+      post.postID = user.numReplies; //all reply posts are -1 as ID
       user.posts.unshift(post);
       console.log("CREATING REPLY");
     }

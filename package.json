@@ -65,6 +65,7 @@
     "tumblr.js": "^1.1.1",
     "twilio": "^3.3.1-edge",
     "twit": "^2.2.5",
+    "useragent": "^2.1.13",
     "validator": "^7.0.0"
   },
   "devDependencies": {

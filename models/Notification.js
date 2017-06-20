@@ -7,10 +7,10 @@ function timeStringToNum (v) {
 }
 
 const notificationSchema = new mongoose.Schema({
-  notificationType: String, //(like, read[high, low], reply)
+  notificationType: String, //(like, read[high, low], reply, reply-read, etc)
   userPost: Number, //which user post this action is for (0,1,2....n)
   actor: {type: Schema.ObjectId, ref: 'Actor'}, //actor who did the action (read,likes, replied)
-  time: { type: Number, set: timeStringToNum }, //in millisecons
+  time: Number, //in millisecons
   replyBody: {type: String, default: '', trim: true},//body of actor's reply
   reply: {type: Schema.ObjectId, ref: 'Script'} //this will need to be something else (like the actual user post I guess?)
   

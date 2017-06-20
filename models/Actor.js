@@ -15,11 +15,11 @@ const actorSchema = new mongoose.Schema({
 
 //Pretty sure this is dead code
 actorSchema
-.virtual('time_now')
+.virtual('url')
 .get(function () {
 
-  var diff = Date.now() - this.time;
-  return '/catalog/author/' + this._id;
+  //var diff = Date.now() - this.time;
+  return '/user/' + this.username;
 });
 
 const Actor = mongoose.model('Actor', actorSchema);

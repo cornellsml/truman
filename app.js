@@ -96,7 +96,7 @@ mongoose.connection.on('error', (err) => {
 ** Mailing Users
 */
 var rule = new schedule.RecurrenceRule();
-rule.hour = 23;
+rule.hour = 4;
 rule.minute = 55;
  
 var j = schedule.scheduleJob(rule, function(){
@@ -112,7 +112,7 @@ var j = schedule.scheduleJob(rule, function(){
 **Check if users are still active
 */
 var rule = new schedule.RecurrenceRule();
-rule.hour = 23;
+rule.hour = 4;
 rule.minute = 30;
  
 var j = schedule.scheduleJob(rule, function(){

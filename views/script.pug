@@ -211,7 +211,8 @@ block content
                 img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
                 span=val.actor.profile.name
             .image
-              img(src=val.picture)
+              //-img(src=val.picture)
+              img(src='/picture.svg', data-src=val.picture)
             .content
               .description=val.body
             .three.ui.bottom.attached.icon.buttons
@@ -233,7 +234,22 @@ block content
                   .visible.content
                     i.like.icon
                   .hidden.content Like Post
-
+    .ui.fluid.card
+      .content
+        .description
+        |  All Posts for the past day.
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
     //- New Reply Modal
     .ui.small.reply.modal
       i.close.icon

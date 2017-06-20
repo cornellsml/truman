@@ -31,6 +31,8 @@ exports.getNotifications = (req, res) => {
     //This is the actual array of Posts from User
     var user_posts = user.getPosts();
 
+    //Also get all reply posts as well
+
     console.log("Past user_posts now");
 
     if (user_posts.length == 0)
@@ -49,6 +51,14 @@ exports.getNotifications = (req, res) => {
         .populate('actor')
         .exec(function (err, notification_feed) {
           if (err) { return next(err); }
+
+          if (notification_feed.length == 0)
+          {
+            //peace out - send empty page - 
+            //or deal with replys or something IDK
+            console.log("No User Posts yet. Sending to -1 to PUG");
+            res.render('notification', { notification_feed: -1 });
+          }
 
           var final_notify = [];
 

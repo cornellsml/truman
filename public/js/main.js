@@ -219,13 +219,37 @@ $('.right.floated.time.meta, .date').each(function() {
 
   });
 
+  $('.image > img')
+  .visibility({
+    once       : true,
+    continuous : false,
+    observeChanges: true,
+    offset: 100,
+
+    onTopVisible:function(calculations) {
+      var card_img = $(this);
+      var newsrc = card_img.attr('data-src');
+      console.log("&&&&&&&&&&^^^^^^Changing picture^^^^^^^$$$$$$$$$$$");
+      console.log(newsrc);
+      if (card_img.attr('src') != newsrc)
+      { 
+        card_img.attr('src', newsrc);
+        $('.ui.fluid.card.dim').visibility('refresh');
+        $('.image > img').visibility('refresh');
+      }
+    }
+  });
+
+
+
   //Dimm cards as user scrolls - send Post to update DB on timing of events
   $('.ui.fluid.card.dim')
   .visibility({
     once       : false,
     continuous : false,
-
-
+    observeChanges: true,
+    
+    
     //USER HAS NOW READ THE POST (READ EVENT)
     onBottomVisibleReverse:function(calculations) {
         console.log(":::::Now passing onBottomVisibleReverse:::::");
@@ -285,6 +309,7 @@ $('.right.floated.time.meta, .date').each(function() {
           console.log("@@@@@@@ UI!!!! @@@@@@SENDING TO DB@@@@@@START POST UI has seen post "+postID+" at time "+start);
 
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+          
         }
         //if not UI, we still need to Update DB with new START time
         else if (($(this).attr( "ui" )=='no')&& ($(this).attr( "state" )=='unread'))

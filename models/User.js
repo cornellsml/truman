@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   active: {type: Boolean, default: true},
 
   numPosts: { type: Number, default: 0 }, //not including replys
+  numReplies: { type: Number, default: 0 }, //not including posts
 
   turkID: String,
 
@@ -25,10 +26,23 @@ const userSchema = new mongoose.Schema({
     postID: Number,  //number for this post (1,2,3...) reply get -1 maybe should change to a String ID system
     body: {type: String, default: '', trim: true},
     picture: String,
-
     reply: {type: Schema.ObjectId, ref: 'Script'},
     absTime: Date,
     relativeTime: {type: Number}
+    })],
+
+  replies: [new Schema({
+    replyID: Number,  
+    body: {type: String, default: '', trim: true},
+    reply: {type: Schema.ObjectId, ref: 'Script'},
+    absTime: Date,
+    relativeTime: {type: Number}
+    })],
+
+  log: [new Schema({
+    time: Date,
+    userAgent: String,
+    ipAddress: String
     })],
 
   feedAction: [new Schema({
@@ -78,12 +92,41 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword,
 };
 
 /**
+ * Add Log to User if access is 1 hour from last use.
+ */
+userSchema.methods.logUser = function comparePassword(time, agent, ip) {
+  
+  if(this.log.length > 0)
+  {
+    var log_time = new Date(this.log[this.log.length -1].time);
+
+    if(time >= (log_time.getTime() + 3600000))
+    {
+      var log = {};
+      log.time = time;
+      log.userAgent = agent;
+      log.ipAddress = ip;
+      this.log.push(log);
+    }
+  }
+  else if(this.log.length == 0)
+  {
+    var log = {};
+    log.time = time;
+    log.userAgent = agent;
+    log.ipAddress = ip;
+    this.log.push(log);
+  }
+
+};
+
+/**
  * Helper method for validating user's password.
  */
 userSchema.methods.getPosts = function getPosts() {
   var temp = [];
   for (var i = 0, len = this.posts.length; i < len; i++) {
-    if (this.posts[i].postID != -1)
+    if (this.posts[i].postID >= 0)
      temp.push(this.posts[i]);
   }
 
@@ -98,6 +141,7 @@ userSchema.methods.getPosts = function getPosts() {
 
 //get user posts within the min/max time period 
 userSchema.methods.getPostInPeriod = function(min, max) {
+    //concat posts & reply
     return this.posts.filter(function(item) {
         return item.relativeTime >= min && item.relativeTime <= max;
     });
