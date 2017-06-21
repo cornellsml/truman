@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
 
   numPosts: { type: Number, default: 0 }, //not including replys
   numReplies: { type: Number, default: 0 }, //not including posts
+  numActorReplies: { type: Number, default: 0 }, //not including posts
 
   turkID: String,
 
@@ -23,18 +24,21 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   posts: [new Schema({
+    type: String, //post, reply, actorReply
+
     postID: Number,  //number for this post (1,2,3...) reply get -1 maybe should change to a String ID system
     body: {type: String, default: '', trim: true},
     picture: String,
-    reply: {type: Schema.ObjectId, ref: 'Script'},
-    absTime: Date,
-    relativeTime: {type: Number}
-    })],
 
-  replies: [new Schema({
-    replyID: Number,  
-    body: {type: String, default: '', trim: true},
+    replyID: Number,
     reply: {type: Schema.ObjectId, ref: 'Script'},
+
+    actorReplyID: Number,
+    actorReplyOBody: String,
+    actorReplyOPicture: String,
+    actorReplyORelativeTime: Number,
+    actorAuthor: {type: Schema.ObjectId, ref: 'Actor'},
+
     absTime: Date,
     relativeTime: {type: Number}
     })],

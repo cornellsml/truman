@@ -1,6 +1,15 @@
 //$(document).ready(function() {
+
+//Before Page load:
+$('#content').hide();
+$('#loading').show();
+
 $(window).on("load", function() {
 
+  //close loading dimmer on load
+  $('#loading').hide();
+  $('#content').attr('style', 'block');
+  $('#content').fadeIn('slow');
   //close messages from flash message 
   $('.message .close')
   .on('click', function() {
@@ -219,6 +228,7 @@ $('.right.floated.time.meta, .date').each(function() {
 
   });
 
+/*
   $('.image > img')
   .visibility({
     once       : true,
@@ -239,6 +249,7 @@ $('.right.floated.time.meta, .date').each(function() {
       }
     }
   });
+  */
 
 
 

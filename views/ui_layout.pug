@@ -19,6 +19,10 @@ html
       body {
       background-color: #F5F8FA;
       }
+      .hidden 
+      { 
+        display: none; 
+      }
       .ui.menu .item img.logo {
       margin-left: 3.5em;
       }
@@ -44,20 +48,18 @@ html
           cursor: pointer;
       }
       
-    script.
-      if ('serviceWorker' in navigator) {
-      console.log("Will the service worker register?");
-      navigator.serviceWorker.register('service-worker.js')
-      .then(function(reg){
-      console.log("Yes, it did.");
-      }).catch(function(err) {
-      console.log("No it didn't. This happened: ", err)
-      });
-      }
-      
+  script.
+    if ('serviceWorker' in navigator) {
+    console.log("Will the service worker register?");
+    navigator.serviceWorker.register('service-worker.js')
+    .then(function(reg){
+    console.log("Yes, it did.");
+    }).catch(function(err) {
+    console.log("No it didn't. This happened: ", err)
+    });
+    }
 
   body
-
     .ui.vertically.padded.grid.container
       include partials/ui_header
       include partials/ui_flash

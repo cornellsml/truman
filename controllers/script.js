@@ -34,6 +34,10 @@ exports.getScript = (req, res) => {
          model: 'Actor'
        } 
     })
+  .populate({ 
+       path: 'posts.actorAuthor',
+       model: 'Actor'
+    })
   .exec(function (err, user) {
   //User.findById(req.user.id, (err, user) => {
 
@@ -70,6 +74,11 @@ exports.getScript = (req, res) => {
         //Look up Notifications??? And do this as well?
 
         user_posts = user.getPostInPeriod(time_limit, time_diff);
+
+        user_posts.sort(function (a, b) {
+            return b.relativeTime - a.relativeTime;
+          });
+
         while(script_feed.length || user_posts.length) {
           console.log(typeof user_posts[0] === 'undefined');
           //console.log(user_posts[0].relativeTime);
@@ -181,35 +190,83 @@ exports.newPost = (req, res) => {
     post.absTime = Date.now();
     post.relativeTime = post.absTime - user.createdAt;
 
-    //if numPost never existed yet, make it here - should never happen in new users
+    //if numPost/etc never existed yet, make it here - should never happen in new users
     if (!(user.numPosts) && user.numPosts != 0)
     {
       user.numPosts = 0;
       console.log("numPost is "+user.numPosts);
     }
 
-    //if numPost never existed yet, make it here - should never happen in new users
     if (!(user.numReplies) && user.numReplies != 0)
     {
       user.numReplies = 0;
       console.log("numReplies is "+user.numReplies);
     }
 
+    if (!(user.numActorReplies) && user.numActorReplies != 0)
+    {
+      user.numActorReplies = 0;
+      console.log("numActorReplies is "+user.numActorReplies);
+    }
+
+
     if (req.file)
     {
       post.picture = req.file.filename
       post.postID = user.numPosts;
+      post.type = "user_post";
       user.numPost = user.numPosts + 1;
       console.log("numPost is now "+user.numPosts);
       user.posts.unshift(post);
       console.log("CREATING NEW POST!!!");
+
+      //Now we find any Actor Replies that go along with it
+      Notification.find()
+        .where('userPost').equals(post.postID)
+        .where('notificationType').equals('actor_reply')
+        .populate('actor')
+        .exec(function (err, actor_replies) {
+          if (err) { return next(err); }
+
+          if (actor_replies.length > 0)
+          {
+            //we have a actor reply that goes with this userPost
+            //add them to the posts array
+            console.log("We have Actor Replies to add");
+            for (var i = 0, len = actor_replies.length; i < len; i++) {
+              var tmp_actor_reply = new Object();
+
+              //actual actor reply information
+              tmp_actor_reply.body = actor_replies[i].body;
+              tmp_actor_reply.actorReplyID = user.numActorReplies;
+              tmp_actor_reply.actorAuthor = actor_replies[i].actor;
+              user.numActorReplies = user.numActorReplies + 1;
+
+              //original post this is a reply to
+              tmp_actor_reply.actorReplyOBody= post.body;
+              tmp_actor_reply.actorReplyOPicture = post.picture
+              tmp_actor_reply.actorReplyORelativeTime = post.relativeTime;
+
+              //tmp_actor_reply.absTime = Date.now();
+              tmp_actor_reply.relativeTime = post.relativeTime + actor_replies[i].time;
+
+              //add to posts
+              user.posts.push(tmp_actor_reply);
+
+            }
+
+          }
+
+        });//of of Notification
+
     }
 
     else if (req.body.reply)
     {
       post.reply = req.body.reply;
-      user.numReplies = user.numReplies - 1;
+      post.type = "user_reply";
       post.postID = user.numReplies; //all reply posts are -1 as ID
+      user.numReplies = user.numReplies + 1;
       user.posts.unshift(post);
       console.log("CREATING REPLY");
     }
