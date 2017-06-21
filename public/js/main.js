@@ -72,7 +72,7 @@ $(window).on("load", function() {
         rules: [
           {
             type   : 'empty',
-            prompt : 'Please add some text about what you ate'
+            prompt : 'Please add some text for your reply'
           }
         ]
       }
