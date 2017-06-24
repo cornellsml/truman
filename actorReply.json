@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "userPostId": 0,
+    "body": "Looking good :)",
+    "actor": "ancho-n-cayenne",
+    "time": "00:01",
+    "class": "normal"
+  },
+  {
+    "id": 1,
+    "userPostId": 0,
+    "body": "Nice!",
+    "actor": "coachmatthews",
+    "time": "00:10",
+    "class": "normal"
+  }
+]

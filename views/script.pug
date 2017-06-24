@@ -83,7 +83,7 @@ block content
             .content
               .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
               |
-              a.ui.avatar.image(href='/user/'+val.actorAuthor.username)
+              a(href='/user/'+val.actorAuthor.username)
                 img.ui.avatar.image(src='/profile_pictures/'+val.actorAuthor.profile.picture)
                 span=val.actorAuthor.profile.name
             .content
@@ -102,7 +102,7 @@ block content
                     span=user.profile.name || user.email || user.id
                 if val.actorReplyOPicture
                   .image
-                    img(src=val.actorReplyOPicture)
+                    img(src='/user_post/'+val.actorReplyOPicture)
                 .content
                   .description=val.actorReplyOBody
             .three.ui.bottom.attached.icon.buttons

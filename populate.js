@@ -14,7 +14,9 @@ var fs = require('fs')
 
 var highUsers = require('./highusers.json');
 var actors1 = require('./actorsv1.json');
-var posts1 = require('./postsv1.json')
+var posts1 = require('./postsv1.json');
+var actorReply = require('./actorReply.json');
+var notify = require('./notify.json');
 
 dotenv.load({ path: '.env' });
 
@@ -111,24 +113,6 @@ function PostCreate(new_post) {
     //postdetail.actor2=act;
     postdetail.time = timeStringToNum(new_post.time);
 
-    /*
-    bookdetail = { 
-    title: title,
-    summary: summary,
-    author: author,
-    isbn: isbn
-    }; 
-
-    var postdetail = {
-    class: new_post.class,
-    post_id: new_post.id,
-    actor2: act,
-    time: timeStringToNum(new_post.time),
-    picture: new_post.picture,
-    body: new_post.body
-    }
-    */
-
     console.log('Looking up Actor: ' + act.username); 
     //console.log(mongoose.Types.ObjectId.isValid(postdetail.actor.$oid));
     //console.log(postdetail);
@@ -154,7 +138,69 @@ function PostCreate(new_post) {
 
   });
 
-}
+};
+
+function NotifyCreate(new_notify) {
+  
+  Actor.findOne({ username: new_notify.actor}, (err, act) => {
+    if (err) { console.log(err); return next(err); }
+
+    console.log('Looking up Actor ID is : ' + act._id); 
+    var notifydetail = new Object();
+
+    if (new_notify.userPost >= 0)
+    {
+      notifydetail.userPost = new_notify.userPost;
+    }
+
+    else if (new_notify.userReply >= 0)
+    {
+      notifydetail.userReply = new_notify.userReply;
+    }
+
+    else if (new_notify.actorReply >= 0)
+    {
+      notifydetail.actorReply = new_notify.actorReply;
+    }
+
+    notifydetail.actor = {};
+    notifydetail.notificationType = new_notify.type;
+    notifydetail.actor.$oid = act._id.toString();
+    notifydetail.time = timeStringToNum(new_notify.time);
+
+    //console.log('Looking up Actor: ' + act.username); 
+    //console.log(mongoose.Types.ObjectId.isValid(notifydetail.actor.$oid));
+    //console.log(notifydetail);
+
+    fs.appendFileSync('upload_replyv1.json', JSON.stringify(notifydetail));
+
+  });
+
+};
+
+function actorNotifyCreate(new_notify) {
+  
+  Actor.findOne({ username: new_notify.actor}, (err, act) => {
+    if (err) { console.log(err); return next(err); }
+
+    console.log('Looking up Actor ID is : ' + act._id); 
+    var notifydetail = new Object();
+    notifydetail.userPost = new_notify.userPostId;
+    notifydetail.actor = {};
+    notifydetail.notificationType = 'reply';
+    notifydetail.replyBody = new_notify.body;
+    notifydetail.actor.$oid = act._id.toString();
+    notifydetail.time = timeStringToNum(new_notify.time);
+
+    //console.log('Looking up Actor: ' + act.username); 
+    //console.log(mongoose.Types.ObjectId.isValid(notifydetail.actor.$oid));
+    //console.log(notifydetail);
+
+    fs.appendFileSync('upload_actorReplyV1.json', JSON.stringify(notifydetail));
+
+  });
+
+};
 /*
 for (var i = 0, len = actors1.length; i < len; i++) {
   if ((actors1[i].class == "cohort") || (actors1[i].class == "normal"))
@@ -168,13 +214,14 @@ for (var i = 0, len = highUsers.results.length; i < len; i++) {
   
       highActorCreate(highUsers.results[i]);
 }*/
-for (var i = 0, len = posts1.length; i < len; i++) {
+for (var i = 0, len = notify.length; i < len; i++) {
       
-      PostCreate(posts1[i]);
+      NotifyCreate(notify[i]);
 }
 
 //PostCreate(posts1[0]);
 //PostCreate(posts1[1]);
+//actorNotifyCreate(actorReply[i]);
 console.log('After Lookup:');
 
 

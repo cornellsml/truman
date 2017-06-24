@@ -143,6 +143,28 @@ userSchema.methods.getPosts = function getPosts() {
 
 };
 
+//Return the user post from its ID
+userSchema.methods.getUserPostByID = function(postID) {
+  
+  return this.posts.find(x => x.postID == postID);
+
+};
+
+
+//Return the user reply from its ID
+userSchema.methods.getUserReplyByID = function(replyID) {
+  
+  return this.posts.find(x => x.replyID == replyID);
+
+};
+
+//Return the user reply from its ID
+userSchema.methods.getActorReplyByID = function(actorReplyID) {
+  
+  return this.posts.find(x => x.actorReplyID == actorReplyID);
+
+};
+
 //get user posts within the min/max time period 
 userSchema.methods.getPostInPeriod = function(min, max) {
     //concat posts & reply

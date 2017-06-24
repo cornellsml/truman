@@ -1,5 +1,6 @@
 const Script = require('../models/Script.js');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const _ = require('lodash');
 
 
@@ -94,41 +95,41 @@ exports.getScript = (req, res) => {
               user_posts.splice(0,1);
           }
           else{
-            console.log("ELSE PUSH FEED");
+            //console.log("ELSE PUSH FEED");
             var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
              
             if(feedIndex!=-1)
             {
-              console.log("WE HAVE AN ACTION!!!!!");
+              //console.log("WE HAVE AN ACTION!!!!!");
 
               if (user.feedAction[feedIndex].readTime[0])
               { 
                 script_feed[0].read = true;
                 script_feed[0].state = 'read';
-                console.log("Post: %o has been READ", script_feed[0].id);
+                //console.log("Post: %o has been READ", script_feed[0].id);
               }
 
               if (user.feedAction[feedIndex].likeTime[0])
               { 
                 script_feed[0].like = true;
-                console.log("Post %o has been LIKED", script_feed[0].id);
+                //console.log("Post %o has been LIKED", script_feed[0].id);
               }
 
               if (user.feedAction[feedIndex].replyTime[0])
               { 
                 script_feed[0].reply = true;
-                console.log("Post %o has been REPLIED", script_feed[0].id);
+                //console.log("Post %o has been REPLIED", script_feed[0].id);
               }
 
               //If this post has been flagged - remove it from FEED array (script_feed)
               if (user.feedAction[feedIndex].flagTime[0])
               { 
                 script_feed.splice(0,1);
-                console.log("Post %o has been FLAGGED", script_feed[0].id);
+                //console.log("Post %o has been FLAGGED", script_feed[0].id);
               }
               else
               {
-                console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
+                //console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
@@ -137,7 +138,7 @@ exports.getScript = (req, res) => {
 
               else
               {
-                console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
+                //console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
                 finalfeed.push(script_feed[0]);
                 script_feed.splice(0,1);
               }
@@ -191,19 +192,19 @@ exports.newPost = (req, res) => {
     post.relativeTime = post.absTime - user.createdAt;
 
     //if numPost/etc never existed yet, make it here - should never happen in new users
-    if (!(user.numPosts) && user.numPosts != 0)
+    if (!(user.numPosts) && user.numPosts < 0)
     {
       user.numPosts = 0;
       console.log("numPost is "+user.numPosts);
     }
 
-    if (!(user.numReplies) && user.numReplies != 0)
+    if (!(user.numReplies) && user.numReplies < 0)
     {
       user.numReplies = 0;
       console.log("numReplies is "+user.numReplies);
     }
 
-    if (!(user.numActorReplies) && user.numActorReplies != 0)
+    if (!(user.numActorReplies) && user.numActorReplies < 0)
     {
       user.numActorReplies = 0;
       console.log("numActorReplies is "+user.numActorReplies);
@@ -223,7 +224,7 @@ exports.newPost = (req, res) => {
       //Now we find any Actor Replies that go along with it
       Notification.find()
         .where('userPost').equals(post.postID)
-        .where('notificationType').equals('actor_reply')
+        .where('notificationType').equals('reply')
         .populate('actor')
         .exec(function (err, actor_replies) {
           if (err) { return next(err); }
@@ -232,12 +233,14 @@ exports.newPost = (req, res) => {
           {
             //we have a actor reply that goes with this userPost
             //add them to the posts array
-            console.log("We have Actor Replies to add");
+            console.log("@@@@@@@We have Actor Replies to add");
             for (var i = 0, len = actor_replies.length; i < len; i++) {
               var tmp_actor_reply = new Object();
 
               //actual actor reply information
-              tmp_actor_reply.body = actor_replies[i].body;
+              tmp_actor_reply.body = actor_replies[i].replyBody;
+              //tmp_actor_reply.actorReplyID = actor_replies[i].replyBody;
+              //might need to change to above
               tmp_actor_reply.actorReplyID = user.numActorReplies;
               tmp_actor_reply.actorAuthor = actor_replies[i].actor;
               user.numActorReplies = user.numActorReplies + 1;
@@ -247,13 +250,24 @@ exports.newPost = (req, res) => {
               tmp_actor_reply.actorReplyOPicture = post.picture
               tmp_actor_reply.actorReplyORelativeTime = post.relativeTime;
 
-              //tmp_actor_reply.absTime = Date.now();
+              var tmpTime = post.absTime + actor_replies[i].time
+
+              tmp_actor_reply.absTime = new Date(tmpTime);
               tmp_actor_reply.relativeTime = post.relativeTime + actor_replies[i].time;
+
 
               //add to posts
               user.posts.push(tmp_actor_reply);
 
             }
+
+            user.save((err) => {
+            if (err) {
+              return next(err);
+            }
+            //req.flash('success', { msg: 'Profile information has been updated.' });
+            res.redirect('/');
+          });
 
           }
 
@@ -269,23 +283,23 @@ exports.newPost = (req, res) => {
       user.numReplies = user.numReplies + 1;
       user.posts.unshift(post);
       console.log("CREATING REPLY");
+
+      user.save((err) => {
+        if (err) {
+          return next(err);
+        }
+        //req.flash('success', { msg: 'Profile information has been updated.' });
+        res.redirect('/');
+      });
+
     }
 
     else
     {
       console.log("@#@#@#@#@#@#@#ERROR: Oh Snap, Made a Post but not reply or Pic")
-    }
-
-    
-
-
-    user.save((err) => {
-      if (err) {
-        return next(err);
-      }
-      //req.flash('success', { msg: 'Profile information has been updated.' });
+      req.flash('errors', { msg: 'ERROR: Your post or reply did not get sent' });
       res.redirect('/');
-    });
+    }
 
   });
 };

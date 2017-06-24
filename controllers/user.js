@@ -148,6 +148,7 @@ exports.getMe = (req, res) => {
        } 
     })
   .exec(function (err, user) {
+    if (err) { return next(err); }
 
     res.render('me', { posts: user.posts });
 
