@@ -11,9 +11,9 @@ const userSchema = new mongoose.Schema({
   username: String,
   active: {type: Boolean, default: true},
 
-  numPosts: { type: Number, default: 0 }, //not including replys
-  numReplies: { type: Number, default: 0 }, //not including posts
-  numActorReplies: { type: Number, default: 0 }, //not including posts
+  numPosts: { type: Number, default: -1 }, //not including replys
+  numReplies: { type: Number, default: -1 }, //not including posts
+  numActorReplies: { type: Number, default: -1 }, //not including posts
 
   turkID: String,
 

@@ -27,6 +27,10 @@ exports.getNotifications = (req, res) => {
          model: 'Actor'
        } 
     })
+  .populate({ 
+       path: 'posts.actorAuthor',
+       model: 'Actor'
+    })
   .exec(function (err, user) {
 
     //This is the actual array of Posts from User
@@ -422,7 +426,8 @@ exports.getNotifications = (req, res) => {
                     read_tmp.action = 'actor_reply_read';
                     read_tmp.postID = actorReplyID;
                     read_tmp.body = actor_reply.body;
-                    read_tmp.picture = actor_reply.picture;
+                    read_tmp.picture = actor_reply.actorReplyOPicture;
+                    read_tmp.originalActor = actor_reply.actorAuthor;
                     read_tmp.time = Date.parse(actor_reply.absTime) + notification_feed[i].time;
                     read_tmp.actors = [];
                     read_tmp.actors.push(notification_feed[i].actor);
@@ -466,7 +471,8 @@ exports.getNotifications = (req, res) => {
                     read_tmp.action = 'actor_reply_read';
                     read_tmp.postID = actorReplyID;
                     read_tmp.body = actor_reply.body;
-                    read_tmp.picture = actor_reply.picture;
+                    read_tmp.picture = actor_reply.actorReplyOPicture;
+                    read_tmp.originalActor = actor_reply.actorAuthor;
                     read_tmp.time = Date.parse(actor_reply.absTime) + notification_feed[i].time;
                     console.log("TIME  is");
                     console.log(read_tmp.time)
@@ -505,7 +511,8 @@ exports.getNotifications = (req, res) => {
                     like_tmp.action = 'actor_reply_like';
                     like_tmp.postID = actorReplyID;
                     like_tmp.body = actor_reply.body;
-                    like_tmp.picture = actor_reply.picture;
+                    like_tmp.picture = actor_reply.actorReplyOPicture;
+                    like_tmp.originalActor = actor_reply.actorAuthor;
                     like_tmp.time = Date.parse(actor_reply.absTime) + notification_feed[i].time;
                     like_tmp.actors = [];
                     like_tmp.actors.push(notification_feed[i].actor);

@@ -148,19 +148,22 @@ function NotifyCreate(new_notify) {
     console.log('Looking up Actor ID is : ' + act._id); 
     var notifydetail = new Object();
 
-    if (new_notify.userPost >= 0)
+    if (new_notify.userPost >= 0 && !(new_notify.userPost === ""))
     {
       notifydetail.userPost = new_notify.userPost;
+      console.log('User Post is : ' + notifydetail.userPost);
     }
 
-    else if (new_notify.userReply >= 0)
+    else if (new_notify.userReply >= 0 && !(new_notify.userReply === ""))
     {
       notifydetail.userReply = new_notify.userReply;
+      console.log('User Reply is : ' + notifydetail.userReply);
     }
 
-    else if (new_notify.actorReply >= 0)
+    else if (new_notify.actorReply >= 0 && !(new_notify.actorReply === ""))
     {
       notifydetail.actorReply = new_notify.actorReply;
+      console.log('Actor Reply is : ' + notifydetail.actorReply);
     }
 
     notifydetail.actor = {};

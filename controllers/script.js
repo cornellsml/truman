@@ -81,7 +81,7 @@ exports.getScript = (req, res) => {
           });
 
         while(script_feed.length || user_posts.length) {
-          console.log(typeof user_posts[0] === 'undefined');
+          //console.log(typeof user_posts[0] === 'undefined');
           //console.log(user_posts[0].relativeTime);
           //console.log(feed[0].time)
           if(typeof script_feed[0] === 'undefined') {
@@ -213,10 +213,12 @@ exports.newPost = (req, res) => {
 
     if (req.file)
     {
-      post.picture = req.file.filename
+      post.picture = req.file.filename;
+
+      user.numPosts = user.numPosts + 1;
       post.postID = user.numPosts;
       post.type = "user_post";
-      user.numPost = user.numPosts + 1;
+      
       console.log("numPost is now "+user.numPosts);
       user.posts.unshift(post);
       console.log("CREATING NEW POST!!!");
@@ -241,9 +243,10 @@ exports.newPost = (req, res) => {
               tmp_actor_reply.body = actor_replies[i].replyBody;
               //tmp_actor_reply.actorReplyID = actor_replies[i].replyBody;
               //might need to change to above
+              user.numActorReplies = user.numActorReplies + 1;
               tmp_actor_reply.actorReplyID = user.numActorReplies;
               tmp_actor_reply.actorAuthor = actor_replies[i].actor;
-              user.numActorReplies = user.numActorReplies + 1;
+              
 
               //original post this is a reply to
               tmp_actor_reply.actorReplyOBody= post.body;
@@ -279,8 +282,9 @@ exports.newPost = (req, res) => {
     {
       post.reply = req.body.reply;
       post.type = "user_reply";
-      post.postID = user.numReplies; //all reply posts are -1 as ID
       user.numReplies = user.numReplies + 1;
+      post.replyID = user.numReplies; //all reply posts are -1 as ID
+      
       user.posts.unshift(post);
       console.log("CREATING REPLY");
 
@@ -324,11 +328,13 @@ exports.postUpdateFeedAction = (req, res, next) => {
     if(feedIndex==-1)
     {
       //Post does not exist yet in User DB, so we have to add it now
-      console.log("$$$$$Making new feedAction Object! at post ", req.body.postID);
+      //console.log("$$$$$Making new feedAction Object! at post ", req.body.postID);
       var cat = new Object();
       cat.post = req.body.postID;
       if(!(req.body.start))
-        {console.log("!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!No start")}
+        {
+          //console.log("!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!No start");
+        }
       cat.startTime = req.body.start;
       cat.rereadTimes = 0;
       //add new post into feedAction
@@ -343,11 +349,11 @@ exports.postUpdateFeedAction = (req, res, next) => {
       //update to new StartTime
       if (req.body.start && (req.body.start > user.feedAction[feedIndex].startTime))
       { 
-        console.log("%%%%%% USER.feedAction.startTime  ", user.feedAction[feedIndex].startTime);
+        //console.log("%%%%%% USER.feedAction.startTime  ", user.feedAction[feedIndex].startTime);
         user.feedAction[feedIndex].startTime = req.body.start;
         user.feedAction[feedIndex].rereadTimes++;
-        console.log("%%%%%% NEW START time is now  ", user.feedAction[feedIndex].startTime);
-        console.log("%%%%%% reRead counter is now  ", user.feedAction[feedIndex].rereadTimes); 
+        //console.log("%%%%%% NEW START time is now  ", user.feedAction[feedIndex].startTime);
+        //console.log("%%%%%% reRead counter is now  ", user.feedAction[feedIndex].rereadTimes); 
 
       }
 
@@ -355,16 +361,16 @@ exports.postUpdateFeedAction = (req, res, next) => {
       else if ((!user.feedAction[feedIndex].readTime)&&req.body.read && (req.body.read > user.feedAction[feedIndex].startTime))
       { 
         let read = req.body.read - user.feedAction[feedIndex].startTime
-        console.log("!!!!!New FIRST READ Time: ", read);
+        //console.log("!!!!!New FIRST READ Time: ", read);
         user.feedAction[feedIndex].readTime = [read];
-        console.log("!!!!!adding FIRST READ time [0] now which is  ", user.feedAction[feedIndex].readTime[0]);
+        //console.log("!!!!!adding FIRST READ time [0] now which is  ", user.feedAction[feedIndex].readTime[0]);
       }
 
       //Already have a readTime Array, New READ event, need to add this to readTime array
       else if ((user.feedAction[feedIndex].readTime)&&req.body.read && (req.body.read > user.feedAction[feedIndex].startTime))
       { 
         let read = req.body.read - user.feedAction[feedIndex].startTime
-        console.log("%%%%%Add new Read Time: ", read);
+        //console.log("%%%%%Add new Read Time: ", read);
         user.feedAction[feedIndex].readTime.push(read);
       }
 
@@ -424,10 +430,10 @@ exports.postUpdateFeedAction = (req, res, next) => {
         console.log("Got a POST that did not fit anything. Possible Error.")
       }
 
-       console.log("####### END OF ELSE post at index "+ feedIndex);
+       //console.log("####### END OF ELSE post at index "+ feedIndex);
 
     }
-    console.log("@@@@@@@@@@@ ABOUT TO SAVE TO DB on Post ", req.body.postID);
+    //console.log("@@@@@@@@@@@ ABOUT TO SAVE TO DB on Post ", req.body.postID);
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
@@ -438,7 +444,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
       }
       //req.flash('success', { msg: 'Profile information has been updated.' });
       //res.redirect('/account');
-      console.log("@@@@@@@@@@@ SAVED TO DB!!!!!!!!! ");
+      //console.log("@@@@@@@@@@@ SAVED TO DB!!!!!!!!! ");
       res.send({result:"success"});
     });
   });
