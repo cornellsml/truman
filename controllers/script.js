@@ -230,7 +230,7 @@ exports.newPost = (req, res) => {
         .populate('actor')
         .exec(function (err, actor_replies) {
           if (err) { return next(err); }
-
+          console.log("%^%^%^^%INSIDE NOTIFICATION&^&^&^&^&^&^&");
           if (actor_replies.length > 0)
           {
             //we have a actor reply that goes with this userPost
@@ -264,15 +264,15 @@ exports.newPost = (req, res) => {
 
             }
 
-            user.save((err) => {
+          }//end of IF
+
+          user.save((err) => {
             if (err) {
               return next(err);
             }
             //req.flash('success', { msg: 'Profile information has been updated.' });
             res.redirect('/');
           });
-
-          }
 
         });//of of Notification
 
