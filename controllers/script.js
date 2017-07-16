@@ -192,21 +192,21 @@ exports.newPost = (req, res) => {
     post.relativeTime = post.absTime - user.createdAt;
 
     //if numPost/etc never existed yet, make it here - should never happen in new users
-    if (!(user.numPosts) && user.numPosts < 0)
+    if (!(user.numPosts) && user.numPosts < -1)
     {
-      user.numPosts = 0;
+      user.numPosts = -1;
       console.log("numPost is "+user.numPosts);
     }
 
-    if (!(user.numReplies) && user.numReplies < 0)
+    if (!(user.numReplies) && user.numReplies < -1)
     {
-      user.numReplies = 0;
+      user.numReplies = -1;
       console.log("numReplies is "+user.numReplies);
     }
 
-    if (!(user.numActorReplies) && user.numActorReplies < 0)
+    if (!(user.numActorReplies) && user.numActorReplies < -1)
     {
-      user.numActorReplies = 0;
+      user.numActorReplies = -1;
       console.log("numActorReplies is "+user.numActorReplies);
     }
 
