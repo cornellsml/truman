@@ -98,6 +98,8 @@ exports.postSignup = (req, res, next) => {
   const user = new User({
     email: req.body.email,
     password: req.body.password,
+    mturkID: req.body.mturkID,
+    username: req.body.username,
     group: result,
     active: true,
     ui: resultArray[0], //ui or no
@@ -116,8 +118,55 @@ exports.postSignup = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/');
+        res.redirect('/signup_info');
       });
+    });
+  });
+};
+
+/**
+ * GET /signup_info
+ * Signup Info page.
+ */
+exports.getSignupInfo = (req, res) => {
+
+  res.render('account/signup_info', {
+    title: 'Add Information'
+  });
+};
+
+/**
+ * POST /account/profile
+ * Update profile information.
+ */
+exports.postSignupInfo = (req, res, next) => {
+
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+    //user.email = req.body.email || '';
+    user.profile.name = req.body.name || '';
+    user.profile.gender = req.body.gender || '';
+    user.profile.location = req.body.location || '';
+    user.profile.website = req.body.website || '';
+    user.profile.bio = req.body.bio || '';
+
+    if (req.file)
+    {
+      console.log("Changeing Picture now to: "+ req.file.filename);
+      user.profile.picture = req.file.filename;
+    }
+
+    user.save((err) => {
+      if (err) {
+        if (err.code === 11000) {
+          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+          return res.redirect('/signup_info');
+        }
+        return next(err);
+      }
+      //req.flash('success', { msg: 'Profile information has been updated.' });
+      res.redirect('/com');
     });
   });
 };
@@ -150,7 +199,9 @@ exports.getMe = (req, res) => {
   .exec(function (err, user) {
     if (err) { return next(err); }
 
-    res.render('me', { posts: user.posts });
+    var allPosts = user.getPostsAndReplies();
+
+    res.render('me', { posts: allPosts });
 
   });
 

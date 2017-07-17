@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   numReplies: { type: Number, default: -1 }, //not including posts
   numActorReplies: { type: Number, default: -1 }, //not including posts
 
-  turkID: String,
+  mturkID: String,
 
   group: String, //full group type
   ui: String,    //just UI type (no or ui)
@@ -125,7 +125,7 @@ userSchema.methods.logUser = function comparePassword(time, agent, ip) {
 };
 
 /**
- * Helper method for validating user's password.
+ * Helper method for getting all User Posts.
  */
 userSchema.methods.getPosts = function getPosts() {
   var temp = [];
@@ -137,6 +137,25 @@ userSchema.methods.getPosts = function getPosts() {
   //sort to ensure that posts[x].postID == x
   temp.sort(function (a, b) {
     return a.postID - b.postID;
+  });
+
+  return temp;
+
+};
+
+/**
+ * Helper method for getting all User Posts and replies.
+ */
+userSchema.methods.getPostsAndReplies = function getPostsAndReplies() {
+  var temp = [];
+  for (var i = 0, len = this.posts.length; i < len; i++) {
+    if (this.posts[i].postID >= 0 || this.posts[i].replyID >= 0)
+     temp.push(this.posts[i]);
+  }
+
+  //sort to ensure that posts[x].postID == x
+  temp.sort(function (a, b) {
+    return a.absTime - b.absTime;
   });
 
   return temp;

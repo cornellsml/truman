@@ -98,47 +98,6 @@ function readURL(input) {
         readURL(this);
     });
 
-/*
-LAZY LOADING OF USERS PROFLES IMAGES OF EXTRA USERS
-
-$('.extra.divided.items .image a img')
-.visibility({
-  type       : 'image',
-  transition : 'fade in',
-  initialCheck : false,
-  duration   : 1000
-});
-
-
-$('.extra.divided.items .image a img')
-  .visibility({
-    once       : true,
-    continuous : false,
-    //initialCheck : true,
-
-    onTopVisible:function(calculations) {
-      console.log($(this).attr('data-src'));
-      var newsrc = $(this).attr('data-src');
-      $(this).attr('src', newsrc);
-
-    }
-
-    });
-
-
-$('a.others').click(function () {
-  
-  let key = $(this).attr('key')
-  //.ui.long.test.modal(id=val.key)
-  //$('#replyInput').attr("value", postID);
-
-  $('.ui.long.extrausers.modal#'+key).modal('show');
-  $("img.tiny.circular.transition.visible").unveil();
-  //$('.extra.divided.items .image a img').visibility('refresh');
-});
-*/
-
-
 $('a.others').click(function(){
   let key = $(this).attr('key');
 
@@ -156,10 +115,6 @@ $('a.others').click(function(){
   }).modal('show')  
 });
 
-
-
-
-
 //add humanized time to all posts
 $('.right.floated.time.meta, .date').each(function() {
     var ms = parseInt($(this).text(), 10);
@@ -171,6 +126,18 @@ $('.right.floated.time.meta, .date').each(function() {
   $('.ui.big.green.labeled.icon.button.signup')
   .on('click', function() {
     window.location.href='/signup';
+  });
+
+  //Sign Up Info Skip Button
+  $('button.ui.button.skip')
+  .on('click', function() {
+    window.location.href='/com';
+  });
+
+  //Community Rules Button (rocket!!!)
+  $('.ui.big.green.labeled.icon.button.com')
+  .on('click', function() {
+    window.location.href='/'; //maybe go to tour site???
   });
 
   //Edit button

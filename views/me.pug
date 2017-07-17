@@ -10,11 +10,12 @@ block content
         else
           img(src=user.gravatar(60))
       .content
-        a.header= user.profile.name
+        a.header= user.profile.name || user.email || user.id
         .description=user.profile.bio
-        .description 
-          i.marker.icon
-          span=user.profile.location
+        .description
+          if user.profile.location
+            i.marker.icon
+            span=user.profile.location
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon
@@ -69,7 +70,7 @@ block content
               if user.profile.picture
                 img(src='/user_post/'+user.profile.picture)
               else
-                img(src='/user_post/'+user.gravatar(60))
+                img(src=user.gravatar(60))
             a(href='/me')
               span=user.profile.name || user.email || user.id
           .image

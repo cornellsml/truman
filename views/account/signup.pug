@@ -10,7 +10,13 @@ block content
     form.ui.form(id='signup-form', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       .field
-        label(for='email') Email
+        label(for='username') Username
+        input(type='username', name='username', id='username', placeholder='Username', autofocus, required).field
+      .field
+        label(for='mturkID') Mechanical Turk ID
+        input(type='mturkID', name='mturkID', id='mturkID', placeholder='Mechanical Turk ID', autofocus, required).field
+      .field
+        label(for='email') Email (will not be publicly displayed)
         input(type='email', name='email', id='email', placeholder='Email', autofocus, required).field
       .field
         label(for='password') Password

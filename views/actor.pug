@@ -29,7 +29,7 @@ block content
       .ui.fluid.card
         if val.reply
           .content
-            .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
+            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
             |  
             img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
             span=val.actor.profile.name
@@ -38,7 +38,7 @@ block content
           .extra.content
             .ui.fluid.card
               .content
-                .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.reply.time))/(1000*60*60)) + "h ago"
+                .right.floated.time.meta= (user.createdAt.getTime() + val.time)
                 |  
                 img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                 span=val.reply.actor.profile.name
@@ -62,7 +62,7 @@ block content
               .hidden.content Like Post
         else
           .content
-            .right.floated.meta= Math.floor((Date.now() - (user.createdAt.getTime() + val.time))/(1000*60*60)) + "h ago"
+            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
             |  
             img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
             span=val.actor.profile.name
