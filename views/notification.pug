@@ -31,7 +31,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -64,7 +64,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -87,7 +87,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -120,7 +120,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -143,7 +143,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -176,7 +176,7 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username)
+                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
@@ -197,7 +197,7 @@ block content
                 .content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
-                      a.ui.avatar.image(href='/user/'+val.actor.username)
+                      a.ui.avatar.image(href='/user/'+val.actor.username, data-tooltip=val.actor.profile.name, data-position='top center')
                         img(src='/profile_pictures/'+val.actor.profile.picture)
                   .summary
                     a(href='/user/'+val.actor.username)

@@ -146,6 +146,88 @@ $('.right.floated.time.meta, .date').each(function() {
     window.location.href='/account';
   });
 
+  //this is the REPORT User button
+  $('button.ui.button.report')
+  .on('click', function() {
+
+    var username = $(this).attr( "username" );
+
+    $('.ui.small.report.modal').modal('show');
+
+    $('.coupled.modal')
+      .modal({
+        allowMultiple: false
+      })
+    ;
+    // attach events to buttons
+    $('.second.modal')
+      .modal('attach events', '.report.modal .button')
+    ;
+    // show first now
+    $('.ui.small.report.modal')
+      .modal('show')
+    ;
+
+  });
+
+  //Report User Form//
+  $('form#reportform').submit(function(e){
+
+    e.preventDefault();
+    $.post($(this).attr('action'), $(this).serialize(), function(res){
+        // Do something with the response `res`
+        console.log(res);
+        // Don't forget to hide the loading indicator!
+    });
+    //return false; // prevent default action
+
+});
+
+  //this is the Block User button
+  $('button.ui.button.block')
+  .on('click', function() {
+
+    var username = $(this).attr( "username" );
+    //Modal for Blocked Users
+    $('.ui.small.basic.blocked.modal')
+      .modal({
+        closable  : false,
+        onDeny    : function(){ 
+          //report user
+          
+        },
+        onApprove : function() {
+          //unblock user
+          $.post( "/user", { unblocked: username, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+        }
+      })
+      .modal('show')
+    ;
+
+    
+    console.log("***********Block USER "+username);
+    $.post( "/user", { blocked: username, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+
+  });
+
+  //Block Modal for User that is already Blocked
+  $('.ui.on.small.basic.blocked.modal')
+  .modal({
+    closable  : false,
+    onDeny    : function(){ 
+      //report user
+      
+    },
+    onApprove : function() {
+      //unblock user
+      var username = $('button.ui.button.block').attr( "username" );
+      $.post( "/user", { unblocked: username, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+
+    }
+  })
+  .modal('show')
+;
+
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
@@ -174,6 +256,11 @@ $('.right.floated.time.meta, .date').each(function() {
                    closable: false
                   })
                   .dimmer('show');
+      //repeat to ensure its closable             
+      post.find(".ui.dimmer.flag").dimmer({
+                   closable: false
+                  })
+                  .dimmer('show');
     
 
   });
@@ -195,28 +282,7 @@ $('.right.floated.time.meta, .date').each(function() {
 
   });
 
-/*
-  $('.image > img')
-  .visibility({
-    once       : true,
-    continuous : false,
-    observeChanges: true,
-    offset: 100,
 
-    onTopVisible:function(calculations) {
-      var card_img = $(this);
-      var newsrc = card_img.attr('data-src');
-      console.log("&&&&&&&&&&^^^^^^Changing picture^^^^^^^$$$$$$$$$$$");
-      console.log(newsrc);
-      if (card_img.attr('src') != newsrc)
-      { 
-        card_img.attr('src', newsrc);
-        $('.ui.fluid.card.dim').visibility('refresh');
-        $('.image > img').visibility('refresh');
-      }
-    }
-  });
-  */
 
 
 
@@ -243,7 +309,7 @@ $('.right.floated.time.meta, .date').each(function() {
                    closable: false
                   })
                   .dimmer('show');
-                  
+          //some weird reason this dimmer will be closable if not "dimmed" twice
           $(this).find(".ui.inverted.read.dimmer").dimmer({
                    closable: false
                   })
@@ -256,22 +322,26 @@ $('.right.floated.time.meta, .date').each(function() {
 
         //if we are not in UI condistion, and we are reading, then send off Post to DB for new Read Time
         //Maybe kill this so we don't fill the DB with all this stuff. Seems kind of silly (or only do like 10, etc)
-        else if (($(this).attr( "ui" )=='no') && ($(this).attr( "state" )=='unread'))
+        //else if (($(this).attr( "ui" )=='no') && ($(this).attr( "state" )=='unread'))
+
+        //Need to get all "read" and "start" times in non-UI case (as all other times rests on it)
+        else if (($(this).attr( "ui" )=='no'))
         {
           console.log("::::NO UI passing:::");
-          console.log("::::first time reading -> UNREAD:::");
+          //console.log("::::first time reading -> UNREAD:::");
           var postID = $(this).attr( "postID" );
           var read = Date.now();
           //set to read now
-          $(this).attr( "state" , "read");
+          //$(this).attr( "state" , "read");
+
           //send post to server to update DB that we have now read this
-          console.log("::::NO UI passing::::SENDING POST TO DB::::::::");
+          console.log("::::NO UI :::::READ::::SENDING POST TO DB::::::::");
           $.post( "/feed", { postID: postID, read: read, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
 
         //UI and DIMMED READ, which does not count as a READ
         else
-          {console.log("::::passing::::Already dimmed - do nothing - OR NO UI");}
+          {console.log("::::passing::::Already dimmed - do nothing - UI is now "+$(this).attr( "ui" ));}
 
       },
 
@@ -290,11 +360,12 @@ $('.right.floated.time.meta, .date').each(function() {
           
         }
         //if not UI, we still need to Update DB with new START time
-        else if (($(this).attr( "ui" )=='no')&& ($(this).attr( "state" )=='unread'))
+        //else if (($(this).attr( "ui" )=='no')&& ($(this).attr( "state" )=='unread'))
+        else if (($(this).attr( "ui" )=='no'))
         {
           var postID = $(this).attr( "postID" );
           var start = Date.now();
-          console.log("@@@@@@@ NO UI!!!! @@@@@@SENDING TO DB@@@@@@START@@@@@@@ POST has seen post "+postID+" at time "+start)
+          console.log("@@@@@@@ NO UI!!!! @@@@@@START@@@@@@START@@@@@@@ POST has seen post "+postID+" at time "+start)
           $.post( "/feed", { postID: postID, start: start, _csrf : $('meta[name="csrf-token"]').attr('content') } );
         }
 

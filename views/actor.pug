@@ -17,10 +17,10 @@ block content
           i.marker.icon
           span=actor.profile.location
       .two.ui.bottom.attached.icon.buttons
-          button.ui.button(data-tooltip='Block User', data-position='bottom left')
+          button.ui.button.block(data-tooltip='Block User', data-position='bottom left', username=actor.username)
             i.ban.icon
           |  
-          button.ui.button(data-tooltip='Report User', data-position='bottom right')
+          button.ui.button.report(data-tooltip='Report User', data-position='bottom right', username=actor.username)
             i.flag.icon
 
 
@@ -83,3 +83,72 @@ block content
               .visible.content
                 i.like.icon
               .hidden.content Like Post
+  .ui.small.report.coupled.modal
+      i.close.icon
+      .header Report This User
+      .content
+        form#reportform.ui.reply.form(action='/user', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          input(type='hidden', name='reported', value=actor.username)
+          .ui.form
+            .grouped.fields
+              label(for='report_issue') Help us understand the issue. What's the problem with this account?
+              .field
+                .ui.radio.checkbox
+                  input.hidden(type='radio', name='report_issue', value="interested", tabindex='0')
+                  label I'm not interested in this account
+              .field
+                .ui.radio.checkbox
+                  input.hidden(type='radio', name='report_issue', value="spam",tabindex='0')
+                  label They are posting spam
+              .field
+                .ui.radio.checkbox
+                  input.hidden(type='radio', name='report_issue', value="bully", tabindex='0')
+                  label They're being abusive or harmful
+              .field
+                .ui.radio.checkbox
+                  input.hidden(type='radio', name='report_issue', value="hacked", tabindex='0')
+                  label Their account may be hacked
+            .ui.error.message
+      .actions
+        input.ui.green.button(type='submit', value='Submit', form='reportform')
+  .ui.small.second.coupled.modal
+      .header
+        | Report Has Been Sent!
+      .content
+        .description
+          p This user has been reported to the admins. Thank you for helping the community!
+      .actions
+        .ui.approve.button
+          i.checkmark.icon
+          |         Continue
+  if blocked
+    .ui.on.small.basic.blocked.modal
+        .ui.icon.header
+          i.ban.icon
+          |       You Have Blocked This User
+        .content
+          p
+            | You will no longer receive posts from this user. You can choose to report this user or un-block them. 
+        .actions
+          //-.ui.left.floated.red.cancel.inverted.button
+            i.flag.icon
+            |         Report User
+          .ui.green.ok.inverted.button
+            i.undo.icon
+            |         Un-Block User
+  else
+    .ui.small.basic.blocked.modal
+        .ui.icon.header
+          i.ban.icon
+          |       You Have Blocked This User
+        .content
+          p
+            | You will no longer receive posts from this user. You can choose to report this user or un-block them. 
+        .actions
+          .ui.left.floated.red.cancel.inverted.button
+            i.flag.icon
+            |         Report User
+          .ui.right.floated.green.ok.inverted.button
+            i.undo.icon
+            |         Un-Block User

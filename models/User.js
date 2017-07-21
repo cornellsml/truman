@@ -23,19 +23,22 @@ const userSchema = new mongoose.Schema({
 
   tokens: Array,
 
+  blocked: [String],
+  reported: [String],
+
   posts: [new Schema({
     type: String, //post, reply, actorReply
 
     postID: Number,  //number for this post (1,2,3...) reply get -1 maybe should change to a String ID system
-    body: {type: String, default: '', trim: true},
-    picture: String,
+    body: {type: String, default: '', trim: true}, //body of post or reply
+    picture: String, //picture for post
 
-    replyID: Number,
-    reply: {type: Schema.ObjectId, ref: 'Script'},
+    replyID: Number, //use this for User Replies
+    reply: {type: Schema.ObjectId, ref: 'Script'}, //Actor Post reply is to =>
 
-    actorReplyID: Number,
-    actorReplyOBody: String,
-    actorReplyOPicture: String,
+    actorReplyID: Number, //An Actor reply to a User Post
+    actorReplyOBody: String, //Original Body of User Post
+    actorReplyOPicture: String, //Original Picture of User Post
     actorReplyORelativeTime: Number,
     actorAuthor: {type: Schema.ObjectId, ref: 'Actor'},
 
@@ -47,6 +50,18 @@ const userSchema = new mongoose.Schema({
     time: Date,
     userAgent: String,
     ipAddress: String
+    })],
+
+  pageLog: [new Schema({
+    time: Date,
+    page: String
+    })],
+
+  blockAndReportLog: [new Schema({
+    time: Date,
+    action: String,
+    report_issue: String,
+    actorName: String
     })],
 
   feedAction: [new Schema({
@@ -98,7 +113,7 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword,
 /**
  * Add Log to User if access is 1 hour from last use.
  */
-userSchema.methods.logUser = function comparePassword(time, agent, ip) {
+userSchema.methods.logUser = function logUser(time, agent, ip) {
   
   if(this.log.length > 0)
   {
@@ -122,6 +137,14 @@ userSchema.methods.logUser = function comparePassword(time, agent, ip) {
     this.log.push(log);
   }
 
+};
+
+userSchema.methods.logPage = function logPage(time, page) {
+
+    let log = {};
+    log.time = time;
+    log.page = page;
+    this.pageLog.push(log);
 };
 
 /**

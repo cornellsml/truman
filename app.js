@@ -147,7 +147,7 @@ app.use(session({
     path: '/',
     httpOnly: true,
     secure: false,
-    maxAge: 1800000
+    maxAge: 7200000
   },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
@@ -256,7 +256,9 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 //See actors
 //app.get('/actors', actorsController.getActors);
 
-app.get('/user/:userId', actorsController.getActor);
+app.get('/user/:userId', passportConfig.isAuthenticated, actorsController.getActor);
+app.post('/user', passportConfig.isAuthenticated, actorsController.postBlockOrReport);
+
 
 //getScript
 app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);

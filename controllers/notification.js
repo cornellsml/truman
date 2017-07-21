@@ -35,6 +35,7 @@ exports.getNotifications = (req, res) => {
 
     //This is the actual array of Posts from User
     var user_posts = user.getPosts();
+    user.logPage(Date.now(), "Notifications");
 
     //Also get all reply posts as well
 
@@ -551,8 +552,13 @@ exports.getNotifications = (req, res) => {
           });
 
 
-
-
+          //save the Page Log
+          user.save((err) => {
+            if (err) {
+              return next(err);
+            }
+            //req.flash('success', { msg: 'Profile information has been updated.' });
+          });
           res.render('notification', { notification_feed: final_notify });
 
 

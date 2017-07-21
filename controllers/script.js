@@ -127,6 +127,13 @@ exports.getScript = (req, res) => {
                 script_feed.splice(0,1);
                 //console.log("Post %o has been FLAGGED", script_feed[0].id);
               }
+
+              //post is from blocked user - so remove  it from feed
+              else if (user.blocked.includes(script_feed[0].actor.username))
+              {
+                script_feed.splice(0,1);
+              }
+
               else
               {
                 //console.log("Post is NOT FLAGGED, ADDED TO FINAL FEED");
@@ -139,8 +146,15 @@ exports.getScript = (req, res) => {
               else
               {
                 //console.log("NO FEED ACTION SO, ADDED TO FINAL FEED");
-                finalfeed.push(script_feed[0]);
-                script_feed.splice(0,1);
+                if (user.blocked.includes(script_feed[0].actor.username))
+                {
+                  script_feed.splice(0,1);
+                }
+                else
+                {
+                  finalfeed.push(script_feed[0]);
+                  script_feed.splice(0,1);
+                }
               }
             }//else in while loop
       }//while loop
