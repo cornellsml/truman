@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const moment = require('moment');
 const User = require('../models/User');
+const Notification = require('../models/Notification.js');
 
 /**
  * GET /login
@@ -17,6 +18,78 @@ exports.getLogin = (req, res) => {
     title: 'Login'
   });
 };
+
+/*************
+Get Notifcation Bell signal
+**************/
+exports.checkBell = (req, res) => {
+if (req.user) {
+
+    var user = req.user;
+
+    Notification.find({ $or: [ { userPost: user.numPosts  }, { userReply: user.numReplies }, { actorReply: user.numActorReplies } ] })
+        .populate('actor')
+        .exec(function (err, notification_feed) {
+
+          if (err) { return next(err); }
+
+          if (notification_feed.length == 0)
+          {
+            //peace out - send empty page - 
+            //or deal with replys or something IDK
+            console.log("No User Posts yet. Bell is black");
+            return res.send({result:false}); 
+          }
+
+          //We have values we need to check
+          //When this happens
+          else{
+
+            for (var i = 0, len = notification_feed.length; i < len; i++) {
+
+              //Do all things that reference userPost (read,like, actual copy of ActorReply)
+              if (notification_feed[i].userPost >= 0)
+              {
+
+                var userPostID = notification_feed[i].userPost;
+                var user_post = user.getUserPostByID(userPostID);
+                var time_diff = Date.now() - user_post.absTime;
+                if (user.lastNotifyVisit)
+                {
+                  var past_diff = user.lastNotifyVisit - user_post.absTime;
+                }
+                
+                else
+                {
+                  var past_diff = 0;
+                }
+
+                if(notification_feed[i].time <= time_diff && notification_feed[i].time > past_diff)
+                {
+                  return res.send({result:true});
+                }
+
+              }//UserPost
+
+            }//for loop
+
+            //end of for loop and no results, so no new stuff
+            console.log("&&Bell Check&& End of For Loop, no Results")
+            res.send({result:false});
+          }
+
+
+        });//Notification exec
+
+
+  }
+
+ else{
+  console.log("No req.user")
+  return res.send({result:false});
+}
+};
+
 
 /**
  * POST /login

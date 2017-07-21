@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
   numReplies: { type: Number, default: -1 }, //not including posts
   numActorReplies: { type: Number, default: -1 }, //not including posts
 
+  lastNotifyVisit: Date,
+
   mturkID: String,
 
   group: String, //full group type

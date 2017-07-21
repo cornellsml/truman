@@ -35,7 +35,10 @@ exports.getNotifications = (req, res) => {
 
     //This is the actual array of Posts from User
     var user_posts = user.getPosts();
+
+    //Log our visit to Notifications
     user.logPage(Date.now(), "Notifications");
+    user.lastNotifyVisit = Date.now();
 
     //Also get all reply posts as well
 

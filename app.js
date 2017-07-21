@@ -263,6 +263,7 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.get('/user/:userId', passportConfig.isAuthenticated, actorsController.getActor);
 app.post('/user', passportConfig.isAuthenticated, actorsController.postBlockOrReport);
 
+app.get('/bell', passportConfig.isAuthenticated, userController.checkBell);
 
 //getScript
 app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);
