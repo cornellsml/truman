@@ -118,22 +118,13 @@ exports.postSignup = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/signup_info');
+        res.redirect('/account/signup_info');
       });
     });
   });
 };
 
-/**
- * GET /signup_info
- * Signup Info page.
- */
-exports.getSignupInfo = (req, res) => {
 
-  res.render('account/signup_info', {
-    title: 'Add Information'
-  });
-};
 
 /**
  * POST /account/profile
@@ -146,9 +137,7 @@ exports.postSignupInfo = (req, res, next) => {
     if (err) { return next(err); }
     //user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
     user.profile.bio = req.body.bio || '';
 
     if (req.file)
@@ -165,7 +154,7 @@ exports.postSignupInfo = (req, res, next) => {
         }
         return next(err);
       }
-      //req.flash('success', { msg: 'Profile information has been updated.' });
+      req.flash('success', { msg: 'Profile information has been updated.' });
       res.redirect('/com');
     });
   });
@@ -178,6 +167,17 @@ exports.postSignupInfo = (req, res, next) => {
 exports.getAccount = (req, res) => {
   res.render('account/profile', {
     title: 'Account Management'
+  });
+};
+
+/**
+ * GET /signup_info
+ * Signup Info page.
+ */
+exports.getSignupInfo = (req, res) => {
+
+  res.render('account/signup_info', {
+    title: 'Add Information'
   });
 };
 

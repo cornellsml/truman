@@ -160,8 +160,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+
+
 app.use((req, res, next) => {
-  if ((req.path === '/api/upload') || (req.path === '/post/new') || (req.path === '/account/profile')) {
+  if ((req.path === '/api/upload') || (req.path === '/post/new') || (req.path === '/account/profile') || (req.path === '/account/signup_info')) {
     console.log("Not checking CSRF - out path now");
     //console.log("@@@@@request is " + req);
     next();
@@ -194,8 +196,9 @@ app.use((req, res, next) => {
 });
 
 var csrf = lusca({ csrf: true });
+
 function check(req, res, next) {
-    console.log("Body is now ");
+    console.log("@@@@@@@@@@@@Body is now ");
     console.log(req.body);
     next();
 }
@@ -243,14 +246,15 @@ app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
 
-app.get('/signup_info', userController.getSignupInfo);
-app.post('/signup_info', userController.postSignupInfo);
+app.get('/account/signup_info', passportConfig.isAuthenticated, userController.getSignupInfo);
+app.post('/account/signup_info', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postSignupInfo);
+
+app.post('/account/profile', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postUpdateProfile);
 
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-//app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 
 //See actors
