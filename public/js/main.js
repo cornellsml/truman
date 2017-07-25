@@ -20,14 +20,18 @@ $(window).on("load", function() {
   });
 
   //check bell
-  $.getJSON( "/bell", function( json ) {
-    
-    if (json.result)
-    {
-      $("i.big.alarm.icon").replaceWith( '<i class="big icons"><i class="red alarm icon"></i><i class="corner yellow lightning icon"></i></i>' );
-    }
+  if (!(top.location.pathname === '/login' || top.location.pathname === '/signup'))
+  {
+      
+    $.getJSON( "/bell", function( json ) {
+      
+      if (json.result)
+      {
+        $("i.big.alarm.icon").replaceWith( '<i class="big icons"><i class="red alarm icon"></i><i class="corner yellow lightning icon"></i></i>' );
+      }
 
- });
+   });
+}
 
   //make checkbox work
   $('.ui.checkbox')

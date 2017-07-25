@@ -11,6 +11,9 @@ const scriptSchema = new mongoose.Schema({
   post_id: Number,
   class: String, //experimental or normal
   picture: String,
+  highread: Number,
+  lowread: Number,
+  likes: Number,
   actor: {type: Schema.ObjectId, ref: 'Actor'},
 
   reply: {type: Schema.ObjectId, ref: 'Script'},

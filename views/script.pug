@@ -106,18 +106,20 @@ block content
                 .content
                   .description=val.actorReplyOBody
             .three.ui.bottom.attached.icon.buttons
-              .ui.animated.button(tabindex='0')
-                .visible.content
-                  i.reply.icon
-                .hidden.content Reply to Post
-              .ui.vertical.animated.button(tabindex='1')
-                .visible.content
-                  i.flag.icon
-                .hidden.content Report Post
-              .ui.animated.fade.button(tabindex='2')
-                .visible.content
-                  i.like.icon
-                .hidden.content Like Post
+              .ui.reply.button(tabindex='0')
+                i.reply.icon
+                |  Reply
+              .ui.flag.button(tabindex='0')
+                i.flag.icon
+                |  Flag
+              if val.like
+                .ui.red.like.button
+                  i.heart.icon
+                  |  Like
+              else
+                .ui.like.button
+                  i.heart.icon
+                  |  Like
 
           //- This is a User made post
           else
@@ -136,18 +138,20 @@ block content
             .content
               .description=val.body
             .three.ui.bottom.attached.icon.buttons
-              .ui.animated.button(tabindex='0')
-                .visible.content
-                  i.reply.icon
-                .hidden.content Reply to Post
-              .ui.vertical.animated.button(tabindex='1')
-                .visible.content
-                  i.flag.icon
-                .hidden.content Report Post
-              .ui.animated.fade.button(tabindex='2')
-                .visible.content
-                  i.like.icon
-                .hidden.content Like Post
+              .ui.reply.button(tabindex='0')
+                i.reply.icon
+                |  Reply
+              .ui.flag.button(tabindex='0')
+                i.flag.icon
+                |  Flag
+              if val.like
+                .ui.red.like.button
+                  i.heart.icon
+                  |  Like
+              else
+                .ui.like.button
+                  i.heart.icon
+                  |  Like
 
       //-THIS is for posts by Actors, not the USER
       else
@@ -233,24 +237,26 @@ block content
                 .content
                   .description=val.reply.body
             .three.ui.bottom.attached.icon.buttons
-              .ui.animated.reply.button(tabindex='0')
-                .visible.content
-                  i.reply.icon
-                .hidden.content Reply to Post
-              .ui.vertical.animated.flag.button(tabindex='1')
-                .visible.content
-                  i.flag.icon
-                .hidden.content Report Post
+              .ui.reply.button(tabindex='0')
+                i.reply.icon
+                |  Reply
+              .ui.flag.button(tabindex='0')
+                i.flag.icon
+                |  Flag
               if val.like
-                .ui.animated.fade.red.like.button(tabindex='2')
-                  .visible.content
-                    i.like.icon
-                  .hidden.content Like Post
+                .ui.labeled.button(tabindex='0')
+                  .ui.red.like.button
+                    i.heart.icon
+                    |  Like
+                  a.ui.basic.red.left.pointing.label
+                    | 15
               else
-                .ui.animated.fade.like.button(tabindex='2')
-                  .visible.content
-                    i.like.icon
-                  .hidden.content Like Post
+                .ui.labeled.button(tabindex='0')
+                  .ui.like.button
+                    i.heart.icon
+                    |  Like
+                  a.ui.basic.red.left.pointing.label
+                    | 15
           else
             //- not a reply post - visualize like normal
             .content
@@ -264,25 +270,35 @@ block content
               //-img(src='/picture.svg', data-src=val.picture)
             .content
               .description=val.body
+              if user.notify != 'low'
+                .right.floated.meta
+                  i.icon.checkmark
+                  | Seen by 12
+              else if user.notify != 'high'
+                .right.floated.meta
+                  i.icon.checkmark
+                  | Seen by 153
             .three.ui.bottom.attached.icon.buttons
-              .ui.animated.reply.button(tabindex='0')
-                .visible.content
-                  i.reply.icon
-                .hidden.content Reply to Post
-              .ui.vertical.animated.flag.button(tabindex='1')
-                .visible.content
-                  i.flag.icon
-                .hidden.content Report Post
+              .ui.reply.button(tabindex='0')
+                i.reply.icon
+                |  Reply
+              .ui.flag.button(tabindex='0')
+                i.flag.icon
+                |  Flag
               if val.like
-                .ui.animated.fade.red.like.button(tabindex='2')
-                  .visible.content
-                    i.like.icon
-                  .hidden.content Like Post
+                .ui.labeled.button(tabindex='0')
+                  .ui.red.like.button
+                    i.heart.icon
+                    |  Like
+                  a.ui.basic.red.left.pointing.label
+                    | 15
               else
-                .ui.animated.fade.like.button(tabindex='2')
-                  .visible.content
-                    i.like.icon
-                  .hidden.content Like Post
+                .ui.labeled.button(tabindex='0')
+                  .ui.like.button
+                    i.heart.icon
+                    |  Like
+                  a.ui.basic.red.left.pointing.label
+                    | 15
     .ui.fluid.card
       .content
         .description

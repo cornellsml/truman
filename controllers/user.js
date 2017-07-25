@@ -526,6 +526,48 @@ var sendReminderEmail = function(user){
   };
 
 /**
+ * Mail A user a Reminder
+ * 
+ */
+var sendFinalEmail = function(user){
+    if (!user) { return; }
+    var u_name = user.profile.name || user.email || 'buddy';
+    const transporter = nodemailer.createTransport({
+      service: '"Mailgun"',
+      auth: {
+        user: process.env.MAILGUN_USER,
+        pass: process.env.MAILGUN_PASSWORD
+      },
+      debug: true
+    });
+
+    const mailOptions = {
+      to: user.email,
+      from: 'admin@eatsnap.love',
+      subject: 'Remember to Checkout 🍴📷.❤️ Today',
+      text: `Hey ${u_name},\n\n
+      Thank you so much for participating in our study!\n
+      Your participation has been a huge help in beta testing our app.
+      You have one last task to finish the study, and that is to take the final survey here at https://github.com/difrad/truman\n\n
+      Thanks again for all your help and participation!\n
+      Keep Eating, Snapping and Loving!\n 
+      🍴📷.❤️ Team
+      \n`
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              console.log('Error occurred');
+              console.log(error.message);
+              return;
+          }
+          console.log('Message sent successfully!');
+          console.log('Server responded with "%s"', info.response);
+          transporter.close();
+      });
+      
+  };
+
+/**
  * GET /forgot
  * Forgot Password page.
  */
@@ -573,7 +615,8 @@ exports.stillActive = () => {
             console.log("turning off user "+users[i].email);
             users[i].save((err) => {
               if (err) { return next(err); }
-              console.log("Success in turning off");
+            console.log("Success in turning off");
+            sendFinalEmail(users[i]);
             });
         }
         

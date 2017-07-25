@@ -185,11 +185,16 @@ app.use((req, res, next) => {
   if (!req.user &&
       req.path !== '/login' &&
       req.path !== '/signup' &&
+      req.path !== '/bell' &&
       !req.path.match(/^\/auth/) &&
       !req.path.match(/\./)) {
+    console.log("@@@@@path is now");
+    console.log(req.path);
     req.session.returnTo = req.path;
   } else if (req.user &&
       req.path == '/account') {
+    console.log("!!!!!!!path is now");
+    console.log(req.path);
     req.session.returnTo = req.path;
   }
   next();
