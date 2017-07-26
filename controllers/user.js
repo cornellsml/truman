@@ -531,6 +531,7 @@ var sendReminderEmail = function(user){
  */
 var sendFinalEmail = function(user){
     if (!user) { return; }
+    console.log("!!!!!!SENDING FINAL E_MAIL!!!!")
     var u_name = user.profile.name || user.email || 'buddy';
     const transporter = nodemailer.createTransport({
       service: '"Mailgun"',
@@ -544,7 +545,7 @@ var sendFinalEmail = function(user){
     const mailOptions = {
       to: user.email,
       from: 'admin@eatsnap.love',
-      subject: 'Remember to Checkout 🍴📷.❤️ Today',
+      subject: 'Final Survey For Study for 🍴📷.❤️ ',
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
       Your participation has been a huge help in beta testing our app.
@@ -613,10 +614,10 @@ exports.stillActive = () => {
         {
             users[i].active = false;
             console.log("turning off user "+users[i].email);
+            sendFinalEmail(users[i]);
             users[i].save((err) => {
               if (err) { return next(err); }
             console.log("Success in turning off");
-            sendFinalEmail(users[i]);
             });
         }
         
