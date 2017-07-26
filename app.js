@@ -163,7 +163,7 @@ app.use(flash());
 
 
 app.use((req, res, next) => {
-  if ((req.path === '/api/upload') || (req.path === '/post/new') || (req.path === '/account/profile') || (req.path === '/account/signup_info')) {
+  if ((req.path === '/api/upload') || (req.path === '/post/new') || (req.path === '/account/profile') || (req.path === '/account/signup_info_post')) {
     console.log("Not checking CSRF - out path now");
     //console.log("@@@@@request is " + req);
     next();
@@ -253,7 +253,7 @@ app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
 
 app.get('/account/signup_info', passportConfig.isAuthenticated, userController.getSignupInfo);
-app.post('/account/signup_info', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postSignupInfo);
+app.post('/account/signup_info_post', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postSignupInfo);
 
 app.post('/account/profile', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postUpdateProfile);
 

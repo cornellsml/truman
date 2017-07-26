@@ -5,7 +5,7 @@ block content
   .sixteen.wide.column
     h3.ui.header Tell Us A Little More About Yourself
 
-    form.ui.form(action='/account/signup_info', method='POST', enctype='multipart/form-data')
+    form.ui.form(action='/account/signup_info_post', method='POST', enctype='multipart/form-data')
       input(type='hidden', name='_csrf', value=_csrf)
       .field.image-upload
         //- label.col-sm-3.control-label Profile Picture (Click to Change)
