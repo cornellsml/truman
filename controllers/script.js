@@ -97,6 +97,7 @@ exports.getScript = (req, res) => {
           else{
             //console.log("ELSE PUSH FEED");
             var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[0].id; });
+
              
             if(feedIndex!=-1)
             {

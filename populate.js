@@ -303,12 +303,15 @@ for (var i = 0, len = actorReply.length; i < len; i++) {
       
       actorNotifyCreate(actorReply[i]);
 }
-*/
-
-
 for (var i = 0, len = actorReply.length; i < len; i++) {
       
       actorNotifyCreate(actorReply[i]);
+}
+*/
+
+for (var i = 0, len = dd.length; i < len; i++) {
+      
+      PostReplyCreateFinal(dd[i]);
 }
 
 //PostReplyCreate(posts1[0]);

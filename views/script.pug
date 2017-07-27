@@ -236,6 +236,14 @@ block content
                     img(src=val.reply.picture)
                 .content
                   .description=val.reply.body
+                  if user.notify != 'low'
+                    .right.floated.meta
+                      i.icon.checkmark
+                      | Seen by #{val.lowread}
+                  else if user.notify != 'high'
+                    .right.floated.meta
+                      i.icon.checkmark
+                      | Seen by #{val.highread}
             .three.ui.bottom.attached.icon.buttons
               .ui.reply.button(tabindex='0')
                 i.reply.icon
@@ -248,15 +256,15 @@ block content
                   .ui.red.like.button
                     i.heart.icon
                     |  Like
-                  a.ui.basic.red.left.pointing.label
+                  a.ui.basic.red.left.pointing.label=val.likes
                     | 15
               else
                 .ui.labeled.button(tabindex='0')
                   .ui.like.button
                     i.heart.icon
                     |  Like
-                  a.ui.basic.red.left.pointing.label
-                    | 15
+                  a.ui.basic.red.left.pointing.label=val.likes
+      
           else
             //- not a reply post - visualize like normal
             .content
@@ -273,11 +281,11 @@ block content
               if user.notify != 'low'
                 .right.floated.meta
                   i.icon.checkmark
-                  | Seen by 12
+                  | Seen by #{val.lowread}
               else if user.notify != 'high'
                 .right.floated.meta
                   i.icon.checkmark
-                  | Seen by 153
+                  | Seen by #{val.highread}
             .three.ui.bottom.attached.icon.buttons
               .ui.reply.button(tabindex='0')
                 i.reply.icon
@@ -290,15 +298,13 @@ block content
                   .ui.red.like.button
                     i.heart.icon
                     |  Like
-                  a.ui.basic.red.left.pointing.label
-                    | 15
+                  a.ui.basic.red.left.pointing.label=val.likes
               else
                 .ui.labeled.button(tabindex='0')
                   .ui.like.button
                     i.heart.icon
                     |  Like
-                  a.ui.basic.red.left.pointing.label
-                    | 15
+                  a.ui.basic.red.left.pointing.label=val.likes
     .ui.fluid.card
       .content
         .description
