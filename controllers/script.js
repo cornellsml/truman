@@ -113,6 +113,7 @@ exports.getScript = (req, res) => {
               if (user.feedAction[feedIndex].likeTime[0])
               { 
                 script_feed[0].like = true;
+                script_feed[0].likes++;
                 //console.log("Post %o has been LIKED", script_feed[0].id);
               }
 

@@ -94,6 +94,7 @@ $(window).on("load", function() {
   })
 ;
 
+//Picture Preview on Image Selection
 function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -245,9 +246,14 @@ $('.right.floated.time.meta, .date').each(function() {
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
+    
     $(this)
       .toggleClass( "red" )
     ;
+    //a.ui.basic.red.left.pointing.label.count
+    console.log("PLUS 1 to LIKE");
+    var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
+    label.html(function(i, val) { return val*1+1 });
 
      var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
      var like = Date.now();
