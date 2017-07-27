@@ -15,8 +15,10 @@ var fs = require('fs')
 var highUsers = require('./highusers.json');
 var actors1 = require('./actorsv1.json');
 var posts1 = require('./postsv1.json');
+var post_reply1 = require('./post_replyv1.json');
 var actorReply = require('./actorReply.json');
 var notify = require('./notify.json');
+var dd = require('./upload_post_replyv1.json');
 
 dotenv.load({ path: '.env' });
 
@@ -42,6 +44,18 @@ String.prototype.capitalize = function() {
 function timeStringToNum (v) {
   var timeParts = v.split(":");
   return parseInt(((timeParts[0] * (60000 * 60)) + (timeParts[1] * 60000)), 10);
+}
+
+function getLikes() {
+  var notRandomNumbers = [1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6];
+  var idx = Math.floor(Math.random() * notRandomNumbers.length);
+  return notRandomNumbers[idx];
+}
+
+function getReads(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
 function highActorCreate(random_actor) {
@@ -108,6 +122,9 @@ function PostCreate(new_post) {
     postdetail.post_id = new_post.id;
     postdetail.class = new_post.class;
     postdetail.picture = new_post.picture;
+    postdetail.likes = getLikes();
+    postdetail.lowread = getReads(6,20);
+    postdetail.highread = getReads(145,203);
     postdetail.actor.$oid = act._id.toString();
     //postdetail.actor=`${act._id}`;
     //postdetail.actor2=act;
@@ -119,24 +136,72 @@ function PostCreate(new_post) {
 
     fs.appendFileSync('upload_postsv1.json', JSON.stringify(postdetail));
 
-    
-    //var post = new Script(postdetail, 'throw');
-
-    //console.log('@@@@@New post before save: ' + post.post_id);
-     /*    
-    post.save(function (err) {
-      if (err) {
-        console.log("Something went wrong!!!")
-        console.log(err);
-        return -1;
-      }
-      else {
-            console.log('#########New post: ' + post.post_id);
-        }
-      
-    });//save */
 
   });
+
+};
+function PostReplyCreateFinal(new_post){
+
+Script.findOne({ post_id: new_post.replyID}, function(err, pr){
+      if(err) {
+        console.log(err);
+        return
+      }
+
+      console.log('In SCRIPT');
+      console.log('In Reply: ' + pr._id);
+
+      //console.log('Looking up Actor ID is : ' + act._id); 
+      var postdetail = new Object();
+      postdetail.actor = {};
+      postdetail.reply = {};
+      postdetail.body = new_post.body
+      postdetail.post_id = new_post.id;
+      postdetail.class = new_post.class;
+      postdetail.picture = new_post.picture;
+      postdetail.likes = new_post.likes;
+      postdetail.lowread = new_post.lowread;
+      postdetail.highread = new_post.highread;
+      postdetail.actor.$oid = new_post.actor.$oid;
+      postdetail.reply.$oid = pr._id.toString();
+      
+      postdetail.time = new_post.time;
+
+      fs.appendFileSync('upload_post_replyv2.json', JSON.stringify(postdetail));
+
+      
+    });
+
+
+}
+
+function PostReplyCreate(new_post) {
+
+   Actor.findOne({ username: new_post.actor}, function(err, act){
+    if(err) {
+      console.log(err);
+      return
+    }
+    console.log('Looking up Actor: ' + act.username); 
+    console.log('Try for post: ' + new_post.reply);
+    var postdetail = new Object();
+    postdetail.actor = {};
+    postdetail.replyID = new_post.reply;
+    postdetail.body = new_post.body
+    postdetail.post_id = 300 + new_post.id;
+    postdetail.class = new_post.class;
+    postdetail.picture = new_post.picture;
+    postdetail.likes = getLikes();
+    postdetail.lowread = getReads(6,20);
+    postdetail.highread = getReads(145,203);
+    postdetail.actor.$oid = act._id.toString();
+    //postdetail.reply.$oid = pr._id.toString();
+    console.log('Time is now: ' + new_post.time);
+    postdetail.time = timeStringToNum(new_post.time);
+    fs.appendFileSync('upload_post_replyv0.json', JSON.stringify(postdetail));
+  });
+    
+    
 
 };
 
@@ -175,7 +240,7 @@ function NotifyCreate(new_notify) {
     //console.log(mongoose.Types.ObjectId.isValid(notifydetail.actor.$oid));
     //console.log(notifydetail);
 
-    fs.appendFileSync('upload_replyv1.json', JSON.stringify(notifydetail));
+    fs.appendFileSync('upload_replyv2.json', JSON.stringify(notifydetail));
 
   });
 
@@ -199,30 +264,54 @@ function actorNotifyCreate(new_notify) {
     //console.log(mongoose.Types.ObjectId.isValid(notifydetail.actor.$oid));
     //console.log(notifydetail);
 
-    fs.appendFileSync('upload_actorReplyV1.json', JSON.stringify(notifydetail));
+    fs.appendFileSync('upload_actorReplyV2.json', JSON.stringify(notifydetail));
 
   });
 
 };
 /*
 for (var i = 0, len = actors1.length; i < len; i++) {
-  if ((actors1[i].class == "cohort") || (actors1[i].class == "normal"))
-    {
+  
       console.log("@@@Looking at "+actors1[i].username);
       ActorCreate(actors1[i]);
-    }
 
-}*
+}
+/*
 for (var i = 0, len = highUsers.results.length; i < len; i++) {
   
       highActorCreate(highUsers.results[i]);
-}*/
+}
+
 for (var i = 0, len = notify.length; i < len; i++) {
       
       NotifyCreate(notify[i]);
 }
+for (var i = 0, len = posts1.length; i < len; i++) {
+      
+      PostCreate(posts1[i]);
+}
+for (var i = 0, len = post_reply1.length; i < len; i++) {
+      
+      PostReplyCreate(post_reply1[i]);
+}
 
-//PostCreate(posts1[0]);
+for (var i = 0, len = dd.length; i < len; i++) {
+      
+      PostReplyCreateFinal(dd[i]);
+}
+for (var i = 0, len = actorReply.length; i < len; i++) {
+      
+      actorNotifyCreate(actorReply[i]);
+}
+*/
+
+
+for (var i = 0, len = actorReply.length; i < len; i++) {
+      
+      actorNotifyCreate(actorReply[i]);
+}
+
+//PostReplyCreate(posts1[0]);
 //PostCreate(posts1[1]);
 //actorNotifyCreate(actorReply[i]);
 console.log('After Lookup:');
