@@ -151,7 +151,7 @@ app.use(session({
   },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
-    url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
+    url: process.env.PRO_MONGODB_URI || process.env.PRO_MONGOLAB_URI,
     autoReconnect: true,
     clear_interval: 3600
   })
