@@ -1,0 +1,30 @@
+extends ui_layout
+
+block content
+
+  .ui.text.container
+    br
+    h1 Welcome to EatSnap.Love!
+        h3 Here's what you can do on the site.
+    ul
+        li Create new posts! Upload existing photos or take new photos with your phone.
+        li Reply to others' posts to get a conversation going.
+        li Like others' posts to show you love their snaps!
+        li Fill out your profile. You can add as much or as little info as you want.
+    img.ui.centered.image(src='/esl-howto.png')
+    br
+    h3 See who else is around.
+    p We'll notify you if someone replies to or likes your post.
+    if user.ui == 'ui' && user.notify != 'no'
+        p We'll also keep track of which posts you've viewed. To keep things social, we'll let others know when you view their posts, and notify you when they view yours.
+        img.ui.centered.image(src='/UI-read.png')
+    else if user.ui == 'ui'
+        p We'll also keep track of which posts you've viewed.
+        img.ui.centered.image(src='/ui-no-read.png')
+    else if user.notify != 'no'
+        p We'll also keep track of who has viewed your posts.
+        img.ui.centered.image(src='/no-ui-read.png')
+    br
+    .ui.big.green.labeled.icon.button.info
+        i.rocket.icon
+        |   Let's Go!

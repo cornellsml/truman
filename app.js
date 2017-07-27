@@ -236,6 +236,12 @@ app.get('/com', function (req, res) {
   });
 })
 
+app.get('/info', passportConfig.isAuthenticated, function (req, res) {
+  res.render('info', {
+    title: 'User Docs'
+  });
+})
+
 
 //User's Page
 app.get('/me', passportConfig.isAuthenticated, userController.getMe);

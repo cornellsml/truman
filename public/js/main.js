@@ -152,6 +152,12 @@ $('.right.floated.time.meta, .date').each(function() {
   //Community Rules Button (rocket!!!)
   $('.ui.big.green.labeled.icon.button.com')
   .on('click', function() {
+    window.location.href='/info'; //maybe go to tour site???
+  });
+
+  //Community Rules Button (rocket!!!)
+  $('.ui.big.green.labeled.icon.button.info')
+  .on('click', function() {
     window.location.href='/'; //maybe go to tour site???
   });
 
