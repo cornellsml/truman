@@ -176,7 +176,8 @@ exports.postSignup = (req, res, next) => {
     group: result,
     active: true,
     ui: resultArray[0], //ui or no
-    notify: resultArray[1] //no, low or high
+    notify: resultArray[1], //no, low or high
+    lastNotifyVisit : Date.now()
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
