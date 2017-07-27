@@ -31,8 +31,9 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                      if actor.username != "generic-joe"
+                        a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
+                          img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -42,7 +43,8 @@ block content
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
                       |  and 
-                      a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
+                      //-a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
+                      a(key=val.key)=(best.length+val.actors.length-1)+" others "
                       | have read your post.  
                       .date=val.time
               .ui.small.long.extrausers.modal(id=val.key)
@@ -84,11 +86,13 @@ block content
                 .label
                   i.large.unhide.icon
                 .content
-                  img.ui.tiny.right.floated.image(src='/'+val.picture)
+                  if val.picture
+                    img.ui.tiny.right.floated.image(src='/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                      if actor.username != "generic-joe"
+                        a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
+                          img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -98,7 +102,8 @@ block content
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
                       |  and 
-                      a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
+                      //-a.others(key=val.key)=(best.length+val.actors.length-1)+" others "
+                      a(key=val.key)=(best.length+val.actors.length-1)+" others "
                       | have read your reply to #{val.originalActor.profile.name}'s post.  
                       .date=val.time
               .ui.small.long.extrausers.modal(id=val.key)
@@ -117,7 +122,8 @@ block content
                 .label
                   i.large.like.icon
                 .content
-                  img.ui.tiny.right.floated.image(src='/'+val.picture)
+                  if val.picture
+                    img.ui.tiny.right.floated.image(src='/'+val.picture)
                   .extra.images
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
@@ -143,8 +149,9 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                     each actor in best
-                      a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                      if actor.username != "generic-joe"
+                        a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
+                          img(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name

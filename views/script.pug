@@ -36,9 +36,13 @@ block content
       //- create a card for each post in val (if by user make the card a little different)
       //- if val.relativeTime - then post came from user_post (so user post, user reply to actor reply to user post)
       if val.relativeTime
-        .ui.fluid.card(postID=val.id, ui=user.ui, notify=user.notify)
+        -var u_class;
+        -if (val.actorAuthor) {u_class = "actorReply"}
+        -else if (val.reply) {u_class = "userReply"}
+        -else {u_class = "userPost"}
+        .ui.fluid.card(postID=val.id, ui=user.ui, notify=user.notify, type=u_class, u_postID=val.replyID || val.postID || val.actorReplyID)
           if val.reply
-            //- if post is a reply post - add the post and populate the reply as well
+            //- if post is a reply post -  add the post and populate the reply as well
             .content
               .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
               |
@@ -65,18 +69,24 @@ block content
                 .content
                   .description=val.reply.body
             .three.ui.bottom.attached.icon.buttons
-              .ui.animated.button(tabindex='0')
-                .visible.content
-                  i.reply.icon
-                .hidden.content Reply to Post
-              .ui.vertical.animated.button(tabindex='1')
-                .visible.content
-                  i.flag.icon
-                .hidden.content Report Post
-              .ui.animated.fade.button(tabindex='2')
-                .visible.content
-                  i.like.icon
-                .hidden.content Like Post
+              //-.ui.reply.button(tabindex='0')
+              .ui.button(tabindex='0')
+                i.reply.icon
+                |  Reply
+              //-.ui.flag.button(tabindex='0')
+              .ui.button(tabindex='0')
+                i.flag.icon
+                |  Flag
+              if val.like
+                //-.ui.red.like.button
+                .ui.red.button
+                  i.heart.icon
+                  |  Like
+              else
+                //-.ui.like.button
+                .ui.button
+                  i.heart.icon
+                  |  Like
 
           //- This is a actor reply to a user post
           else if val.actorAuthor
@@ -106,18 +116,22 @@ block content
                 .content
                   .description=val.actorReplyOBody
             .three.ui.bottom.attached.icon.buttons
-              .ui.reply.button(tabindex='0')
+              //-.ui.reply.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.reply.icon
                 |  Reply
-              .ui.flag.button(tabindex='0')
+              //-.ui.flag.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.flag.icon
                 |  Flag
               if val.like
-                .ui.red.like.button
+                //-.ui.red.like.button
+                .ui.red.button
                   i.heart.icon
                   |  Like
               else
-                .ui.like.button
+                //-.ui.like.button
+                .ui.button
                   i.heart.icon
                   |  Like
 
@@ -138,24 +152,28 @@ block content
             .content
               .description=val.body
             .three.ui.bottom.attached.icon.buttons
-              .ui.reply.button(tabindex='0')
+              //-.ui.reply.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.reply.icon
                 |  Reply
-              .ui.flag.button(tabindex='0')
+              //-.ui.flag.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.flag.icon
                 |  Flag
               if val.like
-                .ui.red.like.button
+                //-.ui.red.like.button
+                .ui.red.button
                   i.heart.icon
                   |  Like
               else
-                .ui.like.button
+                //-.ui.like.button
+                .ui.button
                   i.heart.icon
                   |  Like
 
       //-THIS is for posts by Actors, not the USER
       else
-        .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread')
+        .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread', type='actor')
           //- dimmer DIV for flagging
           .ui.dimmer.flag
                 .content
