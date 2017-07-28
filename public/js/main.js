@@ -113,6 +113,8 @@ function readURL(input) {
         readURL(this);
     });
 
+//Modal to show "other users" in Notifications 
+/*
 $('a.others').click(function(){
   let key = $(this).attr('key');
 
@@ -128,7 +130,7 @@ $('a.others').click(function(){
       
     }
   }).modal('show')  
-});
+}); */
 
 //add humanized time to all posts
 $('.right.floated.time.meta, .date').each(function() {
@@ -159,6 +161,12 @@ $('.right.floated.time.meta, .date').each(function() {
   $('.ui.big.green.labeled.icon.button.info')
   .on('click', function() {
     window.location.href='/'; //maybe go to tour site???
+  });
+
+  //More info Skip Button
+  $('button.ui.button.skip')
+  .on('click', function() {
+    window.location.href='/com'; //maybe go to tour site???
   });
 
   //Edit button
