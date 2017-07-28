@@ -550,7 +550,7 @@ var sendFinalEmail = function(user){
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
       Your participation has been a huge help in beta testing our app.
-      You have one last task to finish the study, and that is to take the final survey here at https://github.com/difrad/truman\n\n
+      You have one last task to finish the study, and that is to take the final survey here at https://cornell.qualtrics.com/jfe/form/SV_8q6L8qrzpxW3SDz\n\n
       Thanks again for all your help and participation!\n
       Keep Eating, Snapping and Loving!\n 
       🍴📷.❤️ Team
@@ -664,10 +664,10 @@ exports.postForgot = (req, res, next) => {
     if (!user) { return; }
     const token = user.passwordResetToken;
     const transporter = nodemailer.createTransport({
-      service: 'SendPulse',
+      service: 'Mailgun',
       auth: {
-        user: process.env.SENDPULSE_USER,
-        pass: process.env.SENDPULSE_PASSWORD
+        user: process.env.MAILGUN_USER,
+        pass: process.env.MAILGUN_PASSWORD
       }
     });
     const mailOptions = {
