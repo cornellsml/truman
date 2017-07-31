@@ -6,14 +6,19 @@ block content
   
   .computer.only.tablet.only.four.wide.column 
     .ui.card
-      //- this is the for user card - does not show up on mobile
       .image
         if user.profile.picture
           img(src='/user_post/'+user.profile.picture)
         else
           img(src=user.gravatar(60))
       .content
-        a.header(href='/me')= user.profile.name || user.email || user.id
+        a.header= user.profile.name || user.email || user.id
+        .meta="@"+user.username
+        .description=user.profile.bio
+        .description
+          if user.profile.location
+            i.marker.icon
+            span=user.profile.location
       .one.ui.bottom.attached.icon.buttons
           button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
             i.write.icon

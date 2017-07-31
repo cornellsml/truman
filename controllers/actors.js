@@ -2,6 +2,7 @@ const Actor = require('../models/Actor.js');
 const Script = require('../models/Script.js');
 const User = require('../models/User');
 var ObjectId = require('mongoose').Types.ObjectId;
+const _ = require('lodash');
 
 /**
  * GET /
@@ -73,9 +74,49 @@ exports.getActor = (req, res, next) => {
     .exec(function (err, script_feed) {
       if (err) { console.log(err); return next(err); }
       
-      //console.log("::::::Script::::");
-      //console.log(script_feed);
-      //save the Page Log
+      
+      for (var i = script_feed.length - 1; i >= 0; i--) {
+
+        var feedIndex = _.findIndex(user.feedAction, function(o) { return o.post == script_feed[i].id; });
+
+             
+          if(feedIndex!=-1)
+          {
+            //console.log("WE HAVE AN ACTION!!!!!");
+
+            if (user.feedAction[feedIndex].readTime[i])
+            { 
+              script_feed[i].read = true;
+              script_feed[i].state = 'read';
+              //console.log("Post: %o has been READ", script_feed[i].id);
+            }
+
+            if (user.feedAction[feedIndex].likeTime[i])
+            { 
+              script_feed[i].like = true;
+              script_feed[i].likes++;
+              //console.log("Post %o has been LIKED", script_feed[i].id);
+            }
+
+            if (user.feedAction[feedIndex].replyTime[i])
+            { 
+              script_feed[i].reply = true;
+              //console.log("Post %o has been REPLIED", script_feed[i].id);
+            }
+
+            //If this post has been flagged - remove it from FEED array (script_feed)
+            if (user.feedAction[feedIndex].flagTime[i])
+            { 
+              script_feed.splice(i,1);
+              //console.log("Post %o has been FLAGGED", script_feed[i].id);
+            }
+
+          }//end of IF we found Feed_action
+
+
+
+      }
+
       user.save((err) => {
         if (err) {
           return next(err);

@@ -11,6 +11,7 @@ block content
           img(src=user.gravatar(60))
       .content
         a.header= user.profile.name || user.email || user.id
+        .meta="@"+user.username
         .description=user.profile.bio
         .description
           if user.profile.location
@@ -42,7 +43,7 @@ block content
               .content
                 .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
                 |  
-                img.ui.avatar.image(src=val.reply.actor.profile.picture)
+                img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                 span=val.reply.actor.profile.name
               if val.reply.picture
                 .image
@@ -50,18 +51,24 @@ block content
               .content
                 .description=val.reply.body
           .three.ui.bottom.attached.icon.buttons
-            .ui.animated.button(tabindex='0')
-              .visible.content
+              //-.ui.reply.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.reply.icon
-              .hidden.content Reply to Post
-            .ui.vertical.animated.button(tabindex='0')
-              .visible.content
+                |  Reply
+              //-.ui.flag.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.flag.icon
-              .hidden.content Report Post
-            .ui.animated.fade.button(tabindex='0')
-              .visible.content
-                i.like.icon
-              .hidden.content Like Post
+                |  Flag
+              if val.like
+                //-.ui.red.like.button
+                .ui.red.button
+                  i.heart.icon
+                  |  Like
+              else
+                //-.ui.like.button
+                .ui.button
+                  i.heart.icon
+                  |  Like
         else
           .content
             .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
@@ -78,15 +85,21 @@ block content
           .content
             .description=val.body
           .three.ui.bottom.attached.icon.buttons
-            .ui.animated.button(tabindex='0')
-              .visible.content
+              //-.ui.reply.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.reply.icon
-              .hidden.content Reply to Post
-            .ui.vertical.animated.button(tabindex='0')
-              .visible.content
+                |  Reply
+              //-.ui.flag.button(tabindex='0')
+              .ui.button(tabindex='0')
                 i.flag.icon
-              .hidden.content Report Post
-            .ui.animated.fade.button(tabindex='0')
-              .visible.content
-                i.like.icon
-              .hidden.content Like Post
+                |  Flag
+              if val.like
+                //-.ui.red.like.button
+                .ui.red.button
+                  i.heart.icon
+                  |  Like
+              else
+                //-.ui.like.button
+                .ui.button
+                  i.heart.icon
+                  |  Like

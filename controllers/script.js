@@ -454,7 +454,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
       if (err) {
         if (err.code === 11000) {
           req.flash('errors', { msg: 'Something in feedAction went crazy. You should never see this.' });
-          return res.redirect('/account');
+          return res.redirect('/');
         }
         return next(err);
       }
