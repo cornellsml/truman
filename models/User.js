@@ -71,6 +71,7 @@ const userSchema = new mongoose.Schema({
         postClass: String,
         rereadTimes: Number, //number of times post has been viewed by user
         startTime: Number, //always the newest startTime (full date in ms)
+        liked: {type: Boolean, default: false},
         readTime : [Number],
         flagTime  : [Number],
         likeTime  : [Number],

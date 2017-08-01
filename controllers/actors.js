@@ -91,7 +91,7 @@ exports.getActor = (req, res, next) => {
               console.log("Post: %o has been READ", script_feed[i].id);
             }
 
-            if (user.feedAction[feedIndex].likeTime[0])
+            if (user.feedAction[feedIndex].liked)
             { 
               script_feed[i].like = true;
               script_feed[i].likes++;

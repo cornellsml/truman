@@ -260,19 +260,25 @@ $('.right.floated.time.meta, .date').each(function() {
   //this is the LIKE button
   $('.like.button')
   .on('click', function() {
-    
-    $(this)
-      .toggleClass( "red" )
-    ;
-    //a.ui.basic.red.left.pointing.label.count
-    console.log("PLUS 1 to LIKE");
-    var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
-    label.html(function(i, val) { return val*1+1 });
 
-     var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
-     var like = Date.now();
-     console.log("***********LIKE: post "+postID+" at time "+like);
-     $.post( "/feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+    //if already liked, unlike if pressed
+    if ( $( this ).hasClass( "red" ) ) {
+        console.log("***********UNLIKE: post");
+        $( this ).removeClass("red");
+        var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
+        label.html(function(i, val) { return val*1-1 });
+    }
+    //since not red, this button press is a LIKE action
+    else{
+      $(this).addClass("red");
+      var label = $(this).next("a.ui.basic.red.left.pointing.label.count");
+      label.html(function(i, val) { return val*1+1 });
+      var postID = $(this).closest( ".ui.fluid.card.dim" ).attr( "postID" );
+      var like = Date.now();
+      console.log("***********LIKE: post "+postID+" at time "+like);
+      $.post( "/feed", { postID: postID, like: like, _csrf : $('meta[name="csrf-token"]').attr('content') } );
+
+    }
 
   });
 

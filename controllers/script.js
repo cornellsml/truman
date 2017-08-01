@@ -110,7 +110,7 @@ exports.getScript = (req, res) => {
                 //console.log("Post: %o has been READ", script_feed[0].id);
               }
 
-              if (user.feedAction[feedIndex].likeTime[0])
+              if (user.feedAction[feedIndex].liked)
               { 
                 script_feed[0].like = true;
                 script_feed[0].likes++;
@@ -413,6 +413,7 @@ exports.postUpdateFeedAction = (req, res, next) => {
         let like = req.body.like - user.feedAction[feedIndex].startTime
         console.log("!!!!!!New FIRST LIKE Time: ", like);
         user.feedAction[feedIndex].likeTime = [like];
+        user.feedAction[feedIndex].liked = true;
         console.log("!!!!!!!adding FIRST LIKE time [0] now which is  ", user.feedAction[feedIndex].likeTime[0]);
       }
 
@@ -422,6 +423,14 @@ exports.postUpdateFeedAction = (req, res, next) => {
         let like = req.body.like - user.feedAction[feedIndex].startTime
         console.log("%%%%%Add new LIKE Time: ", like);
         user.feedAction[feedIndex].likeTime.push(like);
+        if(user.feedAction[feedIndex].liked)
+        {
+          user.feedAction[feedIndex].liked = false;
+        }
+        else
+        {
+          user.feedAction[feedIndex].liked = true;
+        }
       }
 
       //array of replyTime is empty and we have a new (first) REPLY event
