@@ -84,28 +84,28 @@ exports.getActor = (req, res, next) => {
           {
             //console.log("WE HAVE AN ACTION!!!!!");
 
-            if (user.feedAction[feedIndex].readTime[i])
+            if (user.feedAction[feedIndex].readTime[0])
             { 
               script_feed[i].read = true;
               script_feed[i].state = 'read';
-              //console.log("Post: %o has been READ", script_feed[i].id);
+              console.log("Post: %o has been READ", script_feed[i].id);
             }
 
-            if (user.feedAction[feedIndex].likeTime[i])
+            if (user.feedAction[feedIndex].likeTime[0])
             { 
               script_feed[i].like = true;
               script_feed[i].likes++;
               //console.log("Post %o has been LIKED", script_feed[i].id);
             }
 
-            if (user.feedAction[feedIndex].replyTime[i])
+            if (user.feedAction[feedIndex].replyTime[0])
             { 
               script_feed[i].reply = true;
               //console.log("Post %o has been REPLIED", script_feed[i].id);
             }
 
             //If this post has been flagged - remove it from FEED array (script_feed)
-            if (user.feedAction[feedIndex].flagTime[i])
+            if (user.feedAction[feedIndex].flagTime[0])
             { 
               script_feed.splice(i,1);
               //console.log("Post %o has been FLAGGED", script_feed[i].id);
