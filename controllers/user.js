@@ -114,7 +114,8 @@ exports.postLogin = (req, res, next) => {
       return res.redirect('/login');
     }
     if (!(user.active)) {
-      req.flash('errors', { msg: 'Account is no longer active. Study is over' });
+      console.log("FINAL");
+      req.flash('final', { msg: '' });
       return res.redirect('/login');
     }
     req.logIn(user, (err) => {
