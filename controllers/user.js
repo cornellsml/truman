@@ -662,7 +662,7 @@ exports.userTestResults = (req, res) => {
       } else {
         // E-mail all active users
         for (var i = users.length - 1; i >= 0; i--) {  
-          console.log("Looking at user "+users[i].email);      
+          console.log("@@@@@@@@@@Looking at user "+users[i].email);      
           var time_diff = Date.now() - users[i].createdAt;
           var three_days = 259200000;
           var one_day =     86400000;
@@ -673,30 +673,35 @@ exports.userTestResults = (req, res) => {
 
             //check logs
             console.log("log length is " + users[i].log.length);
+            var day = [0,0,0];
             for (var j = users[i].log.length - 1; j >= 0; j--) {
 
               var logtime = users[i].log[j].time - users[i].createdAt;
-              var day = [0,0,0];
+              console.log("logtime is "+logtime);
+              
 
               //day one
               if (logtime <= one_day)
               {
                 day[0]++;
+                console.log("!!!DAY1");
               }
               //day two
               else if ((logtime >=one_day) && (logtime <= (one_day *2))) 
               {
                 day[1]++;
+                console.log("!!!DAY2");
               }
               //day 3
               else if ((logtime >=(one_day *2)) && (logtime <= three_days))
               {
                 day[2]++;
+                console.log("!!!DAY3");
               }
 
             }//end of LOG for loop
           
-
+            console.log("@@@@@@@@days are d1:"+day[0]+" d2:"+day[1]+" d3:"+day[2]);
             //Logged in at least twice a day, and posted at least 3 times
             if (day[0] >=2 && day[1] >=2 && day[2] >=2 && users[i].numPosts >= 2)
             {
