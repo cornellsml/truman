@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   username: String,
   active: {type: Boolean, default: true},
+  isAdmin: {type: Boolean, default: false},
+
+  completed: {type: Boolean, default: false},
 
   numPosts: { type: Number, default: -1 }, //not including replys
   numReplies: { type: Number, default: -1 }, //not including posts

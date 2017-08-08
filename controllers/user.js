@@ -593,8 +593,7 @@ exports.mailAllActiveUsers = () => {
 
 
 /**
- * GET /forgot
- * Forgot Password page.
+ * Turn off all old accounts. Groundhog admin accounts
  */
 exports.stillActive = () => {
   User.find().where('active').equals(true).exec(    
@@ -614,18 +613,107 @@ exports.stillActive = () => {
         console.log("Three days is  "+three_days);
         if (time_diff >= three_days)
         {
-            users[i].active = false;
-            console.log("turning off user "+users[i].email);
-            sendFinalEmail(users[i]);
-            users[i].save((err) => {
-              if (err) { return next(err); }
-            console.log("Success in turning off");
-            });
+            if (users[i].isAdmin)
+            {
+              users[i].createdAt = Date.now();
+              users[i].save((err) => {
+                if (err) { return next(err); }
+              console.log("Switch over to new day");
+              });
+            }
+
+            //normal user, turn off
+            else
+            {
+              users[i].active = false;
+              console.log("turning off user "+users[i].email);
+              sendFinalEmail(users[i]);
+              users[i].save((err) => {
+                if (err) { return next(err); }
+              console.log("Success in turning off");
+              });
+            }
         }
         
       }  
     }    
   });
+};
+
+/**
+ * Basic information on Users that Finished the study
+ */
+exports.userTestResults = () => {
+  //only admin can do this
+  if (!req.user.isAdmin)
+  {
+    res.redirect('/');
+  }
+  //we are admin
+  else
+  {
+
+    User.find().where('active').equals(false).exec(    
+      function(err, users){
+      
+      // handle error
+      if (err) {
+        console.log('failed: ' + err);
+      } else {
+        // E-mail all active users
+        for (var i = users.length - 1; i >= 0; i--) {  
+          console.log("Looking at user "+users[i].email);      
+          var time_diff = Date.now() - users[i].createdAt;
+          var three_days = 259200000;
+          var one_day =     86400000;
+
+          //check if completed or not yet 
+          if (!users[i].completed)
+          {
+
+            //check logs
+            for (var i = users[i].log.length - 1; i >= 0; i--) {
+
+              var logtime = users[i].log[i].time - users[i].createdAt;
+              var day = [0,0,0];
+
+              //day one
+              if (logtime <= one_day)
+              {
+                day[0]++;
+              }
+              //day two
+              else if ((logtime >=one_day) && (logtime <= (one_day *2))) 
+              {
+                day[1]++;
+              }
+              //day 3
+              else if ((logtime >=(one_day *2)) && (logtime <= three_days))
+              {
+                day[2]++;
+              }
+
+            }//end of LOG for loop
+          
+
+            //Logged in at least twice a day, and posted at least 3 times
+            if (day[0] >=2 && day[1] >=2 && day[2] >=2 && users[i].numPosts >= 2)
+            {
+              users[i].completed = true;
+              users[i].save((err) => {
+                if (err) { return next(err); }
+              console.log("I'm Finished!!!!");
+              });
+            }
+          }//if User.completed
+          
+        }//for loop for all users!  
+
+        res.render('completed', { users: users });
+
+      }///else no error    
+    });//User.Find()
+  }
 };
 
 /**
