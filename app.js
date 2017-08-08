@@ -245,7 +245,9 @@ app.get('/info', passportConfig.isAuthenticated, function (req, res) {
 
 //User's Page
 app.get('/me', passportConfig.isAuthenticated, userController.getMe);
-app.get('/admin', passportConfig.isAuthenticated, userController.getMe);
+
+app.get('/completed', passportConfig.isAuthenticated, userController.userTestResults);
+
 app.get('/notifications', passportConfig.isAuthenticated, notificationController.getNotifications);
 
 

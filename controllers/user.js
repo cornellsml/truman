@@ -643,7 +643,7 @@ exports.stillActive = () => {
 /**
  * Basic information on Users that Finished the study
  */
-exports.userTestResults = () => {
+exports.userTestResults = (req, res) => {
   //only admin can do this
   if (!req.user.isAdmin)
   {
@@ -672,9 +672,10 @@ exports.userTestResults = () => {
           {
 
             //check logs
-            for (var i = users[i].log.length - 1; i >= 0; i--) {
+            console.log("log length is " + users[i].log.length);
+            for (var j = users[i].log.length - 1; j >= 0; j--) {
 
-              var logtime = users[i].log[i].time - users[i].createdAt;
+              var logtime = users[i].log[j].time - users[i].createdAt;
               var day = [0,0,0];
 
               //day one

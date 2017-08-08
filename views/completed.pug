@@ -1,0 +1,28 @@
+extends ui_layout
+
+block content
+
+  .sixteen.wide.column 
+    br
+    table.ui.celled.padded.table
+      thead
+        tr
+          th.single.line E-mail
+          th ID
+          th Group
+          th Completed?
+          th Posts
+          th Replies
+      each u in users
+        tbody
+          tr
+            td=u.email
+            td.single.line=u.mturkID
+            td=u.group
+            td=u.completed
+            td=u.numPosts
+            td=u.numReplies
+    br
+    br
+    br
+
