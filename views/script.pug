@@ -59,7 +59,7 @@ block content
               a(href='/me')
                 span=user.profile.name || user.email || user.id
             .content
-              .description=val.body
+              .description(style="font-size:130%")=val.body
             .extra.content
               .ui.fluid.card
                 .content
@@ -68,11 +68,10 @@ block content
                   a(href='/user/'+val.reply.actor.username)   
                     img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
                     span=val.reply.actor.profile.name
-                if val.reply.picture
-                  .image
-                    img(src=val.reply.picture)
                 .content
-                  .description=val.reply.body
+                  if val.reply.picture
+                    img.post.ui.left.floated.small.image(src=val.reply.picture)
+                  p=val.reply.body
             .three.ui.bottom.attached.icon.buttons
               //-.ui.reply.button(tabindex='0')
               .ui.button(tabindex='0')
@@ -102,7 +101,7 @@ block content
                 img.ui.avatar.image(src='/profile_pictures/'+val.actorAuthor.profile.picture)
                 span=val.actorAuthor.profile.name
             .content
-              .description=val.body
+              .description(style="font-size:130%")=val.body
             .extra.content
               .ui.fluid.card
                 .content
@@ -115,11 +114,10 @@ block content
                       img(src=user.gravatar(60))
                   a(href='/me')
                     span=user.profile.name || user.email || user.id
-                if val.actorReplyOPicture
-                  .image
-                    img(src='/user_post/'+val.actorReplyOPicture)
                 .content
-                  .description=val.actorReplyOBody
+                  if val.actorReplyOPicture
+                    img.post.ui.left.floated.small.image(src='/user_post/'+val.actorReplyOPicture)
+                  p=val.actorReplyOBody
             .three.ui.bottom.attached.icon.buttons
               //-.ui.reply.button(tabindex='0')
               .ui.button(tabindex='0')
