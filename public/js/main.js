@@ -327,17 +327,24 @@ $('.right.floated.time.meta, .date').each(function() {
 
 
   //Dimm cards as user scrolls - send Post to update DB on timing of events .image
-  //$('.ui.fluid.card.dim')
-  $('.ui.fluid.card.dim .image')
+  //$('.ui.fluid.card.dim') img.post $('.ui.fluid.card.dim .image')
+  $('img.post')
   .visibility({
     once       : false,
     continuous : false,
     observeChanges: true,
+    offset: 65,
     
+    /*
+    onTopVisibleReverse:function(calculations) {
+      console.log(":::::Now passing onTopVisibleReverse:::::");
+    },*/
+
     
-    //USER HAS NOW READ THE POST (READ EVENT)
-    onBottomVisibleReverse:function(calculations) {
-        console.log(":::::Now passing onBottomVisibleReverse:::::");
+    //USER HAS NOW READ THE POST (READ EVENT) 
+    //onBottomVisibleReverse:function(calculations) { onBottomPassed
+      onBottomPassed:function(calculations) {
+        console.log(":::::Now passing onBottomPassed:::::");
         var parent = $(this).parents(".ui.fluid.card.dim");
 
         //As Long as Dimmer is not Active and We have a UI condistion - Dimm screen and send Post READ event
