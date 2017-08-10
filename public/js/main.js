@@ -323,11 +323,8 @@ $('.right.floated.time.meta, .date').each(function() {
   });
 
 
-
-
-
   //Dimm cards as user scrolls - send Post to update DB on timing of events .image
-  //$('.ui.fluid.card.dim') img.post $('.ui.fluid.card.dim .image')
+  //$('.ui.fluid.card.dim') img.post $('.ui.fluid.card.dim .image'
   $('img.post')
   .visibility({
     once       : false,
