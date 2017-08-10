@@ -3115,7 +3115,6 @@
 {"_id":{"$oid":"5979427a8ecab254bb6a7b98"},"userPost":2,"actor":{"$oid":"5978ffc618bf097f8cf39ac6"},"notificationType":"reply","replyBody":"I love this stuff!","time":120000}
 {"_id":{"$oid":"5979427a8ecab254bb6a7b99"},"userPost":2,"actor":{"$oid":"5978ffc618bf097f8cf39ac0"},"notificationType":"reply","replyBody":"looks delicious","time":300000}
 {"_id":{"$oid":"5979427a8ecab254bb6a7b9a"},"userPost":2,"actor":{"$oid":"5978ffc618bf097f8cf39abf"},"notificationType":"reply","replyBody":"❤️❤️","time":540000}
-{"_id":{"$oid":"5979427a8ecab254bb6a7b9b"},"userPost":2,"actor":{"$oid":"5978ffc618bf097f8cf39ab4"},"notificationType":"reply","replyBody":"nice 📷","time":660000}
 {"_id":{"$oid":"5979427a8ecab254bb6a7b9c"},"userPost":3,"actor":{"$oid":"5978ffc618bf097f8cf39ac8"},"notificationType":"reply","replyBody":"cool!","time":60000}
 {"_id":{"$oid":"5979427a8ecab254bb6a7b9d"},"userPost":3,"actor":{"$oid":"5978ffc618bf097f8cf39abe"},"notificationType":"reply","replyBody":"good job!","time":360000}
 {"_id":{"$oid":"5979427a8ecab254bb6a7b9e"},"userPost":3,"actor":{"$oid":"5978ffc618bf097f8cf39ac3"},"notificationType":"reply","replyBody":"looks great!","time":420000}
