@@ -103,9 +103,6 @@ User.find()
         console.log("In User "+ users[i].email);
         for (var k = users[i].feedAction.length - 1; k >= 0; k--) 
         {
-          console.log("In User "+ users[i].email);
-          console.log("Checking post "+ users[i].feedAction[k].id);
-          console.log("Checking post actor "+ users[i].feedAction[k].post.actor.profile.name);
           //Victim stats
           if (users[i].feedAction[k].post.actor.id == victim)
           {
@@ -149,10 +146,9 @@ User.find()
           //total read times, and average of all reads
           if(users[i].feedAction[k].readTime[0])
           {
-            console.log("For Row - first read time is "+ users[i].feedAction[k].readTime[0]);
             mlm.TotalNumberRead++;
             mlm.AveReadTime += users[i].feedAction[k].readTime.sum() / users[i].feedAction[k].readTime.length;
-            console.log("For Row - avg time is "+ mlm.AveReadTime);
+            
           }
 
 
@@ -167,7 +163,13 @@ User.find()
         for (var n = bully_messages.length - 1; n >= 0; n--) 
         {  
 
-          var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post == bully_messages[n]; });
+
+
+          var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
+          
+          console.log("In User "+ users[i].mturkID);
+          console.log("Bully message  "+ n);
+          console.log("feedIndex is "+ feedIndex);
 
           if(feedIndex!=-1)
           {
