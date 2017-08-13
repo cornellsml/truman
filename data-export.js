@@ -175,9 +175,18 @@ User.find()
           {
             mlm.BullyingPost  = n + 1;
             //last read time
-            mlm.ReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
-            mlm.AverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
-            mlm.ReadTimes = users[i].feedAction[feedIndex].readTime.length;
+            if(users[i].feedAction[feedIndex].readTime[0])
+            {
+              mlm.ReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
+              mlm.AverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
+              mlm.ReadTimes = users[i].feedAction[feedIndex].readTime.length;
+            }
+            else 
+            {
+              mlm.ReadTime = -1;
+              mlm.AverageReadTime = 0
+              mlm.ReadTimes = 0
+            }
 
             if(users[i].feedAction[feedIndex].flagTime[0])
             {
