@@ -64,7 +64,7 @@ User.find()
       for (var i = users.length - 1; i >= 0; i--) {
 
         var mlm = {};
-        mlm.id = users[i].id;
+        mlm.id = users[i].mturkID;
 
         //UI
         if (users[i].ui == 'ui')
