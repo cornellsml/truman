@@ -259,7 +259,7 @@ User.find()
       {
         var block_index = _.findIndex(users[i].blockAndReportLog, function(o) { return (o.actorName == bully_name && o.action =="block"); });
         sur.blocked = 1;
-        sur.BlockHours = users[i].blockAndReportLog[block_index];
+        sur.BlockHours = users[i].blockAndReportLog[block_index].time - users[i].createdAt;
       }
       else
       {
@@ -271,12 +271,14 @@ User.find()
       {
         var report_index = _.findIndex(users[i].blockAndReportLog, function(o) { return (o.actorName == bully_name && o.action =="report"); });
         sur.reported = 1;
-        sur.ReportHours = users[i].blockAndReportLog[report_index];
+        sur.ReportHours = users[i].blockAndReportLog[report_index].time - users[i].createdAt;
+        sur.reportIssue = users[i].blockAndReportLog[report_index].report_issue;
       }
       else
       {
         sur.reported = 0;
         sur.ReportHours = 259200000;
+        sur.reportIssue = "";
       }
       sur.VictimNoBullyReplies = mlm.VictimNoBullyReplies;
       sur.VictimNoBullyLikes = mlm.VictimNoBullyLikes;
