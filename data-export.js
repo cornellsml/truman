@@ -177,9 +177,9 @@ User.find()
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
           
-          console.log("In User "+ users[i].mturkID);
-          console.log("Bully message  "+ n);
-          console.log("feedIndex is "+ feedIndex);
+          //console.log("In User "+ users[i].mturkID);
+          //console.log("Bully message  "+ n);
+          //console.log("feedIndex is "+ feedIndex);
 
           if(feedIndex!=-1)
           {
