@@ -160,7 +160,7 @@ User.find()
             if(users[i].pageLog[z].page == "Notifications")
               mlm.notificationpage++;
             else if (users[i].pageLog[z].page == bully_name)
-              mlm.notificationpage++;
+              mlm.numberbullypage++;
             else if (users[i].pageLog[z].page == "casssssssssie")
               mlm.numbervictimpage++;
             else
