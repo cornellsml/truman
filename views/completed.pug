@@ -9,8 +9,10 @@ block content
         tr
           th.single.line E-mail
           th ID
+          th Start Date
           th Group
           th Completed?
+          th Number of Logins
           th Posts
           th Replies
       each u in users
@@ -18,8 +20,10 @@ block content
           tr
             td=u.email
             td.single.line=u.mturkID
+            td=u.createdAt
             td=u.group
             td=u.completed
+            td=u.log.length 
             td=u.numPosts
             td=u.numReplies
     br
