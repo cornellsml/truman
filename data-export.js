@@ -286,7 +286,7 @@ User.find()
         }//for Per FeedAction
 
         //get totalAverage
-        mlm.AveReadTime = mlm.AveReadTime/mlm.TotalNumberRead;
+        mlm.AveReadTime = mlm.AveReadTime/mlm.TotalNonBullyPostRead;
         mlm.TotalNumberRead = mlm.TotalNonBullyPostRead + bullyReads;
         mlm.GeneralReplyNumber = users[i].numReplies + 1 - bullyReplies;
         mlm.GeneralPostNumber = users[i].numPosts + 1;
