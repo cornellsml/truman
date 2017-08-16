@@ -11,6 +11,8 @@ const _ = require('lodash');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const fs = require('fs')
+var UAParser = require('ua-parser-js');
+
 
 var csvWriter = require('csv-write-stream');
 var mlm_writer = csvWriter();
@@ -149,8 +151,24 @@ User.find()
           sur.ProfilePicture = 0;
         }
 
-        mlm.UserAgent = users[i].log[0].userAgent;
-        sur.UserAgent = users[i].log[0].userAgent;
+        var parser = new UAParser();
+
+        if (parser.setUA(users[i].log[0].userAgent).getDevice().type)
+        {
+          mlm.Device = parser.setUA(users[i].log[0].userAgent).getDevice().type;
+        }
+        else
+          mlm.Device = "Computer";
+
+        
+        sur.Device = mlm.Device;
+
+        mlm.Broswer = parser.setUA(users[i].log[0].userAgent).getBrowser().name;
+        sur.Broswer = mlm.Broswer;
+
+        mlm.OS = parser.setUA(users[i].log[0].userAgent).getOS().name;
+        sur.OS = mlm.OS;
+        
 
         mlm.notificationpage = 0;
         mlm.numberbullypage = 0;
@@ -382,25 +400,25 @@ User.find()
       {
         var block_index = _.findIndex(users[i].blockAndReportLog, function(o) { return (o.actorName == bully_name && o.action =="block"); });
         sur.blocked = 1;
-        sur.BlockHours = users[i].blockAndReportLog[block_index].time - users[i].createdAt;
+        sur.BlockMilliSeconds = users[i].blockAndReportLog[block_index].time - users[i].createdAt;
       }
       else
       {
         sur.blocked = 0;
-        sur.BlockHours = 259200000;
+        sur.BlockMilliSeconds = 259200000;
       }
 
       if (users[i].reported.includes(bully_name))
       {
         var report_index = _.findIndex(users[i].blockAndReportLog, function(o) { return (o.actorName == bully_name && o.action =="report"); });
         sur.reported = 1;
-        sur.ReportHours = users[i].blockAndReportLog[report_index].time - users[i].createdAt;
+        sur.ReportMilliSeconds = users[i].blockAndReportLog[report_index].time - users[i].createdAt;
         sur.reportIssue = users[i].blockAndReportLog[report_index].report_issue;
       }
       else
       {
         sur.reported = 0;
-        sur.ReportHours = 259200000;
+        sur.ReportMilliSeconds = 259200000;
         sur.reportIssue = "";
       }
 
@@ -413,6 +431,10 @@ User.find()
       sur.GeneralReplyNumber = mlm.GeneralReplyNumber + bullyReplies;
       sur.GeneralPostNumber = mlm.GeneralPostNumber;
       sur.TotalNumberRead = mlm.TotalNumberRead;
+      sur.AveReadTime = mlm.AveReadTime;
+      sur.ReplyBullyPost = bullyReplies;
+      sur.LikeBullyPost = bullyLikes;
+      sur.FlagBullyPost = bullyFlag;
       s_writer.write(sur);
     }//for each user
 
