@@ -501,7 +501,7 @@ var sendReminderEmail = function(user){
 
     const mailOptions = {
       to: user.email,
-      from: 'admin@eatsnap.love',
+      from: 'do-not-reply@eatsnap.love',
       subject: 'Remember to Checkout 🍴📷.❤️ Today',
       text: `Hey ${u_name},\n\n
       Just wanted to remind you to visit https://eatsnap.love today.\n
@@ -546,7 +546,7 @@ var sendFinalEmail = function(user){
 
     const mailOptions = {
       to: user.email,
-      from: 'admin@eatsnap.love',
+      from: 'do-not-reply@eatsnap.love',
       subject: 'Final Survey For Study for 🍴📷.❤️ ',
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
@@ -770,7 +770,7 @@ exports.postForgot = (req, res, next) => {
     });
     const mailOptions = {
       to: user.email,
-      from: 'admin@eatsnap.love',
+      from: 'do-not-reply@eatsnap.love',
       subject: 'Reset your password on eatsnap.love',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
