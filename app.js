@@ -27,7 +27,7 @@ const multer = require('multer');
 var m_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads') ,
   filename: function (req, file, cb) {
     var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
-    cb(null, prefix + file.originalname);
+    cb(null, prefix + file.originalname.replace(/[^A-Z0-9]+/ig, "_"));
   }
 });
 
@@ -35,14 +35,14 @@ var userpost_options = multer.diskStorage({ destination : path.join(__dirname, '
   filename: function (req, file, cb) {
     var lastsix = req.user.id.substr(req.user.id.length - 6);
     var prefix = lastsix + Math.random().toString(36).slice(2, 10);
-    cb(null, prefix + file.originalname);
+    cb(null, prefix + file.originalname.replace(/[^A-Z0-9]+/ig, "_"));
   }
 });
 
 var useravatar_options = multer.diskStorage({ destination : path.join(__dirname, 'uploads/user_post') ,
   filename: function (req, file, cb) {
     var prefix = req.user.id + Math.random().toString(36).slice(2, 10);
-    cb(null, prefix + file.originalname);
+    cb(null, prefix + file.originalname.replace(/[^A-Z0-9]+/ig, "_"));
   }
 });
 
