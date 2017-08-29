@@ -17,6 +17,7 @@ var UAParser = require('ua-parser-js');
 var csvWriter = require('csv-write-stream');
 var mlm_writer = csvWriter();
 var s_writer = csvWriter();
+var summary_writer = csvWriter();
 
 var bully_messages = ["59794b948ecab254bb6a7c92",
 "59794b948ecab254bb6a7c93",
@@ -64,17 +65,26 @@ User.find()
 
       mlm_writer.pipe(fs.createWriteStream('results/mlm_eatsnaplove.csv'));
       s_writer.pipe(fs.createWriteStream('results/sur_eatsnaplove.csv'));
+      summary_writer.pipe(fs.createWriteStream('results/sum_eatsnaplove.csv'));
 
       for (var i = users.length - 1; i >= 0; i--) 
       {
 
         var mlm = {};
         var sur = {};
+        var sums = {};
         mlm.id = users[i].mturkID;
         sur.id = users[i].mturkID;
+        sums.id = users[i].mturkID;
+
 
         mlm.email = users[i].email;
         sur.email = users[i].email;
+        sums.email = users[i].email;
+
+        mlm.StartDate = users[i].createdAt;
+        sur.StartDate = users[i].createdAt;
+        sums.StartDate = users[i].createdAt;
 
         console.log("In User "+ users[i].email);
 
@@ -191,6 +201,7 @@ User.find()
 
         mlm.citevisits = users[i].log.length;
         sur.citevisits = users[i].log.length;
+        sums.citevisits = users[i].log.length;
 
         if (users[i].completed)
         {
@@ -436,6 +447,10 @@ User.find()
       sur.LikeBullyPost = bullyLikes;
       sur.FlagBullyPost = bullyFlag;
       s_writer.write(sur);
+
+      sums.GeneralPostNumber = mlm.GeneralPostNumber;
+      sums.GeneralReplyNumber = mlm.GeneralReplyNumber + bullyReplies;
+      summary_writer.write(sums);
     }//for each user
 
 
