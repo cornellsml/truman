@@ -163,12 +163,16 @@ User.find()
 
         var parser = new UAParser();
 
-        if (parser.setUA(users[i].log[0].userAgent).getDevice().type)
+        if(users[i].log[0].userAgent)
         {
-          mlm.Device = parser.setUA(users[i].log[0].userAgent).getDevice().type;
+
+          if (parser.setUA(users[i].log[0].userAgent).getDevice().type)
+          {
+            mlm.Device = parser.setUA(users[i].log[0].userAgent).getDevice().type;
+          }
+          else
+            mlm.Device = "Computer";
         }
-        else
-          mlm.Device = "Computer";
 
         
         sur.Device = mlm.Device;
