@@ -172,16 +172,17 @@ User.find()
           }
           else
             mlm.Device = "Computer";
-        }
+        
 
         
-        sur.Device = mlm.Device;
+          sur.Device = mlm.Device;
 
-        mlm.Broswer = parser.setUA(users[i].log[0].userAgent).getBrowser().name;
-        sur.Broswer = mlm.Broswer;
+          mlm.Broswer = parser.setUA(users[i].log[0].userAgent).getBrowser().name;
+          sur.Broswer = mlm.Broswer;
 
-        mlm.OS = parser.setUA(users[i].log[0].userAgent).getOS().name;
-        sur.OS = mlm.OS;
+          mlm.OS = parser.setUA(users[i].log[0].userAgent).getOS().name;
+          sur.OS = mlm.OS;
+        }
         
 
         mlm.notificationpage = 0;
