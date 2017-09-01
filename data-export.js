@@ -163,7 +163,7 @@ User.find()
 
         var parser = new UAParser();
 
-        if(users[i].log[0].userAgent)
+        if(users[i].log[0])
         {
 
           if (parser.setUA(users[i].log[0].userAgent).getDevice().type)
