@@ -183,6 +183,16 @@ User.find()
           mlm.OS = parser.setUA(users[i].log[0].userAgent).getOS().name;
           sur.OS = mlm.OS;
         }//if Log exists
+        else{
+          mlm.Device = "NA";
+          mlm.Broswer = "NA";
+          mlm.OS = "NA";
+
+          sur.Device = "NA";
+          sur.Broswer = "NA";
+          sur.OS = "NA";
+
+        }
         
 
         mlm.notificationpage = 0;
@@ -329,7 +339,8 @@ User.find()
         for (var n = 0; n < bully_messages.length; n++) 
         {  
 
-          console.log("Bully message  "+ n);
+          console.log(" Bully message  "+ n);
+          console.log("I (user) is now "+i);
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
           
@@ -340,7 +351,7 @@ User.find()
           if(feedIndex!=-1)
           {
             mlm.BullyingPost  = n + 1;
-            console.log("IF - FI !1 MLM Bully message  "+ mlm.BullyingPost);
+            console.log(":"+mlm.BullyingPost+" IF FI MLM Bully message");
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
@@ -397,7 +408,7 @@ User.find()
           else
           {
             mlm.BullyingPost  = n + 1;
-            console.log("ELSE - MLM Bully message  "+ mlm.BullyingPost);
+            console.log(":"+mlm.BullyingPost+" ELSE MLM Bully message");
             
             mlm.BullyPostLastReadTime = 0;
             mlm.BullyPostAverageReadTime = 0;
@@ -477,6 +488,7 @@ User.find()
       
     mlm_writer.end();
     s_writer.end();
+    summary_writer.end();
     console.log('Wrote MLM!');
     mongoose.connection.close();
 
