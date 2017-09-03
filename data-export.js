@@ -388,8 +388,12 @@ User.find()
               mlm.ReplyTime = 0;
             }
 
+            console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
+            mlm_writer.write(mlm);
+            console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
+
           }//end of if FI != 1
-          
+
           else
           {
             mlm.BullyingPost  = n + 1;
@@ -404,12 +408,15 @@ User.find()
             mlm.LikeTime = 0;
             mlm.Reply = 0;
             mlm.ReplyTime = 0;
+            console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
+            mlm_writer.write(mlm);
+            console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
             
           }
 
-          console.log("Before WRITE MLM Bully message  "+ mlm.BullyingPost);
-          mlm_writer.write(mlm);
-          console.log("After WRITE MLM Bully message  "+ mlm.BullyingPost);
+          //console.log("Before WRITE MLM Bully message  "+ mlm.BullyingPost);
+          //mlm_writer.write(mlm);
+          //console.log("After WRITE MLM Bully message  "+ mlm.BullyingPost);
         }//for Bully Messages
 
 
