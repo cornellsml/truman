@@ -343,7 +343,7 @@ User.find()
           console.log(" Bully message  "+ n);
 
           var temp_mlm = {};
-          temp_mlm = mlm;
+          temp_mlm = JSON.parse(JSON.stringify(mlm));
 
           
 
@@ -403,6 +403,7 @@ User.find()
 
             mlm_array.push(temp_mlm);
             console.log(":"+mlm_array[mlm_array.length - 1].BullyingPost+" @@@@AFTER PUSH MLM Bully message");
+            console.log(":"+mlm_array[mlm_array.length - 1].email+" !!!!!!AFTER PUSH MLM USERNAME");
             /*
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
@@ -498,7 +499,7 @@ User.find()
 
     for (var zz = 0; zz < mlm_array.length; zz++) {
       console.log("writing user "+ mlm_array[zz].email);
-      console.log("writing user "+ mlm_array[zz].BullyingPost);
+      console.log("writing Bully Post "+ mlm_array[zz].BullyingPost);
       mlm_writer.write(mlm_array[zz]);
     }
       
