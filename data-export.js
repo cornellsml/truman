@@ -402,6 +402,7 @@ User.find()
 
 
             mlm_array.push(temp_mlm);
+            console.log(":"+mlm_array[mlm_array.length - 1].BullyingPost+" @@@@AFTER PUSH MLM Bully message");
             /*
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
