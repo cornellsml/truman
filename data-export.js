@@ -343,62 +343,67 @@ User.find()
 
           console.log("I (user) is now "+i);
           console.log(" Bully message  "+ n);
+
+          var temp_mlm = {};
+          temp_mlm = mlm;
+
           
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
 
           if(feedIndex!=-1)
           {
-            mlm.BullyingPost  = n + 1;
-            console.log(":"+mlm.BullyingPost+" IF FI MLM Bully message");
+            temp_mlm.BullyingPost  = n + 1;
+            //console.log(":"+temp_mlm.BullyingPost+" IF FI mlm Bully message");
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
-              mlm.BullyPostLastReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
-              mlm.BullyPostAverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
-              mlm.BullyPostNumOfReadTimes = users[i].feedAction[feedIndex].readTime.length;
+              temp_mlm.BullyPostLastReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
+              temp_mlm.BullyPostAverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
+              temp_mlm.BullyPostNumOfReadTimes = users[i].feedAction[feedIndex].readTime.length;
             }
             else 
             {
-              mlm.BullyPostLastReadTime = -1;
-              mlm.BullyPostAverageReadTime = 0
-              mlm.BullyPostNumOfReadTimes = 0
+              temp_mlm.BullyPostLastReadTime = -1;
+              temp_mlm.BullyPostAverageReadTime = 0
+              temp_mlm.BullyPostNumOfReadTimes = 0
             }
 
             if(users[i].feedAction[feedIndex].flagTime[0])
             {
-              mlm.Flag = 1;
-              mlm.FlagTime = users[i].feedAction[feedIndex].flagTime[0];
+              temp_mlm.Flag = 1;
+              temp_mlm.FlagTime = users[i].feedAction[feedIndex].flagTime[0];
             }
             else 
             {
-              mlm.Flag = 0;
-              mlm.FlagTime = 0;
+              temp_mlm.Flag = 0;
+              temp_mlm.FlagTime = 0;
             }
 
             if(users[i].feedAction[feedIndex].likeTime[0])
             {
-              mlm.Like = 1;
-              mlm.LikeTime = users[i].feedAction[feedIndex].likeTime[0];
+              temp_mlm.Like = 1;
+              temp_mlm.LikeTime = users[i].feedAction[feedIndex].likeTime[0];
             }
             else 
             {
-              mlm.Like = 0;
-              mlm.LikeTime = 0;
+              temp_mlm.Like = 0;
+              temp_mlm.LikeTime = 0;
             }
 
             if(users[i].feedAction[feedIndex].replyTime[0])
             {
-              mlm.Reply = 1;
-              mlm.ReplyTime = users[i].feedAction[feedIndex].replyTime[0];
+              temp_mlm.Reply = 1;
+              temp_mlm.ReplyTime = users[i].feedAction[feedIndex].replyTime[0];
             }
             else 
             {
-              mlm.Reply = 0;
-              mlm.ReplyTime = 0;
+              temp_mlm.Reply = 0;
+              temp_mlm.ReplyTime = 0;
             }
 
-            mlm_array.push(mlm);
+
+            mlm_array.push(temp_mlm);
             /*
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
@@ -408,20 +413,20 @@ User.find()
 
           else
           {
-            mlm.BullyingPost  = n + 1;
-            console.log(":"+mlm.BullyingPost+" ELSE MLM Bully message");
+            temp_mlm.BullyingPost  = n + 1;
+            console.log(":"+temp_mlm.BullyingPost+" ELSE temp_mlm Bully message");
             
-            mlm.BullyPostLastReadTime = 0;
-            mlm.BullyPostAverageReadTime = 0;
-            mlm.BullyPostNumOfReadTimes = 0;
-            mlm.Flag = 0;
-            mlm.FlagTime = 0;
-            mlm.Like = 0;
-            mlm.LikeTime = 0;
-            mlm.Reply = 0;
-            mlm.ReplyTime = 0;
+            temp_mlm.BullyPostLastReadTime = 0;
+            temp_mlm.BullyPostAverageReadTime = 0;
+            temp_mlm.BullyPostNumOfReadTimes = 0;
+            temp_mlm.Flag = 0;
+            temp_mlm.FlagTime = 0;
+            temp_mlm.Like = 0;
+            temp_mlm.LikeTime = 0;
+            temp_mlm.Reply = 0;
+            temp_mlm.ReplyTime = 0;
 
-            mlm_array.push(mlm);
+            mlm_array.push(temp_mlm);
             /*
             console.log(" mlm+array size is  "+ mlm_array.length);
 
