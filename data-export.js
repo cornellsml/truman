@@ -399,10 +399,11 @@ User.find()
             }
 
             mlm_array.push(mlm);
+            /*
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
             console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
-
+            */
           }//end of if FI != 1
 
           else
@@ -421,6 +422,7 @@ User.find()
             mlm.ReplyTime = 0;
 
             mlm_array.push(mlm);
+            /*
             console.log(" mlm+array size is  "+ mlm_array.length);
 
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
@@ -428,7 +430,7 @@ User.find()
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
             console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
-            
+            */
           }
 
           //console.log("Before WRITE MLM Bully message  "+ mlm.BullyingPost);
@@ -489,6 +491,10 @@ User.find()
       summary_writer.write(sums);
 
     }//for each user
+
+    for (var zz = 0; zz < mlm_array.length; zz++) {
+      mlm_writer.write(mlm_array[i]);
+    }
       
     mlm_writer.end();
     s_writer.end();
