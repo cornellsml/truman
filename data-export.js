@@ -340,8 +340,6 @@ User.find()
         //per bully post 1-4
         for (var n = 0; n < bully_messages.length; n++) 
         {  
-
-          console.log("I (user) is now "+i);
           console.log(" Bully message  "+ n);
 
           var temp_mlm = {};
@@ -354,7 +352,7 @@ User.find()
           if(feedIndex!=-1)
           {
             temp_mlm.BullyingPost  = n + 1;
-            //console.log(":"+temp_mlm.BullyingPost+" IF FI mlm Bully message");
+            console.log(":"+temp_mlm.BullyingPost+" IF FI mlm Bully message");
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
@@ -499,6 +497,7 @@ User.find()
 
     for (var zz = 0; zz < mlm_array.length; zz++) {
       console.log("writing user "+ mlm_array[zz].email);
+      console.log("writing user "+ mlm_array[zz].BullyingPost);
       mlm_writer.write(mlm_array[zz]);
     }
       
