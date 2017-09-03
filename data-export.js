@@ -65,7 +65,7 @@ User.find()
 
       mlm_writer.pipe(fs.createWriteStream('results/mlm_eatsnaplove.csv'));
       s_writer.pipe(fs.createWriteStream('results/sur_eatsnaplove.csv'));
-      summary_writer.pipe(fs.createWriteStream('results/sum_eatsnaplove.csv'));
+      //summary_writer.pipe(fs.createWriteStream('results/sum_eatsnaplove.csv'));
 
       for (var i = users.length - 1; i >= 0; i--) 
       {
@@ -478,17 +478,13 @@ User.find()
 
       sums.GeneralPostNumber = mlm.GeneralPostNumber;
       sums.GeneralReplyNumber = mlm.GeneralReplyNumber + bullyReplies;
-      summary_writer.write(sums);
+      //summary_writer.write(sums);
+
     }//for each user
-
-
-
-
-      
       
     mlm_writer.end();
     s_writer.end();
-    summary_writer.end();
+    //summary_writer.end();
     console.log('Wrote MLM!');
     mongoose.connection.close();
 
