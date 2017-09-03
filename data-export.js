@@ -493,7 +493,8 @@ User.find()
     }//for each user
 
     for (var zz = 0; zz < mlm_array.length; zz++) {
-      mlm_writer.write(mlm_array[i]);
+      console.log("writing user "+ mlm_array[zz].email);
+      mlm_writer.write(mlm_array[zz]);
     }
       
     mlm_writer.end();
