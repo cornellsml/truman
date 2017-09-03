@@ -388,8 +388,8 @@ User.find()
               mlm.ReplyTime = 0;
             }
 
-          }
-
+          }//end of if FI != 1
+          
           else
           {
             mlm.BullyingPost  = n + 1;
@@ -407,8 +407,9 @@ User.find()
             
           }
 
+          console.log("Before WRITE MLM Bully message  "+ mlm.BullyingPost);
           mlm_writer.write(mlm);
-
+          console.log("After WRITE MLM Bully message  "+ mlm.BullyingPost);
         }//for Bully Messages
 
 
