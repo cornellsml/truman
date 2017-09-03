@@ -421,7 +421,10 @@ User.find()
             mlm.ReplyTime = 0;
 
             mlm_array.push(mlm);
-            
+            console.log(" mlm+array size is  "+ mlm_array.length);
+
+            console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
+
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
             console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
