@@ -35,6 +35,8 @@ var victim = "5978ffc618bf097f8cf39ac4";
 var bully = "5978ffc618bf097f8cf39ab4";
 var bully_name = "bblueberryy";
 
+var mlm_array = [];
+
 dotenv.load({ path: '.env' });
 
 var MongoClient = require('mongodb').MongoClient
@@ -65,7 +67,7 @@ User.find()
 
       mlm_writer.pipe(fs.createWriteStream('results/mlm_eatsnaplove.csv'));
       s_writer.pipe(fs.createWriteStream('results/sur_eatsnaplove.csv'));
-      //summary_writer.pipe(fs.createWriteStream('results/sum_eatsnaplove.csv'));
+      summary_writer.pipe(fs.createWriteStream('results/sum_eatsnaplove.csv'));
 
       for (var i = users.length - 1; i >= 0; i--) 
       {
@@ -344,10 +346,6 @@ User.find()
           
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
-          
-          //console.log("In User "+ users[i].mturkID);
-          
-          //console.log("feedIndex is "+ feedIndex);
 
           if(feedIndex!=-1)
           {
@@ -400,8 +398,9 @@ User.find()
               mlm.ReplyTime = 0;
             }
 
+            mlm_array.push(mlm);
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
-            mlm_writer.write(mlm);
+            mlm_writer.write(mlm_array[mlm_array.length - 1]);
             console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
 
           }//end of if FI != 1
@@ -420,8 +419,11 @@ User.find()
             mlm.LikeTime = 0;
             mlm.Reply = 0;
             mlm.ReplyTime = 0;
+
+            mlm_array.push(mlm);
+            
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
-            mlm_writer.write(mlm);
+            mlm_writer.write(mlm_array[mlm_array.length - 1]);
             console.log(":"+mlm.BullyingPost+" After WRITE MLM Bully message");
             
           }
@@ -481,13 +483,13 @@ User.find()
 
       sums.GeneralPostNumber = mlm.GeneralPostNumber;
       sums.GeneralReplyNumber = mlm.GeneralReplyNumber + bullyReplies;
-      //summary_writer.write(sums);
+      summary_writer.write(sums);
 
     }//for each user
       
     mlm_writer.end();
     s_writer.end();
-    //summary_writer.end();
+    summary_writer.end();
     console.log('Wrote MLM!');
     mongoose.connection.close();
 
