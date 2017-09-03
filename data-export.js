@@ -339,8 +339,9 @@ User.find()
         for (var n = 0; n < bully_messages.length; n++) 
         {  
 
-          console.log(" Bully message  "+ n);
           console.log("I (user) is now "+i);
+          console.log(" Bully message  "+ n);
+          
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
           
@@ -474,6 +475,8 @@ User.find()
       sur.ReplyBullyPost = bullyReplies;
       sur.LikeBullyPost = bullyLikes;
       sur.FlagBullyPost = bullyFlag;
+
+
       s_writer.write(sur);
 
       sums.GeneralPostNumber = mlm.GeneralPostNumber;
