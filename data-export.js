@@ -182,7 +182,7 @@ User.find()
 
           mlm.OS = parser.setUA(users[i].log[0].userAgent).getOS().name;
           sur.OS = mlm.OS;
-        }
+        }//if Log exists
         
 
         mlm.notificationpage = 0;
@@ -234,8 +234,8 @@ User.find()
         var bullyReads = 0;
         var bullyReadTimes = 0;
         var bullyFlag = 0;
+        
         //per feedAction
-  
         for (var k = users[i].feedAction.length - 1; k >= 0; k--) 
         {
           //is a bully message
@@ -325,15 +325,16 @@ User.find()
         mlm.GeneralReplyNumber = users[i].numReplies + 1 - bullyReplies;
         mlm.GeneralPostNumber = users[i].numPosts + 1;
 
+        //per bully post 1-4
         for (var n = 0; n < bully_messages.length; n++) 
         {  
 
-
+          console.log("Bully message  "+ n);
 
           var feedIndex = _.findIndex(users[i].feedAction, function(o) { return o.post.id == bully_messages[n]; });
           
           //console.log("In User "+ users[i].mturkID);
-          //console.log("Bully message  "+ n);
+          
           //console.log("feedIndex is "+ feedIndex);
 
           if(feedIndex!=-1)
@@ -342,15 +343,15 @@ User.find()
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
-              mlm.ReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
-              mlm.AverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
-              mlm.ReadTimes = users[i].feedAction[feedIndex].readTime.length;
+              mlm.BullyPostLastReadTime = users[i].feedAction[feedIndex].readTime[users[i].feedAction[feedIndex].readTime.length - 1];
+              mlm.BullyPostAverageReadTime = users[i].feedAction[feedIndex].readTime.sum() / users[i].feedAction[feedIndex].readTime.length;
+              mlm.BullyPostNumOfReadTimes = users[i].feedAction[feedIndex].readTime.length;
             }
             else 
             {
-              mlm.ReadTime = -1;
-              mlm.AverageReadTime = 0
-              mlm.ReadTimes = 0
+              mlm.BullyPostLastReadTime = -1;
+              mlm.BullyPostAverageReadTime = 0
+              mlm.BullyPostNumOfReadTimes = 0
             }
 
             if(users[i].feedAction[feedIndex].flagTime[0])
@@ -392,9 +393,9 @@ User.find()
           {
             mlm.BullyingPost  = n + 1;
             
-            mlm.ReadTime = 0;
-            mlm.AverageReadTime = 0;
-            mlm.ReadTimes = 0;
+            mlm.BullyPostLastReadTime = 0;
+            mlm.BullyPostAverageReadTime = 0;
+            mlm.BullyPostNumOfReadTimes = 0;
             mlm.Flag = 0;
             mlm.FlagTime = 0;
             mlm.Like = 0;
@@ -405,6 +406,7 @@ User.find()
           }
 
           mlm_writer.write(mlm);
+
         }//for Bully Messages
 
 
