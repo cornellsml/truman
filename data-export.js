@@ -340,6 +340,7 @@ User.find()
           if(feedIndex!=-1)
           {
             mlm.BullyingPost  = n + 1;
+            console.log("IF - FI !1 MLM Bully message  "+ mlm.BullyingPost);
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
@@ -392,6 +393,7 @@ User.find()
           else
           {
             mlm.BullyingPost  = n + 1;
+            console.log("ELSE - MLM Bully message  "+ mlm.BullyingPost);
             
             mlm.BullyPostLastReadTime = 0;
             mlm.BullyPostAverageReadTime = 0;
