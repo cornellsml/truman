@@ -340,7 +340,7 @@ User.find()
         //per bully post 1-4
         for (var n = 0; n < bully_messages.length; n++) 
         {  
-          console.log(" Bully message  "+ n);
+          //console.log(" Bully message  "+ n);
 
           var temp_mlm = {};
           temp_mlm = JSON.parse(JSON.stringify(mlm));
@@ -352,7 +352,7 @@ User.find()
           if(feedIndex!=-1)
           {
             temp_mlm.BullyingPost  = n + 1;
-            console.log(":"+temp_mlm.BullyingPost+" IF FI mlm Bully message");
+            //console.log(":"+temp_mlm.BullyingPost+" IF FI mlm Bully message");
             //last read time
             if(users[i].feedAction[feedIndex].readTime[0])
             {
@@ -402,8 +402,6 @@ User.find()
 
 
             mlm_array.push(temp_mlm);
-            console.log(":"+mlm_array[mlm_array.length - 1].BullyingPost+" @@@@AFTER PUSH MLM Bully message");
-            console.log(":"+mlm_array[mlm_array.length - 1].email+" !!!!!!AFTER PUSH MLM USERNAME");
             /*
             console.log(":"+mlm.BullyingPost+" Before WRITE MLM Bully message");
             mlm_writer.write(mlm_array[mlm_array.length - 1]);
@@ -414,7 +412,7 @@ User.find()
           else
           {
             temp_mlm.BullyingPost  = n + 1;
-            console.log(":"+temp_mlm.BullyingPost+" ELSE temp_mlm Bully message");
+            //console.log(":"+temp_mlm.BullyingPost+" ELSE temp_mlm Bully message");
             
             temp_mlm.BullyPostLastReadTime = 0;
             temp_mlm.BullyPostAverageReadTime = 0;
@@ -484,9 +482,29 @@ User.find()
       sur.GeneralPostNumber = mlm.GeneralPostNumber;
       sur.TotalNumberRead = mlm.TotalNumberRead;
       sur.AveReadTime = mlm.AveReadTime;
+      if (bullyReplies > 0)
+        sur.DidReplyBullyPost = 1;
+      else
+        sur.DidReplyBullyPost = 0;
       sur.ReplyBullyPost = bullyReplies;
+      if (bullyLikes > 0)
+        sur.DidLikeBullyPost = 1;
+      else
+        sur.DidLikeBullyPost = 0;
       sur.LikeBullyPost = bullyLikes;
+      if (bullyFlag > 0)
+        sur.DidFlagBullyPost = 1;
+      else
+        sur.DidFlagBullyPost = 0;
       sur.FlagBullyPost = bullyFlag;
+
+      sur.OtherIntervention = 0;
+
+      if ((bullyFlag + bullyReplies + sur.blocked + sur.reported) > 0)
+        sur.DidIntervene = 1;
+      else
+        sur.DidIntervene = 0;
+
 
 
       s_writer.write(sur);
@@ -498,8 +516,8 @@ User.find()
     }//for each user
 
     for (var zz = 0; zz < mlm_array.length; zz++) {
-      console.log("writing user "+ mlm_array[zz].email);
-      console.log("writing Bully Post "+ mlm_array[zz].BullyingPost);
+      //console.log("writing user "+ mlm_array[zz].email);
+      //console.log("writing Bully Post "+ mlm_array[zz].BullyingPost);
       mlm_writer.write(mlm_array[zz]);
     }
       
