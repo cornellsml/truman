@@ -29,6 +29,8 @@ bower_components
 # Editors
 .idea
 *.iml
+*.sublime-project
+*.sublime-workspace
 
 # OS metadata
 .DS_Store
