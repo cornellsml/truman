@@ -69,16 +69,9 @@ exports.getScript = (req, res, next) => {
     })
   .exec(function (err, user) {
   
-    if (user.script_type == "study3_n20")
-    {
-      scriptFilter = "study3_n20";
-      profileFilter = "study3_n20_p60";
-    }
-    else if (user.script_type == "study3_n80")
-    {
-      scriptFilter = "study3_n80";
-      profileFilter = "study_n80_p60";
-    }
+    //filter the script based on experimental group
+    scriptFilter = user.group;
+      
     
 
     //User is no longer active - study is over
@@ -95,9 +88,6 @@ exports.getScript = (req, res, next) => {
     //what day in the study are we in???
   var one_day = 86400000; //303,695,677 259,200,000
   var current_day;
-
-
-  user.test = user.test + 1;
   
   //day one
   if (time_diff <= one_day)
@@ -130,9 +120,9 @@ exports.getScript = (req, res, next) => {
 
   
   
-
+    //Get the newsfeed
     Script.find()
-      .where(scriptFilter).equals("yes")
+      .where("experiment_group").equals(scriptFilter)
       .where('time').lte(time_diff).gte(time_limit)
       .sort('-time')
       .populate('actor')
@@ -345,6 +335,7 @@ exports.getScriptPost = (req, res) => {
 /**
  * GET /
  * List of Script posts for Feed
+ * Made for testing
 */
 exports.getScriptFeed = (req, res, next) => {
 
@@ -361,16 +352,7 @@ exports.getScriptFeed = (req, res, next) => {
   var profileFilter = "";
   //study3_n20, study3_n80
 
-  if (req.params.caseId == "study3_n20")
-    {
-      scriptFilter = "study3_n20";
-      profileFilter = "study3_n20_p60";
-    }
-    else if (req.params.caseId == "study3_n80")
-    {
-      scriptFilter = "study3_n80";
-      profileFilter = "study_n80_p60";
-    }
+
 
   scriptFilter = req.params.caseId;
 
@@ -380,7 +362,8 @@ exports.getScriptFeed = (req, res, next) => {
   //{
   
     Script.find()
-      .where(scriptFilter).equals("yes")
+      //change this if you want to test other parts
+      //.where(scriptFilter).equals("yes")
       //.where('time').lte(0)
       .sort('-time')
       .populate('actor')
@@ -523,26 +506,6 @@ exports.newPost = (req, res) => {
           });
 
         });//of of Notification
-
-    }
-
-    else if (req.body.reply)
-    {
-      post.reply = req.body.reply;
-      post.type = "user_reply";
-      user.numReplies = user.numReplies + 1;
-      post.replyID = user.numReplies; //all reply posts are -1 as ID
-      
-      user.posts.unshift(post);
-      console.log("CREATING REPLY");
-
-      user.save((err) => {
-        if (err) {
-          return next(err);
-        }
-        
-        res.redirect('/');
-      });
 
     }
 

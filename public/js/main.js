@@ -37,46 +37,6 @@ $(window).on("load", function() {
   $('.ui.checkbox')
   .checkbox();
 
-  //profile manipulation image to profile
-  $('.column.profile').click(function () {
-    let body = $(this).attr("body");
-    let time = $(this).attr("time");
-    let image = $(this).find('img.ui.fluid.image').attr("src")
-    let pro_link = $('a.pro_name_link').attr("href");
-    let pro_picture = $('img.ui.centered.small.circular.image.pro_name_image').attr("src");
-    let pro_name = $('span.pro_name').text();
-    $("a.mod_pro_name_link").attr('href', pro_link);
-    $("img.ui.avatar.image.mod_pro").attr('src', pro_picture);
-    $("img.post.mod_photo").attr('src', image);
-    $(".description.mod_body").text(body);
-    $(".right.floated.meta.pro_time").text(time);
-    $("span.mod_name").text(pro_name);
-    //span.mod_name
-    $(".ui.small.modal.pro")
-      .modal({
-        closable  : true,
-        onHidden    : function(){
-          console.log("Refresh now");
-          window.location.reload();
-        }
-      })
-      .modal('show')
-    ;
-    var parent = $(this).parents(".profile_card");    
-    var postID = parent.attr( "postID" );
-    var picture = Date.now();
-    //$('img.post, .content.pro').visibility('refresh')
-    $.post( "/pro_feed", { postID: postID, picture: picture, _csrf : $('meta[name="csrf-token"]').attr('content') } );
-    });
-
-  //get add new reply post modal to show
-  $('.reply.button').click(function () {
-    
-    let parent = $(this).closest( ".ui.fluid.card" );
-    let postID = parent.attr( "postID" );
-
-    parent.find( "input.newcomment" ).focus();
-});
 
   $(' .ui.tiny.post.modal').modal({
       observeChanges  : true
@@ -118,10 +78,7 @@ $(window).on("load", function() {
       //console.log(event);
       console.log("fields is :");
       //console.log(fields);
-      if($('.ui.tiny.post.modal').attr( "nudge" ) == "yes")
-        $('.ui.tiny.nudge.modal').modal('show');
-      else
-        $(".ui.feed.form")[0].submit();
+      $(".ui.feed.form")[0].submit();
     }
 
   });
@@ -133,39 +90,6 @@ $(window).on("load", function() {
         //return true;
         });
 
-  $('.ui.tiny.nudge.modal')
-    .modal({
-      closable  : false,
-      onDeny    : function(){
-        //window.alert('Wait not yet!');
-        $(".ui.feed.form").trigger('reset');
-        $('#imgInp').attr('src', '/public/photo-camera.svg');
-        $('.ui.tiny.nudge.modal').modal('hide');
-        return false;
-      },
-      onApprove : function() {
-        //window.alert('Approved!');
-         $(".ui.feed.form")[0].submit();
-      }
-    })
-  ;
-
-  $('.ui.reply.form')
-  .form({
-    on: 'blur',
-    fields: {
-      body: {
-        identifier  : 'body',
-        rules: [
-          {
-            type   : 'empty',
-            prompt : 'Please add some text for your reply'
-          }
-        ]
-      }
-    }
-  })
-;
 
 //Picture Preview on Image Selection
 function readURL(input) {
@@ -458,9 +382,7 @@ $("i.big.send.link.icon").click(function() {
 
   });
 
-  //<h2 style="background-color:black;color:white">Black background-color and white text color</h2>
-  //<div class="comment" style="background-color:black;color:white">The admins will review this comment further. We are sorry you had this experience.</div>
-  //this is the FLAG button
+   //this is the FLAG button
   $('a.flag.comment')
   .on('click', function() {
 
@@ -479,7 +401,7 @@ $("i.big.send.link.icon").click(function() {
 
   });
 
-  //this is the FLAG button
+  //this is the POST FLAG button
   $('.flag.button')
   .on('click', function() {
 

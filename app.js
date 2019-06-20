@@ -66,8 +66,6 @@ const scriptController = require('./controllers/script');
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const notificationController = require('./controllers/notification');
-const apiController = require('./controllers/api');
-const contactController = require('./controllers/contact');
 
 /**
  * API keys and Passport configuration.
@@ -84,9 +82,7 @@ const app = express();
  */
 mongoose.Promise = global.Promise;
 
-//mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
-//mongoose.connect(process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI, { useMongoClient: true });
-mongoose.connect(process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, { useNewUrlParser: true });
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -104,7 +100,7 @@ rule.minute = 55;
  
 var j = schedule.scheduleJob(rule, function(){
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
-  console.log('@@@@@@######@@@@@@@@Sending Mail to All USER!!!!!');
+  console.log('@@@@@@######@@@@@@@@Sending Mail to All ACTIVE USERS!!!!!');
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
   userController.mailAllActiveUsers();
 }); 
@@ -135,7 +131,7 @@ rule2.minute = 30;
  
 var j2 = schedule.scheduleJob(rule2, function(){
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
-  console.log('@@@@@@######@@@@@@@@2222Checking if Users are active2222!!!!!');
+  console.log('@@@@@@######@@@@@@@@2222 Checking if Users are active 2222!!!!!');
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
   userController.stillActive();
 }); 
@@ -150,7 +146,7 @@ rule3.minute = 30;
  
 var j3 = schedule.scheduleJob(rule3, function(){
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
-  console.log('@@@@@@######@@@@@@@@3333Checking if Users are active 3333!!!!!');
+  console.log('@@@@@@######@@@@@@@@3333 Checking if Users are active 3333!!!!!');
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
   userController.stillActive();
 }); 
@@ -162,7 +158,7 @@ var j3 = schedule.scheduleJob(rule3, function(){
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(expressStatusMonitor());
+//app.use(expressStatusMonitor());
 //app.use(compression());
 app.use(sass({
   src: path.join(__dirname, 'public'),
@@ -184,7 +180,7 @@ app.use(session({
   },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
-    url: process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI,
+    url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
     autoReconnect: true,
     clear_interval: 3600
   })
@@ -316,14 +312,9 @@ app.post('/account/signup_info_post', passportConfig.isAuthenticated, useravatar
 
 app.post('/account/profile', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postUpdateProfile);
 
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
 
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-
-//See actors
-//app.get('/actors', actorsController.getActors);
 
 app.get('/user/:userId', passportConfig.isAuthenticated, actorsController.getActor);
 app.post('/user', passportConfig.isAuthenticated, actorsController.postBlockOrReport);
@@ -335,16 +326,6 @@ app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);
 app.post('/feed', passportConfig.isAuthenticated, scriptController.postUpdateFeedAction);
 app.post('/pro_feed', passportConfig.isAuthenticated, scriptController.postUpdateProFeedAction);
 app.post('/userPost_feed', passportConfig.isAuthenticated, scriptController.postUpdateUserPostFeedAction);
-
-/**
- * API examples routes.
- */
-app.get('/api', apiController.getApi);
-
-
-///Upload files and get them back
-app.get('/api/upload', apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 
 /**
  * Error Handler.

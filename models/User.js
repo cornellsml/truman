@@ -41,8 +41,6 @@ const userSchema = new mongoose.Schema({
   blocked: [String],
   reported: [String],
 
-  test: {type: Number, default: 0}, 
-
   study_days: {
       type: [Number],
       default: [0, 0, 0]

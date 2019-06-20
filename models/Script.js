@@ -17,11 +17,7 @@ const scriptSchema = new mongoose.Schema({
   actor: {type: Schema.ObjectId, ref: 'Actor'},
   reply: {type: Schema.ObjectId, ref: 'Script'},
 
-  study3_n20: String,
-  study3_n80: String,
-  study2_n0: String,
-  study2_n20: String,
-  study2_n80: String,
+  experiment_group: String,
 
   time: Number, //in millisecons
 

@@ -2,8 +2,8 @@ extends ui_layout_no
   
 block content
 
-  
-  -var cdn = "https://eatsnaplove.nyc3.cdn.digitaloceanspaces.com";
+  //-Change this URI to a CDN you are using for Photos
+  -var cdn = "";
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
@@ -12,7 +12,7 @@ block content
         else
           img(src=user.gravatar(60))
       .content
-        a.header(href='/me')= user.profile.name || user.email || user.id
+        a.header(href='/me')= user.profile.name || user.username || user.id
         .meta="@"+user.username
         .description=user.profile.bio
         .description
@@ -46,7 +46,7 @@ block content
         -if (val.actorAuthor) {u_class = "actorReply"}
         -else if (val.reply) {u_class = "userReply"}
         -else {u_class = "userPost"}
-        .ui.fluid.card(u_postID=val.id, ui=user.ui, notify=user.notify, type=u_class, postID=val.postID)
+        .ui.fluid.card(u_postID=val.id, type=u_class, postID=val.postID)
           
           //- This is a User made post
           .content
@@ -58,7 +58,7 @@ block content
               else
                 img(src=user.gravatar(60))
             a(href='/me')
-              span=user.profile.name || user.email || user.id
+              span=user.profile.name || user.username || user.id
           .image
             img(src='/user_post/'+val.picture)
           .content
@@ -115,11 +115,7 @@ block content
                         .comment(commentID=comment.commentID)
                           a.avatar(href='/user/'+comment.actor.username)
                             //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
-                            if comment.actor[profileFilter] == "yes"
-                              //img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
-                              img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
-                            else
-                              img(src=comment.actor.profile.fakepic)
+                            img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
                           .content
                             a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                             .metadata
@@ -152,7 +148,7 @@ block content
 
       //-THIS is for posts by Actors, not the USER
       else
-        .ui.fluid.card.dim(postID=val.id, ui=user.ui, transparency=user.transparency, notify=user.notify, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
+        .ui.fluid.card.dim(postID=val.id, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
           //- dimmer DIV for flagging
           .ui.dimmer.flag
                 .content
@@ -169,12 +165,8 @@ block content
             //-a(href='/user/'+val.actor.username)
               img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
               span=val.actor.profile.name
-            a(href='/user/'+val.actor.username)
-              if val.actor[profileFilter] == "yes"
-                //img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
-                img.ui.avatar.image.lazyload(data-src=cdn+"/profile_pictures/"+val.actor.profile.picture)
-              else
-                img.ui.avatar.image(src=val.actor.profile.fakepic)
+            a(href='/user/'+val.actor.username)     
+              img.ui.avatar.image.lazyload(data-src=cdn+"/profile_pictures/"+val.actor.profile.picture)
               span=val.actor.profile.name
           //-div(style="position: relative; z-index: 1;")
             img(src="image.png" style="position: absolute; z-index: 2;")
@@ -234,12 +226,8 @@ block content
                     else
                       .comment(commentID=comment.id)
                         a.avatar(href='/user/'+comment.actor.username)
-                          //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
-                          if comment.actor[profileFilter] == "yes"
-                            //img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)
-                            img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
-                          else
-                            img(src=comment.actor.profile.fakepic)
+                          //-img(src=cdn+'/profile_pictures/'+comment.actor.profile.picture)                       
+                          img.lazyload(data-src=cdn+"/profile_pictures/"+comment.actor.profile.picture)
                         .content
                           a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                           .metadata
@@ -261,25 +249,14 @@ block content
                               a.like.comment Like
                             a.flag.comment Flag
           .extra.content
-            if user.comment_prompt == "yes"
-              .description(style="text-align:center;background:#E8E8E8")="How is "+val.actor.profile.name+" Feeling?"
-              .ui.fluid.left.labeled.right.icon.input
-                .ui.label            
-                  if user.profile.picture
-                    img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
-                  else
-                    img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)
-                input.newcomment(type='text', placeholder='Write a Comment')
-                i.big.send.link.icon
-            else
-              .ui.fluid.left.labeled.right.icon.input
-                .ui.label
-                  if user.profile.picture
-                    img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
-                  else
-                    img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
-                input.newcomment(type='text', placeholder='Write a Comment')
-                i.big.send.link.icon
+            .ui.fluid.left.labeled.right.icon.input
+              .ui.label
+                if user.profile.picture
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                else
+                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+              input.newcomment(type='text', placeholder='Write a Comment')
+              i.big.send.link.icon
 
     .ui.fluid.card
       .content
@@ -321,7 +298,7 @@ block content
     br
     br
     br
-    .ui.tiny.post.modal(nudge=user.post_nudge)
+    .ui.tiny.post.modal()
       i.close.icon
       .header Add a New Post
       .content
@@ -338,21 +315,3 @@ block content
           .ui.error.message
       .actions
         input.ui.green.button(type='submit', name="foo", value='Submit', form='postform')
-
-    .ui.tiny.nudge.modal
-      .header Checkup
-      //-.content
-        .image
-          img.image(src='/public/Nudge_final.png')
-        .description
-          p Do you really want to share this image?
-      .image.content
-        .ui.tiny.image
-          img(src='/public/Nudge_final.png')
-        .description
-          p
-            | Do you really want to share this image? Everyone on EatSnap.Love could potentially see this.
-          
-      .actions
-        .ui.green.approve.button Yes, share it
-        .ui.red.cancel.button No, don't share it

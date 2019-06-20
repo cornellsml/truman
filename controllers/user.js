@@ -121,7 +121,8 @@ exports.postLogin = (req, res, next) => {
     }
     if (!(user.active)) {
       console.log("FINAL");
-      var post_url = 'https://cornell.qualtrics.com/jfe/form/SV_0dK6TRfe3HfC6ax?id='+user.mturkID;
+      //Need to capture this in a var
+      var post_url = process.env.POST_SURVEY+user.mturkID;
       console.log("last url is "+post_url)
       req.flash('final', { msg: post_url });
       return res.redirect('/login');
@@ -174,11 +175,12 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
-  //random assignment of experimental group
-  //var result = ['no:no:no', 'no:yes:no','yes:no:no', 'yes:yes:no','no:no:yes', 'no:yes:yes', 'yes:no:yes', 'yes:yes:yes'][Math.floor(Math.random() * 8)]
-  //var result = ['no:no', 'no:yes','yes:no', 'yes:yes'][Math.floor(Math.random() * 4)]
-  //study3_n20 or study3_n80
-  var result = ['study3_n20:no', 'study3_n20:yes','study3_n80:no', 'study3_n80:yes'][Math.floor(Math.random() * 4)]
+/*###############################
+Place Experimental Varibles Here!
+###############################*/
+  var var_num = 4;
+  var result = ['var1', 'var2','var3', 'var4'][Math.floor(Math.random() * var_num)]
+  
   var resultArray = result.split(':');
   //[0] is script_type, [1] is post_nudge
   const user = new User({
@@ -188,13 +190,6 @@ exports.postSignup = (req, res, next) => {
     username: req.body.username,
     group: result,
     active: true,
-    ui: 'no', //ui or no
-    notify: "no", //no, low or high (not used anymore)
-    transparency: 'no',
-    profile_perspective: "no", //yes or no
-    comment_prompt: 'no', //yes or no
-    script_type: resultArray[0], //type of script they are running in
-    post_nudge: resultArray[1],
     lastNotifyVisit : (Date.now() - 86400000),
     createdAt: (Date.now() - 86400000)
   });
@@ -577,7 +572,7 @@ var sendFinalEmail = function(user){
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
       Your participation has been a huge help in beta testing our app.
-      You have one last task to finish the study, and that is to take the final survey here at  https://cornell.qualtrics.com/jfe/form/SV_0dK6TRfe3HfC6ax?id=`+user.mturkID+`\n\n
+      You have one last task to finish the study, and that is to take the final survey here at  `+process.env.POST_SURVEY+user.mturkID+`\n\n
       Thanks again for all your help and participation!\n
       Keep Eating, Snapping and Loving!\n 
       🍴📷.❤️ Team
