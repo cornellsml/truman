@@ -51,10 +51,12 @@ const upload= multer({ storage: m_options });
 const userpostupload= multer({ storage: userpost_options });
 const useravatarupload= multer({ storage: useravatar_options });
 
+
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env' });
+//dotenv.config({ path: '.env.example' });
+dotenv.config({ path: '.env' });
 
 /**
  * Controllers (route handlers).
@@ -83,7 +85,8 @@ const app = express();
 mongoose.Promise = global.Promise;
 
 //mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
-mongoose.connect(process.env.PRO_MONGODB_URI || process.env.PRO_MONGOLAB_URI);
+//mongoose.connect(process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI, { useMongoClient: true });
+mongoose.connect(process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI, { useNewUrlParser: true });
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -109,15 +112,45 @@ var j = schedule.scheduleJob(rule, function(){
 
 /****
 **CRON JOBS 
-**Check if users are still active
+**Check if users are still active 12 and 20
 */
-var rule = new schedule.RecurrenceRule();
-rule.hour = 4;
-rule.minute = 30;
+var rule1 = new schedule.RecurrenceRule();
+rule1.hour = 4;
+rule1.minute = 30;
  
-var j = schedule.scheduleJob(rule, function(){
+var j = schedule.scheduleJob(rule1, function(){
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
   console.log('@@@@@@######@@@@@@@@Checking if Users are active!!!!!');
+  console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
+  userController.stillActive();
+}); 
+
+/****
+**CRON JOBS 
+**Check if users are still active 12 and 20
+*/
+var rule2 = new schedule.RecurrenceRule();
+rule2.hour = 12;
+rule2.minute = 30;
+ 
+var j2 = schedule.scheduleJob(rule2, function(){
+  console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
+  console.log('@@@@@@######@@@@@@@@2222Checking if Users are active2222!!!!!');
+  console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
+  userController.stillActive();
+}); 
+
+/****
+**CRON JOBS 
+**Check if users are still active 12 and 20
+*/
+var rule3 = new schedule.RecurrenceRule();
+rule3.hour = 20;
+rule3.minute = 30;
+ 
+var j3 = schedule.scheduleJob(rule3, function(){
+  console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
+  console.log('@@@@@@######@@@@@@@@3333Checking if Users are active 3333!!!!!');
   console.log('@@@@@@######@@@@@@@@#########@@@@@@@@@@@@########');
   userController.stillActive();
 }); 
@@ -151,7 +184,7 @@ app.use(session({
   },
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
-    url: process.env.PRO_MONGODB_URI || process.env.PRO_MONGOLAB_URI,
+    url: process.env.MONGOLAB_TEST || process.env.PRO_MONGOLAB_URI,
     autoReconnect: true,
     clear_interval: 3600
   })
@@ -172,7 +205,10 @@ app.use((req, res, next) => {
   }
 });
 
-app.use(lusca.xframe('SAMEORIGIN'));
+//app.use(lusca.xframe('SAMEORIGIN'));
+//allow-from https://example.com/
+//add_header X-Frame-Options "allow-from https://cornell.qualtrics.com/";
+//app.use(lusca.xframe('allow-from https://cornell.qualtrics.com/'));
 app.use(lusca.xssProtection(true));
 
 app.use((req, res, next) => {
@@ -209,16 +245,19 @@ function check(req, res, next) {
 }
 
 
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use('/public',express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/semantic',express.static(path.join(__dirname, 'semantic'), { maxAge: 31557600000 }));
 app.use(express.static(path.join(__dirname, 'uploads'), { maxAge: 31557600000 }));
-app.use(express.static(path.join(__dirname, 'post_pictures'), { maxAge: 31557600000 }));
+app.use('/post_pictures', express.static(path.join(__dirname, 'post_pictures'), { maxAge: 31557600000 }));
 app.use('/profile_pictures',express.static(path.join(__dirname, 'profile_pictures'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.
  */
 app.get('/', passportConfig.isAuthenticated, scriptController.getScript);
+
+app.get('/newsfeed/:caseId', scriptController.getScriptFeed);
+
 app.post('/post/new', userpostupload.single('picinput'), check, csrf, scriptController.newPost);
 
 app.post('/account/profile', passportConfig.isAuthenticated, useravatarupload.single('picinput'), check, csrf, userController.postUpdateProfile);
@@ -242,6 +281,12 @@ app.get('/info', passportConfig.isAuthenticated, function (req, res) {
   });
 });
 
+app.get('/profile_info', passportConfig.isAuthenticated, function (req, res) {
+  res.render('profile_info', {
+    title: 'Profile Introductions'
+  });
+});
+
 
 //User's Page
 app.get('/me', passportConfig.isAuthenticated, userController.getMe);
@@ -250,6 +295,11 @@ app.get('/completed', passportConfig.isAuthenticated, userController.userTestRes
 
 app.get('/notifications', passportConfig.isAuthenticated, notificationController.getNotifications);
 
+app.get('/test_comment', function (req, res) {
+  res.render('test', {
+    title: 'Test Comments'
+  });
+});
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
@@ -283,6 +333,8 @@ app.get('/bell', passportConfig.isAuthenticated, userController.checkBell);
 //getScript
 app.get('/feed', passportConfig.isAuthenticated, scriptController.getScript);
 app.post('/feed', passportConfig.isAuthenticated, scriptController.postUpdateFeedAction);
+app.post('/pro_feed', passportConfig.isAuthenticated, scriptController.postUpdateProFeedAction);
+app.post('/userPost_feed', passportConfig.isAuthenticated, scriptController.postUpdateUserPostFeedAction);
 
 /**
  * API examples routes.

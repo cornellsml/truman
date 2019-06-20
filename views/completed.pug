@@ -12,6 +12,9 @@ block content
           th Start Date
           th Group
           th Completed?
+          th Day 1
+          th Day 2
+          th Day 3
           th Number of Logins
           th Posts
           th Replies
@@ -23,6 +26,9 @@ block content
             td=u.createdAt
             td=u.group
             td=u.completed
+            td=u.study_days[0]
+            td=u.study_days[1]
+            td=u.study_days[2]
             td=u.log.length 
             td=u.numPosts + 1
             td=u.numReplies + 1

@@ -11,20 +11,23 @@ block content
         li Reply to others' posts to get a conversation going.
         li Like others' posts to show you love their snaps!
         li Fill out your profile. You can add as much or as little info as you want.
-    img.ui.centered.image(src='/esl-howto.png')
+        li When the Notification Bell is red, that means you have new Notifications, be sure to check them out!
+    img.ui.centered.image(src='/public/esl-howto.png')
     br
     h3 See who else is around.
     p We'll notify you if someone replies to or likes your post.
-    if user.ui == 'ui' && user.notify != 'no'
+    if user.transparency == "yes"
         p We'll also keep track of which posts you've viewed. To keep things social, we'll let others know when you view their posts, and notify you when they view yours.
-        img.ui.centered.image(src='/UI-read.png')
-    else if user.ui == 'ui'
-        p We'll also keep track of which posts you've viewed.
-        img.ui.centered.image(src='/ui-no-read.png')
-    else if user.notify != 'no'
-        p We'll also keep track of who has viewed your posts.
-        img.ui.centered.image(src='/no-ui-read.png')
+        img.ui.centered.image(src='/public/UI-read.png')
     br
-    .ui.big.green.labeled.icon.button.info
-        i.rocket.icon
-        |   Let's Go!
+    if user.profile_perspective == 'yes'
+        .ui.big.green.labeled.icon.button.profile
+            i.rocket.icon
+            |   Let's Go!
+    else
+        .ui.big.green.labeled.icon.button.info
+            i.rocket.icon
+            |   Let's Go!
+    br
+    br
+    br

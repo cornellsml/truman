@@ -181,7 +181,7 @@
   margin: @menuDividerMargin;
 }
 
-.ui.dropdown .menu > .input {
+.ui.dropdown.dropdown .menu > .input {
   width: auto;
   display: flex;
   margin: @menuInputMargin;
@@ -833,8 +833,8 @@ select.ui.dropdown {
 .ui.default.dropdown:not(.button) > .text {
   color: @defaultTextColor;
 }
-.ui.dropdown:not(.button) > input:focus + .default.text,
-.ui.default.dropdown:not(.button) > input:focus + .text {
+.ui.dropdown:not(.button) > input:focus ~ .default.text,
+.ui.default.dropdown:not(.button) > input:focus ~ .text {
   color: @defaultTextFocusColor;
 }
 /*--------------------
@@ -924,6 +924,18 @@ select.ui.dropdown {
   background-color: @errorItemActiveBackground;
 }
 
+
+/*--------------------
+        Clear
+----------------------*/
+
+.ui.dropdown > .clear.dropdown.icon {
+  opacity: @clearableIconOpacity;
+  transition: opacity @defaultDuration @defaultEasing;
+}
+.ui.dropdown > .clear.dropdown.icon:hover {
+  opacity: @clearableIconActiveOpacity;
+}
 
 
 /*--------------------
@@ -1098,7 +1110,7 @@ select.ui.dropdown {
 @media all and (-ms-high-contrast:none) {
   .ui.scrolling.dropdown .menu,
   .ui.dropdown .scrolling.menu {
-    min-width: ~"calc(100% - "@scrollbarWidth~")";
+    min-width: calc(100% - @scrollbarWidth);
   }
 }
 @media only screen and (max-width : @largestMobileScreen) {

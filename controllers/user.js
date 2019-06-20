@@ -27,7 +27,8 @@ if (req.user) {
 
     var user = req.user;
 
-    Notification.find({ $or: [ { userPost: user.numPosts  }, { userReply: user.numReplies }, { actorReply: user.numActorReplies } ] })
+    Notification.find({ $or: [ { userPost: user.numPosts  }, { actorReply: user.numActorReplies } ] })
+    //Notification.find({ $or: [ { userPost: { $lte: user.numPosts } }, { actorReply: { $lte: user.numActorReplies } } ] })
         .populate('actor')
         .exec(function (err, notification_feed) {
 
@@ -52,6 +53,7 @@ if (req.user) {
               {
 
                 var userPostID = notification_feed[i].userPost;
+                //this can cause issues if not found - should check on later
                 var user_post = user.getUserPostByID(userPostID);
                 var time_diff = Date.now() - user_post.absTime;
                 if (user.lastNotifyVisit)
@@ -66,7 +68,11 @@ if (req.user) {
 
                 if(notification_feed[i].time <= time_diff && notification_feed[i].time > past_diff)
                 {
-                  return res.send({result:true});
+                  
+                  if ((notification_feed[i].notificationType == "read") && (user.transparency != "no"))
+                    return res.send({result:true});
+                  if (notification_feed[i].notificationType != "read")
+                    return res.send({result:true});
                 }
 
               }//UserPost
@@ -115,7 +121,9 @@ exports.postLogin = (req, res, next) => {
     }
     if (!(user.active)) {
       console.log("FINAL");
-      req.flash('final', { msg: '' });
+      var post_url = 'https://cornell.qualtrics.com/jfe/form/SV_0dK6TRfe3HfC6ax?id='+user.mturkID;
+      console.log("last url is "+post_url)
+      req.flash('final', { msg: post_url });
       return res.redirect('/login');
     }
     req.logIn(user, (err) => {
@@ -167,8 +175,12 @@ exports.postSignup = (req, res, next) => {
   }
 
   //random assignment of experimental group
-  var result = ['no:no', 'no:low', 'no:high', 'ui:no', 'ui:low', 'ui:high'][Math.floor(Math.random() * 6)]
+  //var result = ['no:no:no', 'no:yes:no','yes:no:no', 'yes:yes:no','no:no:yes', 'no:yes:yes', 'yes:no:yes', 'yes:yes:yes'][Math.floor(Math.random() * 8)]
+  //var result = ['no:no', 'no:yes','yes:no', 'yes:yes'][Math.floor(Math.random() * 4)]
+  //study3_n20 or study3_n80
+  var result = ['study3_n20:no', 'study3_n20:yes','study3_n80:no', 'study3_n80:yes'][Math.floor(Math.random() * 4)]
   var resultArray = result.split(':');
+  //[0] is script_type, [1] is post_nudge
   const user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -176,9 +188,15 @@ exports.postSignup = (req, res, next) => {
     username: req.body.username,
     group: result,
     active: true,
-    ui: resultArray[0], //ui or no
-    notify: resultArray[1], //no, low or high
-    lastNotifyVisit : Date.now()
+    ui: 'no', //ui or no
+    notify: "no", //no, low or high (not used anymore)
+    transparency: 'no',
+    profile_perspective: "no", //yes or no
+    comment_prompt: 'no', //yes or no
+    script_type: resultArray[0], //type of script they are running in
+    post_nudge: resultArray[1],
+    lastNotifyVisit : (Date.now() - 86400000),
+    createdAt: (Date.now() - 86400000)
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -271,12 +289,20 @@ exports.getMe = (req, res) => {
          model: 'Actor'
        } 
     })
+  .populate({ 
+       path: 'posts.actorAuthor',
+       model: 'Actor'
+    })
+  .populate({ 
+       path: 'posts.comments.actor',
+       model: 'Actor'
+    })
   .exec(function (err, user) {
     if (err) { return next(err); }
 
     var allPosts = user.getPostsAndReplies();
 
-    res.render('me', { posts: allPosts });
+    res.render('me', { posts: allPosts.reverse() });
 
   });
 
@@ -502,7 +528,7 @@ var sendReminderEmail = function(user){
     const mailOptions = {
       to: user.email,
       from: 'do-not-reply@eatsnap.love',
-      subject: 'Remember to Checkout 🍴📷.❤️ Today',
+      subject: 'Remember to Check Out 🍴📷.❤️ Today',
       text: `Hey ${u_name},\n\n
       Just wanted to remind you to visit https://eatsnap.love today.\n
       Your participation in our study is a huge help in beta testing the app.
@@ -551,7 +577,7 @@ var sendFinalEmail = function(user){
       text: `Hey ${u_name},\n\n
       Thank you so much for participating in our study!\n
       Your participation has been a huge help in beta testing our app.
-      You have one last task to finish the study, and that is to take the final survey here at https://cornell.qualtrics.com/jfe/form/SV_8eukV6K9MLA5Au9\n\n
+      You have one last task to finish the study, and that is to take the final survey here at  https://cornell.qualtrics.com/jfe/form/SV_0dK6TRfe3HfC6ax?id=`+user.mturkID+`\n\n
       Thanks again for all your help and participation!\n
       Keep Eating, Snapping and Loving!\n 
       🍴📷.❤️ Team
@@ -675,6 +701,7 @@ exports.userTestResults = (req, res) => {
           if (!users[i].completed)
           {
 
+            /*
             //check logs
             var day = [0,0,0];
             for (var j = users[i].log.length - 1; j >= 0; j--) {
@@ -706,7 +733,8 @@ exports.userTestResults = (req, res) => {
           
             console.log("@@@@@@@@days are d1:"+day[0]+" d2:"+day[1]+" d3:"+day[2]);
             //Logged in at least twice a day, and posted at least 3 times
-            if (day[0] >=2 && day[1] >=2 && day[2] >=2 && users[i].numPosts >= 2)
+            */
+            if (users[i].study_days[0] >=2 && users[i].study_days[1] >=2 && users[i].study_days[2] >=2 && users[i].numPosts >= 2)
             {
               users[i].completed = true;
               users[i].save((err) => {

@@ -12,9 +12,9 @@ html
     meta(name="msapplication-tap-highlight" content="no")
     meta(name="content-language" content="en_US")
     title #{title} - eatsnap.love
-    link(rel='shortcut icon', href='/favicon.ico')
-    link(rel='manifest', href='/manifest.json')
-    link(rel='stylesheet', href='/semantic/dist/semantic.min.css')
+    link(rel='shortcut icon', href='/public/favicon.ico')
+    link(rel='manifest', href='/public/manifest.json')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css')
     style(type='text/css').
       body {
       background-color: #F5F8FA;
@@ -62,17 +62,34 @@ html
       {
           cursor: pointer;
       }
+      .ui.three.column.grid.pro {
+        margin: 0;
+      }
+      .ui.three.column.grid.pro .column {
+        padding: 0 4px;
+      }
+      .ui.three.column.grid.pro .column img {
+        margin-top: 8px;
+        vertical-align: middle;
+      }
       
   script.
     if ('serviceWorker' in navigator) {
     console.log("Will the service worker register?");
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('/public/service-worker.js')
     .then(function(reg){
     console.log("Yes, it did.");
     }).catch(function(err) {
     console.log("No it didn't. This happened: ", err)
     });
     }
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+  //script(src='/public/js/lib/jquery-3.1.1.min.js')
+  script(src='/public/js/lib/humanized_time_span.js')
+  //script(src='/js/lib/lazyload.transpiled.min.js')
+  //script(src='/js/lib/bootstrap.min.js') humanized_time_span.js
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js')
+  script(src='/public/js/main.js')
 
   body
     .ui.vertically.padded.grid.container
@@ -82,7 +99,11 @@ html
 
     //include partials/ui_footer
     //- New Post Modal
-    .ui.small.post.modal
+    //-
+      var nudge = "no";
+      if (user.post_nudge) 
+        {nudge = user.post_nudge}
+    //-.ui.tiny.post.modal(nudge=nudge)
       i.close.icon
       .header Add a New Post
       .content
@@ -93,19 +114,23 @@ html
           .field.image-upload
             label(for='picinput')
               .image.content
-                img#imgInp.ui.fluid.image(src='/photo-camera.svg')
+                img#imgInp.ui.fluid.image(src='/public/photo-camera.svg')
             //-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
             input#picinput(type='file', accept='image/*', name='picinput')
           .ui.error.message
       .actions
         input.ui.green.button(type='submit', name="foo", value='Submit', form='postform')
 
-    script(src='/js/lib/jquery-3.1.1.min.js')
-    script(src='/js/lib/humanized_time_span.js')
-    script(src='/js/lib/lazyload.transpiled.min.js')
-    //script(src='/js/lib/bootstrap.min.js') humanized_time_span.js
-    script(src='/semantic/dist/semantic.min.js')
-    script(src='/js/main.js')
+    //-.ui.tiny.nudge.modal
+      .header Are you sure?
+      .content
+        p Do you really want to submit this post?
+      .actions
+        .ui.approve.button Yes
+        .ui.cancel.button No
+
+    //-script(src='/js/lib/jquery-3.1.1.min.js')
+
 
     //- // Google Analytics: change UA-XXXXX-X to be your site's ID
     //- script.

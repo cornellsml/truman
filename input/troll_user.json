@@ -1,0 +1,32 @@
+[
+  {
+    "username": "MrShazam",
+    "name": "MrShazam",
+    "age": 40,
+    "picture": "clintonclinton.png",
+    "gender": "Female",
+    "bio": "",
+    "location": "",
+    "class": "troll"
+  },
+  {
+    "username": "JuniperQ",
+    "name": "JuniperQ",
+    "age": 20,
+    "picture": "343kol.png",
+    "gender": "male",
+    "bio": "",
+    "location": "AMERICA",
+    "class": "troll"
+  },
+  {
+    "username": "csmbx1",
+    "name": "Suzanne",
+    "age": 42,
+    "picture": "dogdogdog.jpg",
+    "gender": "Female",
+    "bio": "MAKE $5000 PER WEEK WORKING FROM HOME",
+    "location": "",
+    "class": "troll"
+  }
+]

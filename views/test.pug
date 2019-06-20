@@ -1,0 +1,274 @@
+extends ui_layout
+  
+block content
+
+
+  .computer.only.tablet.only.four.wide.column 
+  #content.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
+
+    .ui.raised.fluid.card.profile_card
+      //-h3.ui.center.aligned.header(style="background:#42c8f4;") 
+        //-checkered5.png bluecheckered contain cover
+      .content(style="background-image: url('/public/checkered6.png');background-size: cover;")
+        //-h3.ui.center.aligned.header(style="background-image: url('/public/checkered6.png');background-size: cover;")
+        .center.aligned
+          a.pro_name_link(href='/user/NoahM1121')
+            img.ui.centered.small.circular.image.pro_name_image(src='/user_post/5af0aee42c477b0e9db79556msrd75jedd2_png')
+      .content(style="white-space:nowrap;")
+        span(style="font-size:150%;font-weight: bold;")="What's on "
+        a.pro_name_link(href='/user/NoahM1121')
+          span(style="font-size:150%;font-weight: bold;").pro_name="Tom's"
+        span(style="font-size:150%;font-weight: bold;")=" plate? "
+        br
+        span(style="white-space:normal;")="Kate, we care about helping you connect with others. Browse through Tom's posts. Imagine how Tom feels and what is going on in his life."
+
+      //-.content(style="text-align:center;")
+        span="Here are some of Noah's recents posts"
+      .content()
+        .ui.three.column.grid.pro
+          .column.profile(body="this is a test!!!", time=9000)
+            img.ui.fluid.image(src="/post_pictures/"+'IMG_20160625_113114.jpg')
+          .column.profile(body="OK I see this now!!!")
+            img.ui.fluid.image(src="/post_pictures/"+'IMG_20170415_095155.jpg')
+          .column.profile(body="WHAT WHAT!!!")
+            img.ui.fluid.image(src="/post_pictures/"+'IMG_4266.JPG')
+          .column.profile(body="OMG ()()()()()()()()(!!!")
+            img.ui.fluid.image(src="/post_pictures/"+'IMG_20170305_133410.jpg')
+          .column.profile(body="HAHAHA but really WTF!!!")
+            img.ui.fluid.image(src="/post_pictures/"+'IMG_20170519_184216.jpg')
+          .column.profile(body="Last one")
+            img.ui.fluid.image(src="/post_pictures/"+'vegan6.jpg')
+      
+
+      
+
+        //-.ui.small.images
+          img(src='IMG_20160625_113114.jpg')
+          img(src='IMG_4266.JPG')
+          img(src='IMG_20170519_184216.jpg')
+          img(src='IMG_20170415_095155.jpg')
+    
+    .ui.small.modal.pro
+      .image.content
+        .ui.fluid.card.dim
+          //- Normal Base Post
+          .content
+            .right.floated.time.meta= "2 Days Ago"
+            //-.right.floated.time.meta= (user.createdAt.getTime() + val.time)
+            |  
+            a.mod_pro_name_link(href='/user/NoahM1121')
+              img.ui.avatar.image.mod_pro(src='/profile_pictures/4.jpg')
+              span.mod_name="Noah Marshall"
+          .image
+            img.post.mod_photo(src="/post_pictures/"+'IMG_20160625_113114.jpg')
+            //-img(src='/picture.svg', data-src=val.picture)
+          .content
+            .description.mod_body="Totes my Goats"
+          .three.ui.bottom.attached.icon.buttons
+            .ui.reply.button(tabindex='0')
+              i.reply.icon
+              |  Reply
+            .ui.flag.button(tabindex='0')
+              i.flag.icon
+              |  Flag
+            .ui.labeled.button(tabindex='0')
+              .ui.like.button
+                i.heart.icon
+                |  Like
+              a.ui.basic.red.left.pointing.label.count=5
+                p
+                p
+                p
+
+    .ui.fluid.card.test(postID="3")
+      .content
+        .right.floated.meta= "Yesterday"
+        |
+        a(href='/user/bblueberryy')
+          img.ui.avatar.image(src='/profile_pictures/image-31.png')
+          span='Cassie Reed'
+      .image
+        img.post(src="/post_pictures/"+"IMG_20170129_131732.jpg")
+      .content
+        .description="taking a break from #pastaweek for some crab rangoons... made with leftover pasta dough!! :D "
+        //-.right.floated.meta
+          i.icon.checkmark
+          | Seen by 12
+      .three.ui.bottom.attached.icon.buttons
+        .ui.reply.button(tabindex='0')
+          i.reply.icon
+          |  Reply
+        .ui.flag.button(tabindex='0')
+          i.flag.icon
+          |  Flag
+        .ui.labeled.button(tabindex='0')
+          .ui.like.button
+            i.heart.icon
+            |  Like
+          a.ui.basic.red.left.pointing.label.count=2
+      
+      .content
+        .ui.comments
+          .comment
+            a.avatar
+              img(src='/profile_pictures/155.jpg')
+            .content
+              a.author Emma Hanson
+              .metadata
+                span.date 1527025081548
+                i.heart.icon
+                |  0 Likes
+              .text
+                | when will you get it into your head that nobody likes your stupid ass.
+              .actions
+                a.reply Reply
+                a.like Like
+                a.flag Flag
+            .ui.bottom.attached.negative.message
+              i.close.icon
+              .header
+                i.icon.red.flag
+                | Is this Cyberbullying?
+              br
+              button.positive.ui.button Yes
+              button.negative.ui.button No
+
+
+
+      .content
+        //-.description(style="text-align:center;background:#E8E8E8")="How is Cassie Feeling?"
+        .ui.fluid.left.labeled.right.icon.input
+          .ui.label            
+            img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+          input.newcomment(type='text', placeholder='Write a Message')
+          i.big.send.link.icon
+      
+
+    .ui.fluid.card(postID="2")
+      .content
+        .right.floated.meta= "Yesterday"
+        |
+        a(href='/user/NoahM1121')
+          img.ui.avatar.image(src='/profile_pictures/image-7.png')
+          span='Aimee Lin'
+      .image
+        img.post(src="/post_pictures/"+"IMG_20170602_173837.jpg")
+      .content
+        .description="Today was a rough day, but I have food to cheer me up."
+        //-.right.floated.meta
+          i.icon.checkmark
+          | Seen by 12
+      .three.ui.bottom.attached.icon.buttons
+        .ui.reply.button(tabindex='0')
+          i.reply.icon
+          |  Reply
+        .ui.flag.button(tabindex='0')
+          i.flag.icon
+          |  Flag
+        .ui.labeled.button(tabindex='0')
+          .ui.like.button
+            i.heart.icon
+            |  Like
+          a.ui.basic.red.left.pointing.label.count=4
+      .content
+        //-.description(style="text-align:center;background:#E8E8E8")="How is Aimee Feeling?"
+        //-.ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
+        .ui.fluid.left.labeled.right.icon.input
+          //-.ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
+          .ui.label            
+            img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+          input.newcomment(type='text', placeholder='Write a Comment')
+          i.big.send.link.icon
+
+    //-.ui.blurring.segment
+    .ui.fluid.card(postID="1")
+      .content
+        .right.floated.meta= "Yesterday"
+        |
+        a(href='/user/NoahM1121')
+          img.ui.avatar.image(src='/profile_pictures/image-51.png')
+          span='Jamie Taggart'
+      .image.blurring
+        .ui.inverted.active.read.dimmer
+              .content
+                .center
+                  h2.ui.icon.header
+                    i.hide.icon
+                    |  This photo may have graphic or violent content
+                  br
+                  button.ui.black.button.reread Reveal? 
+        img.post(src="/post_pictures/"+"vegan6.jpg", style="filter: blur(5px);")
+      .content
+        .description="a little ranbow salad! soooooooooo much chopping though :P #eatclean"
+        //-.right.floated.meta
+          i.icon.checkmark
+          | Seen by 12
+      .three.ui.bottom.attached.icon.buttons
+        .ui.reply.button(tabindex='0')
+          i.reply.icon
+          |  Reply
+        .ui.flag.button(tabindex='0')
+          i.flag.icon
+          |  Flag
+        .ui.labeled.button(tabindex='0')
+          .ui.like.button
+            i.heart.icon
+            |  Like
+          a.ui.basic.red.left.pointing.label.count=8
+      .content
+        .ui.comments
+          .ui.info.message
+            .comment
+              a.avatar
+                img(src='/profile_pictures/jaket.jpeg')
+              .content
+                a.author Jake Tyrel
+                .metadata
+                  span.date 1518667649625
+                  i.heart.icon
+                  |  3 Likes
+                .text
+                  | This is gross, just like you!
+                .actions
+                  a.reply Reply
+                  a.like Like
+                  a.flag Flag
+            .ui.header Our automated system has flagged this comment as harassment. Do you agree? 
+            a.ui.button(href='#') Yes
+            a.ui.button(href='#') No 
+          //-.ui.info.message
+            .ui.header Our automated system has flagged this comment as harassment. Do you agree? 
+            a.ui.button(href='#') Yes
+            a.ui.button(href='#') No 
+          .comment
+            a.avatar
+              img(src='/profile_pictures/165.jpg')
+            .content
+              a.author Yalonda Carter
+              .metadata
+                span.date 1518667649625
+                .rating
+                  i.heart.icon
+                  |  5 Likes
+              .text
+                p Pretty good!!!
+              .actions
+                a.reply Reply
+                a.like Like
+                a.flag Flag
+      //-.extra.content
+        .ui.fluid.top.labeled.right.icon.input
+          .ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
+          //-.ui.label            
+            img.ui.avatar.image(src='/user_post/5979434f9977054afa16f2af5r5z28mndominic_jpg')
+          input(type='text', placeholder='Write to Noah')
+          i.send.link.icon
+      .extra.content
+        //-.description(style="text-align:center;background:#E8E8E8")="How is Jamie Feeling?"
+        //-.ui.top.attached.label(style="text-align:center")="How is Noah Feeling"
+        #newcomment.ui.fluid.left.labeled.right.icon.input
+          .ui.label            
+            img.ui.avatar.image(src='/profile_pictures/image-18.png', name="Jane Doe")
+          input(type='text', placeholder='Write to Jamie')
+          i.big.send.link.icon
+

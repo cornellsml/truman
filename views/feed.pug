@@ -1,0 +1,142 @@
+extends ui_layout_no
+  
+block content
+
+  
+  -var cdn = "https://eatsnaplove.nyc3.cdn.digitaloceanspaces.com";
+  -//var cdn = "";
+  .computer.only.tablet.only.four.wide.column 
+    
+
+  #content.eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column(style='display: none;')
+    //-.ui.active.dimmer.feed
+      .ui.large.text.loader Loading
+    //- Input for creating new post at top of feed
+  
+    each val in script
+      
+      
+      .ui.fluid.card.dim()
+        //- dimmer DIV for flagging
+        .ui.dimmer.flag
+              .content
+                .center
+                  h2.ui.inverted.icon.header
+                    i.red.flag.icon
+                    |  You&apos;ve flagged this!
+                    h3.ui.inverted.header
+                      span="The admins will review this post further. We are sorry you had this experience."
+        //- Normal Base Post
+        .content
+          .right.floated.time.meta= (1547752372994 + val.time)
+          |  
+          a(href='#')
+            if val.actor[namefilter] == "yes"
+              img.ui.avatar.image(src=cdn+'/profile_pictures/'+val.actor.profile.picture)
+            else
+              img.ui.avatar.image(src=val.actor.profile.fakepic)
+            span=val.actor.profile.name
+        //-div(style="position: relative; z-index: 1;")
+          img(src="image.png" style="position: absolute; z-index: 2;")
+          span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+        .image
+          img.post(src=cdn+"/post_pictures/"+val.picture)
+        .content
+          .description=val.body
+        .three.ui.bottom.attached.icon.buttons
+          .ui.reply.button(tabindex='0')
+            i.reply.icon
+            |  Reply
+          .ui.flag.button(tabindex='0')
+            i.flag.icon
+            |  Flag
+          if val.like
+            .ui.labeled.button(tabindex='0')
+              .ui.red.like.button
+                i.heart.icon
+                |  Like
+              a.ui.basic.red.left.pointing.label=val.likes
+          else
+            .ui.labeled.button(tabindex='0')
+              .ui.like.button
+                i.heart.icon
+                |  Like
+              a.ui.basic.red.left.pointing.label.count=val.likes
+        if val.comments.length > 0
+          .content
+            .ui.comments
+              each comment in val.comments
+                //-IF this comment is USER made, do this
+                
+                  
+                .comment(commentID=comment.id)
+                  a.avatar(href='#')
+                    if comment.actor[namefilter] == "yes"
+                      img(src='/profile_pictures/'+comment.actor.profile.picture)
+                    else
+                      img(src=comment.actor.profile.fakepic)
+                  .content
+                    a.author(href='#')=comment.actor.profile.name
+                    .metadata
+                      span.date=(1547752372994 + val.time +comment.time)
+                      .rating
+                        if comment.liked
+                          i.red.heart.icon
+                          span=comment.likes
+                          |  Likes 
+                        else
+                          i.heart.icon
+                          span.num=comment.likes
+                          |  Likes
+                    .text=comment.body
+                    .actions
+                      a.like.comment Like
+                      a.flag.comment Flag
+        .extra.content
+          .ui.fluid.left.labeled.right.icon.input
+            .ui.label
+              img.ui.avatar.image(src='/profile_pictures/genericphoto6.png', name="Nick Johnson")           
+            input.newcomment(type='text', placeholder='Write a Comment')
+            i.big.send.link.icon
+
+    .ui.fluid.card
+      .content
+        .description
+        |  End of Posts
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    

@@ -10,7 +10,7 @@ block content
         else
           img(src=user.gravatar(60))
       .content
-        a.header= user.profile.name || user.email || user.id
+        a.header(href='/me')= user.profile.name || user.email || user.id
         .meta="@"+user.username
         .description=user.profile.bio
         .description
@@ -24,7 +24,11 @@ block content
 
   .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column 
     each val in posts
-      .ui.fluid.card
+      -var u_class;
+      -if (val.actorAuthor) {u_class = "actorReply"}
+      -else if (val.reply) {u_class = "userReply"}
+      -else {u_class = "userPost"}
+      .ui.fluid.card(u_postID=val.id, ui=user.ui, notify=user.notify, type=u_class, postID=val.postID)
         if val.reply
           .content
             .right.floated.time.meta= (user.createdAt.getTime() + val.relativeTime)
@@ -84,22 +88,84 @@ block content
             img(src='/user_post/'+val.picture)
           .content
             .description=val.body
-          .three.ui.bottom.attached.icon.buttons
-              //-.ui.reply.button(tabindex='0')
-              .ui.button(tabindex='0')
+          .two.ui.bottom.attached.icon.buttons
+              .ui.reply.button(tabindex='0')
                 i.reply.icon
                 |  Reply
-              //-.ui.flag.button(tabindex='0')
-              .ui.button(tabindex='0')
-                i.flag.icon
-                |  Flag
-              if val.like
-                //-.ui.red.like.button
-                .ui.red.button
+              if val.liked
+                .ui.red.like.button
                   i.heart.icon
                   |  Like
               else
-                //-.ui.like.button
-                .ui.button
+                .ui.like.button
                   i.heart.icon
                   |  Like
+          if val.comments.length > 0
+            .content
+              .ui.comments
+                each comment in val.comments
+                  //-IF this comment is USER made, do this
+                  if (user.createdAt.getTime() + comment.time) < Date.now()
+                    if !comment.flagged
+                      if comment.new_comment
+                        -console.log("New COMMENT AREA");
+                        .comment(commentID=comment.commentID)
+                          a.avatar.image(href='/me')
+                            if user.profile.picture
+                              img(src='/user_post/'+user.profile.picture)
+                            else
+                              img(src=user.gravatar(60))
+                          .content
+                            a.author(href='/me')=user.profile.name || user.username || user.id
+                            .metadata
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              .rating
+                                if comment.liked
+                                  i.red.heart.icon
+                                  span=comment.likes
+                                  | Likes 
+                                else
+                                  i.heart.icon
+                                  span.num=comment.likes
+                                  |  Likes
+                            .text=comment.body
+                            .actions
+                              if comment.liked
+                                a.red.like.comment Like
+                              else
+                                a.like.comment Like
+                              a.flag.comment Flag
+                      //- Else this is a normal comment from the script
+                      else
+                        .comment(commentID=comment.commentID)
+                          a.avatar(href='/user/'+comment.actor.username)
+                            img(src='/profile_pictures/'+comment.actor.profile.picture)
+                          .content
+                            a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                            .metadata
+                              span.date=(user.createdAt.getTime() + comment.time)
+                              .rating
+                                if comment.liked
+                                  i.red.heart.icon
+                                  span=comment.likes
+                                  | Likes 
+                                else
+                                  i.heart.icon
+                                  span.num=comment.likes
+                                  |  Likes
+                            .text=comment.body
+                            .actions
+                              if comment.liked
+                                a.red.like.comment Like
+                              else
+                                a.like.comment Like
+                              a.flag.comment Flag
+          .extra.content
+            .ui.fluid.left.labeled.right.icon.input
+              .ui.label
+                if user.profile.picture
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                else
+                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+              input.newcomment(type='text', placeholder='Write a Comment')
+              i.big.send.link.icon

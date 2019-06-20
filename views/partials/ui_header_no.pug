@@ -1,0 +1,58 @@
+.computer.only.tablet.only.row 
+  .ui.borderless.fixed.menu
+    .ui.container
+      a.item(href='/')
+        img.ui.tiny.image(src='/public/logo.png', id='logo')
+      |  
+      .right.menu
+        if !user
+          a.item(href='/login') Login
+          a.item(href='/signup') Create Account
+        else
+          a.item.newpost
+            i.big.write.square.icon
+          a.item(href='/notifications') 
+            i.big.alarm.icon
+          .ui.simple.dropdown.item
+            if user.profile.picture
+              img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+            else
+              img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+            |
+            span= user.profile.name || user.username || user.id
+            i.dropdown.icon
+            .menu
+              a.item(href='/account') My Account
+              .divider
+              a.item(href='/me') My Profile
+              .divider
+              a.item(href='/logout') Logout
+.mobile.only.row
+  .ui.fluid.top.fixed.four.item.menu
+    a.item(href='/')
+      img.ui.tiny.image(src='/public/logo.png', id='cell_logo')
+    if !user
+      a.item(href='/login') Login
+      a.item(href='/signup') Create Account
+    else
+      a.item.newpost
+        i.big.write.square.icon
+      a.item(href='/notifications') 
+        i.big.alarm.icon
+      .ui.simple.dropdown.item
+        if user.profile.picture
+          img.ui.mini.spaced.circular.image(src='/user_post/'+user.profile.picture)
+        else
+          img.ui.mini.spaced.circular.image(src=user.gravatar(60))
+        i.dropdown.icon
+        .menu
+          a.item(href='/account') My Account
+          .divider
+          a.item(href='/me') My Profile
+          .divider
+          a.item(href='/logout') Logout
+
+
+
+
+

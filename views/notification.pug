@@ -6,18 +6,26 @@ block content
   
   .computer.only.tablet.only.four.wide.column 
     .ui.card
-      //- this is the for user card - does not show up on mobile
       .image
         if user.profile.picture
           img(src='/user_post/'+user.profile.picture)
         else
           img(src=user.gravatar(60))
       .content
-        a.header= user.profile.name || user.email || user.id
+        a.header(href='/me')= user.profile.name || user.email || user.id
+        .meta="@"+user.username
+        .description=user.profile.bio
+        .description
+          if user.profile.location
+            i.marker.icon
+            span=user.profile.location
+      .one.ui.bottom.attached.icon.buttons
+          button.ui.editprofile.button(data-tooltip='Update Your Profile', data-position='bottom left')
+            i.write.icon
 
   .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column
     if notification_feed == -1
-      p You have no notifications. I guess no one likes you...jk! 😜
+      h4 You have no notifications at the time.
     else
       .ui.feed
         each val in notification_feed
@@ -33,7 +41,10 @@ block content
                     each actor in best
                       if actor.username != "generic-joe"
                         a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                          img(src='/profile_pictures/'+actor.profile.picture)
+                          if actor[profileFilter] == "yes"
+                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                          else
+                            img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -67,7 +78,11 @@ block content
                   .extra.images
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                        //-img(src='/profile_pictures/'+actor.profile.picture)
+                        if actor[profileFilter] == "yes"
+                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                        else
+                          img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -92,7 +107,11 @@ block content
                     each actor in best
                       if actor.username != "generic-joe"
                         a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                          img(src='/profile_pictures/'+actor.profile.picture)
+                          //-img(src='/profile_pictures/'+actor.profile.picture)
+                          if actor[profileFilter] == "yes"
+                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                          else
+                            img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -127,7 +146,11 @@ block content
                   .extra.images
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                        //-img(src='/profile_pictures/'+actor.profile.picture)
+                        if actor[profileFilter] == "yes"
+                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                        else
+                          img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -151,7 +174,11 @@ block content
                     each actor in best
                       if actor.username != "generic-joe"
                         a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                          img(src='/profile_pictures/'+actor.profile.picture)
+                          //-img(src='/profile_pictures/'+actor.profile.picture)
+                          if actor[profileFilter] == "yes"
+                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                          else
+                            img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -184,7 +211,11 @@ block content
                   .extra.images
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+actor.profile.picture)
+                        //-img(src='/profile_pictures/'+actor.profile.picture)
+                        if actor[profileFilter] == "yes"
+                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
+                        else
+                          img.ui.avatar.image(src=actor.profile.fakepic)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -205,11 +236,15 @@ block content
                   img.ui.tiny.right.floated.image(src='/user_post/'+val.picture)
                   .extra.images
                       a.ui.avatar.image(href='/user/'+val.actor.username, data-tooltip=val.actor.profile.name, data-position='top center')
-                        img(src='/profile_pictures/'+val.actor.profile.picture)
+                        //-img(src='/profile_pictures/'+val.actor.profile.picture)
+                        if val.actor[profileFilter] == "yes"
+                          img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
+                        else
+                          img.ui.avatar.image(src=val.actor.profile.fakepic)
                   .summary
                     a(href='/user/'+val.actor.username)
                       span=val.actor.profile.name
-                    |  has replied to your post.
+                    |  has commented on your post.
                   .extra.text=val.replyBody
                   
             default

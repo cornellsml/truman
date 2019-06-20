@@ -282,13 +282,7 @@ module.exports = {
         type    : 'list',
         name    : 'useRoot',
         message :
-          '    \n' +
-          '    {packageMessage} \n' +
-          '    \n' +
-          '    Is this your project folder?\n' +
-          '    \x1b[92m{root}\x1b[0m \n' +
-          '    \n ' +
-          '\n',
+          '{packageMessage} Is this your project folder? {root}',
         choices: [
           {
             name  : 'Yes',
@@ -372,6 +366,7 @@ module.exports = {
           { name: "label", checked: true },
           { name: "list", checked: true },
           { name: "loader", checked: true },
+          { name: "placeholder", checked: true },
           { name: "rail", checked: true },
           { name: "reveal", checked: true },
           { name: "segment", checked: true },

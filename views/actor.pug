@@ -5,10 +5,10 @@ block content
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
-        if actor.class == 'high_read'
-          img(src=actor.profile.picture)
-        else
+        if actor[profileFilter] == "yes"
           img(src='/profile_pictures/'+actor.profile.picture)
+        else
+          img(src=actor.profile.fakepic)
       .content
         a.header= actor.profile.name
         .meta="@"+actor.username
@@ -26,7 +26,7 @@ block content
 
   .eight.wide.computer.ten.wide.tablet.sixteen.wide.mobile.column 
     each val in script
-      .ui.fluid.card.dim(postID=val.id, ui=user.ui, notify=user.notify, state=val.state || 'unread', type='actor')
+      .ui.fluid.card.dim(postID=val.id, ui=user.ui, state=val.state || 'unread', type='actor', actor_un = val.actor.username, actor_name = val.actor.profile.name, actor_pic = val.actor.profile.picture)
           //- dimmer DIV for flagging
           .ui.dimmer.flag
                 .content
@@ -36,171 +36,118 @@ block content
                       |  You&apos;ve flagged this!
                       h3.ui.inverted.header
                         span="The admins will review this post further. We are sorry you had this experience."
-          if user.ui == 'ui'
-            //- if user is in UI condistion - add read dimmer to post
-            if val.read 
-              //- if user has already READ this post before - set dimmer to active (turn it on)
-              .ui.inverted.active.read.dimmer
-                .content
-                  .center
-                    h2.ui.icon.header
-                      i.unhide.icon
-                      |  You&apos;ve read this!
-                    br
-                    if user.notify != 'no'
-                      h3.ui.icon.header
-                        img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
-                        span=" "+val.actor.profile.name+" "
-                        | has been notified
-                        br
-                        if val.reply
-                          img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
-                          span=" "+val.reply.actor.profile.name+" "
-                          | has been notified
-                        br
-                    br
-                    button.ui.black.button.reread Read Again?                
-            else
-              //- user has not read this post, but is in UI condistion, so add dimmer, but don't turn it on
-              .ui.inverted.read.dimmer
-                .content
-                  .center
-                    h2.ui.icon.header
-                      i.unhide.icon
-                      |  You&apos;ve read this!
-                    br
-                    if user.notify != 'no'
-                      h3.ui.icon.header
-                        img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
-                        span=" "+val.actor.profile.name+" "
-                        | has been notified
-                        br
-                        if val.reply
-                          img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
-                          span=" "+val.reply.actor.profile.name+" "
-                          | has been notified
-                        br
-                    br
-                    button.ui.black.button.reread Read Again?
-
-          if val.reply
-            //- if post is a reply post - add the post and populate the reply as well
-            .content
-              .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-              |
-              a.ui.avatar.image(href='/user/'+val.actor.username)
-                img(src='/profile_pictures/'+val.actor.profile.picture)
-              a(href='/user/'+val.actor.username)
-                span=val.actor.profile.name
-            .content
-              .description=val.body
-            .extra.content
-              .ui.fluid.card
-                .content
-                  .right.floated.time.meta= (user.createdAt.getTime() + val.reply.time)
-                  |
-                  a(href='/user/'+val.reply.actor.username)   
-                    img.ui.avatar.image(src='/profile_pictures/'+val.reply.actor.profile.picture)
-                    span=val.reply.actor.profile.name
-                if val.reply.picture
-                  .image
-                    img(src="/"+val.reply.picture)
-                .content
-                  .description=val.reply.body
-                  if user.notify != 'low'
-                    .right.floated.meta
-                      i.icon.checkmark
-                      | Seen by #{val.lowread}
-                  else if user.notify != 'high'
-                    .right.floated.meta
-                      i.icon.checkmark
-                      | Seen by #{val.highread}
-            .three.ui.bottom.attached.icon.buttons
-              .ui.reply.button(tabindex='0')
-                i.reply.icon
-                |  Reply
-              .ui.flag.button(tabindex='0')
-                i.flag.icon
-                |  Flag
-              if val.like
-                .ui.labeled.button(tabindex='0')
-                  .ui.red.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label=val.likes
-                    | 15
-              else
-                .ui.labeled.button(tabindex='0')
-                  .ui.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label.count=val.likes
-      
-          else
-            //- not a reply post - visualize like normal
-            .content
-              .right.floated.time.meta= (user.createdAt.getTime() + val.time)
-              |  
-              a(href='/user/'+val.actor.username)
+          //- Normal Base Post
+          .content
+            .right.floated.time.meta= (user.createdAt.getTime() + val.time)
+            |  
+            a(href='/user/'+val.actor.username)
+              if val.actor[profileFilter] == "yes"
                 img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
-                span=val.actor.profile.name
-            .image
-              img(src="/"+val.picture)
-              //-img(src='/picture.svg', data-src=val.picture)
-            .content
-              .description=val.body
-              if user.notify != 'low'
-                .right.floated.meta
-                  i.icon.checkmark
-                  | Seen by #{val.lowread}
-              else if user.notify != 'high'
-                .right.floated.meta
-                  i.icon.checkmark
-                  | Seen by #{val.highread}
-            .three.ui.bottom.attached.icon.buttons
-              .ui.reply.button(tabindex='0')
-                i.reply.icon
-                |  Reply
-              .ui.flag.button(tabindex='0')
-                i.flag.icon
-                |  Flag
-              if val.like
-                .ui.labeled.button(tabindex='0')
-                  .ui.red.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label=val.likes
               else
-                .ui.labeled.button(tabindex='0')
-                  .ui.like.button
-                    i.heart.icon
-                    |  Like
-                  a.ui.basic.red.left.pointing.label.count=val.likes
-    br
-    br
-    br
-    br
-    br
-    br
-    br
-    br
-    br
-    br
-    br
-  //- New Reply Modal
-  .ui.small.reply.modal
-    i.close.icon
-    .header Reply to Post
-    .content
-      form#replyform.ui.reply.form(action='/post/new', method='POST', enctype='multipart/form-data')
-        input(type='hidden', name='_csrf', value=_csrf)
-        input#replyInput(type='hidden', name='reply', value='a')
-        .field
-          textarea(rows='2', placeholder='Add your Reply', name='body')
-        .ui.error.message
-    .actions
-      input.ui.green.button(type='submit', value='Submit', form='replyform')
+                img.ui.avatar.image(src=val.actor.profile.fakepic)
+              span=val.actor.profile.name
 
+          //-div(style="position: relative; z-index: 1;")
+            img(src="image.png" style="position: absolute; z-index: 2;")
+            span#overlay_text(style="position: relative; top: -10px; z-index: 3;") OVERLAY
+          .image
+            img.post(src="/post_pictures/"+val.picture)
+          .content
+            .description=val.body
+          .three.ui.bottom.attached.icon.buttons
+            .ui.reply.button(tabindex='0')
+              i.reply.icon
+              |  Reply
+            .ui.flag.button(tabindex='0')
+              i.flag.icon
+              |  Flag
+            if val.like
+              .ui.labeled.button(tabindex='0')
+                .ui.red.like.button
+                  i.heart.icon
+                  |  Like
+                a.ui.basic.red.left.pointing.label=val.likes
+            else
+              .ui.labeled.button(tabindex='0')
+                .ui.like.button
+                  i.heart.icon
+                  |  Like
+                a.ui.basic.red.left.pointing.label.count=val.likes
+          if val.comments.length > 0
+            .content
+              .ui.comments
+                each comment in val.comments
+                  //-IF this comment is USER made, do this
+                  if ((user.createdAt.getTime() + comment.time) < Date.now() && (!comment.flagged))
+                    if comment.new_comment
+                      -console.log("New COMMENT AREA");
+                      .comment(commentID=comment.new_comment_id)
+                        a.avatar.image(href='/me')
+                          if user.profile.picture
+                            img(src='/user_post/'+user.profile.picture)
+                          else
+                            img(src=user.gravatar(60))
+                        .content
+                          a.author(href='/me')=user.profile.name || user.username || user.id
+                          .metadata
+                            span.date=(user.createdAt.getTime() + comment.time)
+                            .rating
+                              i.heart.icon
+                              span.num=0
+                              |  Likes
+                          .text=comment.body
+                          .actions
+                            a.like.comment Like
+                            a.flag.comment Flag
+                    //- Else this is a normal comment from the script
+                    else
+                      .comment(commentID=comment.id)
+                        a.avatar(href='/user/'+comment.actor.username)
+                          if comment.actor[profileFilter] == "yes"
+                            img(src='/profile_pictures/'+comment.actor.profile.picture)
+                          else
+                            img(src=comment.actor.profile.fakepic)
+                        .content
+                          a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
+                          .metadata
+                            span.date=(user.createdAt.getTime() + comment.time)
+                            .rating
+                              if comment.liked
+                                i.red.heart.icon
+                                span=comment.likes
+                                | Likes 
+                              else
+                                i.heart.icon
+                                span.num=comment.likes
+                                |  Likes
+                          .text=comment.body
+                          .actions
+                            if comment.liked
+                              a.red.like.comment Like
+                            else
+                              a.like.comment Like
+                            a.flag.comment Flag
+          .extra.content
+            .ui.fluid.left.labeled.right.icon.input
+              .ui.label
+                if user.profile.picture
+                  img.ui.avatar.image(src='/user_post/'+user.profile.picture, name=user.profile.name || user.username || user.id)
+                else
+                  img.ui.avatar.image(src=user.gravatar(60), name=user.profile.name || user.username || user.id)            
+              input.newcomment(type='text', placeholder='Write a Comment')
+              i.big.send.link.icon
+
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+    br
   .ui.small.report.coupled.modal
       i.close.icon
       .header Report This User
@@ -252,6 +199,9 @@ block content
           //-.ui.left.floated.red.cancel.inverted.button
             i.flag.icon
             |         Report User
+          .ui.home.inverted.button
+            i.home.icon
+            |         Go Back to Homepage
           .ui.green.ok.inverted.button
             i.undo.icon
             |         Un-Block User
@@ -267,6 +217,9 @@ block content
           .ui.left.floated.red.cancel.inverted.button
             i.flag.icon
             |         Report User
+          .ui.home.inverted.button
+            i.home.icon
+            |         Go Back to Homepage
           .ui.right.floated.green.ok.inverted.button
             i.undo.icon
             |         Un-Block User
