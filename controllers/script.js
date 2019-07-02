@@ -394,13 +394,6 @@ exports.getScriptFeed = (req, res, next) => {
 
 };//end of .getScript
 
-exports.getScriptPost = (req, res) => {
-
-  Script.findOne({ _id: req.params.id}, (err, post) => {
-    console.log(post);
-    res.render('script_post', { post: post });
-  });
-};
 
 /*
 ##############
