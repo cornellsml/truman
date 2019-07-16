@@ -187,6 +187,7 @@ function createPostInstances() {
                 
                 postdetail.experiment_group = new_post.experiment_group
                 postdetail.post_id = new_post.id;
+                postdetail.body = new_post.body;
                 postdetail.class = new_post.class;
                 postdetail.picture = new_post.picture;
                 postdetail.lowread = getReads(6, 20);
@@ -464,10 +465,10 @@ async function loadDatabase() {
         await readData(); //read data from csv files and convert it to json for loading
         await promisify(dropCollections); //drop existing collecions before loading data
         await promisify(createActorInstances);
-        await promisify(actorNotifyInstances);
         await promisify(createNotificationInstances);
         await promisify(createPostInstances);
         await promisify(createPostRepliesInstances);
+        await promisify(actorNotifyInstances);
     } catch (err) {
         console.log('Error occurred in Loading', err);
     }

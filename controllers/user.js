@@ -190,8 +190,8 @@ Place Experimental Varibles Here!
     username: req.body.username,
     group: result,
     active: true,
-    lastNotifyVisit : (Date.now() - 86400000),
-    createdAt: (Date.now() - 86400000)
+    lastNotifyVisit : (Date.now()),
+    createdAt: (Date.now())
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {

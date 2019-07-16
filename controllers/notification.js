@@ -549,7 +549,7 @@ exports.getNotifications = (req, res) => {
             }
             //req.flash('success', { msg: 'Profile information has been updated.' });
           });
-          res.render('notification', { notification_feed: final_notify, profileFilter: profileFilter });
+          res.render('notification', { notification_feed: final_notify });
 
 
 

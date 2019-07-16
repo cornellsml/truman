@@ -44,7 +44,6 @@ exports.getScript = (req, res, next) => {
   var bully_count = 0;
 
   var scriptFilter;
-  var profileFilter;
 
   console.log("$#$#$#$#$#$#$START GET SCRIPT$#$#$$#$#$#$#$#$#$#$#$#$#");
   console.log("time_diff  is now "+time_diff);
@@ -315,7 +314,7 @@ exports.getScript = (req, res, next) => {
       });
 
       console.log("Script Size is now: "+finalfeed.length);
-      res.render('script', { script: finalfeed, profileFilter: profileFilter});
+      res.render('script', { script: finalfeed});
 
       });//end of Script.find()
 

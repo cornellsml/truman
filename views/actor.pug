@@ -5,10 +5,7 @@ block content
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
-        if actor[profileFilter] == "yes"
-          img(src='/profile_pictures/'+actor.profile.picture)
-        else
-          img(src=actor.profile.fakepic)
+        img(src='/profile_pictures/'+actor.profile.picture)
       .content
         a.header= actor.profile.name
         .meta="@"+actor.username
@@ -41,10 +38,7 @@ block content
             .right.floated.time.meta= (user.createdAt.getTime() + val.time)
             |  
             a(href='/user/'+val.actor.username)
-              if val.actor[profileFilter] == "yes"
-                img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
-              else
-                img.ui.avatar.image(src=val.actor.profile.fakepic)
+              img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
               span=val.actor.profile.name
 
           //-div(style="position: relative; z-index: 1;")
@@ -103,10 +97,7 @@ block content
                     else
                       .comment(commentID=comment.id)
                         a.avatar(href='/user/'+comment.actor.username)
-                          if comment.actor[profileFilter] == "yes"
-                            img(src='/profile_pictures/'+comment.actor.profile.picture)
-                          else
-                            img(src=comment.actor.profile.fakepic)
+                          img(src='/profile_pictures/'+comment.actor.profile.picture)
                         .content
                           a.author(href='/user/'+comment.actor.username)=comment.actor.profile.name
                           .metadata

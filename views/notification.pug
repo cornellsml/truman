@@ -7,10 +7,7 @@ block content
   .computer.only.tablet.only.four.wide.column 
     .ui.card
       .image
-        if user.profile.picture
-          img(src='/user_post/'+user.profile.picture)
-        else
-          img(src=user.gravatar(60))
+        img(src='/user_post/'+user.profile.picture)
       .content
         a.header(href='/me')= user.profile.name || user.email || user.id
         .meta="@"+user.username
@@ -79,10 +76,8 @@ block content
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         //-img(src='/profile_pictures/'+actor.profile.picture)
-                        if actor[profileFilter] == "yes"
-                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                        else
-                          img.ui.avatar.image(src=actor.profile.fakepic)
+                        
+                        img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -108,10 +103,8 @@ block content
                       if actor.username != "generic-joe"
                         a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                           //-img(src='/profile_pictures/'+actor.profile.picture)
-                          if actor[profileFilter] == "yes"
-                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                          else
-                            img.ui.avatar.image(src=actor.profile.fakepic)
+                          
+                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -147,10 +140,7 @@ block content
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         //-img(src='/profile_pictures/'+actor.profile.picture)
-                        if actor[profileFilter] == "yes"
-                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                        else
-                          img.ui.avatar.image(src=actor.profile.fakepic)
+                        img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -175,10 +165,7 @@ block content
                       if actor.username != "generic-joe"
                         a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                           //-img(src='/profile_pictures/'+actor.profile.picture)
-                          if actor[profileFilter] == "yes"
-                            img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                          else
-                            img.ui.avatar.image(src=actor.profile.fakepic)
+                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -212,10 +199,8 @@ block content
                     each actor in best
                       a.ui.avatar.image(href='/user/'+actor.username, data-tooltip=actor.profile.name, data-position='top center')
                         //-img(src='/profile_pictures/'+actor.profile.picture)
-                        if actor[profileFilter] == "yes"
-                          img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
-                        else
-                          img.ui.avatar.image(src=actor.profile.fakepic)
+                        
+                        img.ui.avatar.image(src='/profile_pictures/'+actor.profile.picture)
                   if best.length == 1
                     .summary
                       a(href='/user/'+best[0].username)=best[0].profile.name
@@ -237,10 +222,8 @@ block content
                   .extra.images
                       a.ui.avatar.image(href='/user/'+val.actor.username, data-tooltip=val.actor.profile.name, data-position='top center')
                         //-img(src='/profile_pictures/'+val.actor.profile.picture)
-                        if val.actor[profileFilter] == "yes"
-                          img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
-                        else
-                          img.ui.avatar.image(src=val.actor.profile.fakepic)
+                        
+                        img.ui.avatar.image(src='/profile_pictures/'+val.actor.profile.picture)
                   .summary
                     a(href='/user/'+val.actor.username)
                       span=val.actor.profile.name

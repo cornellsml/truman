@@ -37,17 +37,6 @@ exports.getActor = (req, res, next) => {
   User.findById(req.user.id)
   .exec(function (err, user) {
 
-    if (user.script_type == "study3_n20")
-    {
-      scriptFilter = "study3_n20";
-      profileFilter = "study3_n20_p60";
-    }
-    else if (user.script_type == "study3_n80")
-    {
-      scriptFilter = "study3_n80";
-      profileFilter = "study_n80_p60";
-    }
-
 	Actor.findOne({ username: req.params.userId}, (err, act) => {
     if (err) { console.log(err); return next(err); }
 
@@ -72,7 +61,6 @@ exports.getActor = (req, res, next) => {
     }
 
     Script.find({ actor: act.id})
-    .where(scriptFilter).equals("yes")
     .where('time').lte(time_diff)
     .sort('-time')
     .populate('actor')
@@ -195,7 +183,7 @@ exports.getActor = (req, res, next) => {
         }
       });
       console.log("Is block is now "+isBlocked);
-      res.render('actor', { script: script_feed, actor: act, blocked:isBlocked, profileFilter: profileFilter });
+      res.render('actor', { script: script_feed, actor: act, blocked:isBlocked });
     });
 
  // }
