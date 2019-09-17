@@ -18,31 +18,11 @@ TODO:
 Use CSV files instead of json files
 use a CSV file reader and use that as input
 ********/
-var actors_list 
-var posts_list 
+var actors_list
+var posts_list
 var comment_list
-var notification_list 
-var notification_reply_list 
-async function readData() {
-    try {        
-        //synchronously read all csv files and convert them to JSON
-        await console.log("Start reading data from .csv files")
-         actors_list = await CSVToJSON().fromFile('./input/actors.csv');
-         posts_list = await CSVToJSON().fromFile('./input/posts.csv');
-         comment_list = await CSVToJSON().fromFile('./input/replies.csv');
-         notification_list = await CSVToJSON().fromFile('./input/notifications.csv');
-         notification_reply_list = await CSVToJSON().fromFile('./input/actor_replies.csv');
-
-        //synchronously write all converted JSON output to .json files incase for future use
-        // fs.writeFileSync("./input/bots.json", JSON.stringify(actors_list));
-        // fs.writeFileSync("./input/allposts.json", JSON.stringify(posts_list));
-        // fs.writeFileSync("./input/allreplies.json", JSON.stringify(comment_list));
-        await console.log("Converted data to json")
-    } catch (err) {
-        console.log('Error occurred in reading data from csv files', err);
-    }
-}
-
+var notification_list
+var notification_reply_list
 
 dotenv.config({ path: '.env' });
 
@@ -51,6 +31,7 @@ var MongoClient = require('mongodb').MongoClient
 
 
 //var connection = mongo.connect('mongodb://127.0.0.1/test');
+
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, { useNewUrlParser: true });
 var db = mongoose.connection;
 mongoose.connection.on('error', (err) => {
@@ -59,23 +40,379 @@ mongoose.connection.on('error', (err) => {
     process.exit(1);
 });
 
-
-
 /*
-drop existing collections before loading
-to make sure we dont overwrite the data 
-incase we run the script twice or more
+This is a huge function of chained promises, done to achieve serial completion of asynchronous actions.
+There's probably a better way to do this, but this worked.
 */
-function dropCollections() {
+async function doPopulate() {
+  /****
+  Dropping collections
+  ****/
+  let promise = new Promise((resolve, reject) => { //Drop the actors collection
+    console.log("Dropping actors...");
     db.collections['actors'].drop(function (err) {
         console.log('actors collection dropped');
+        resolve("done");
+      });
+    }).then(function(result){ //Drop the scripts collection
+      return new Promise((resolve, reject) => {
+        console.log("Dropping scripts...");
+        db.collections['scripts'].drop(function (err) {
+            console.log('scripts collection dropped');
+            resolve("done");
+          });
+      });
+    }).then(function(result){ //Drop the notifications collection
+      return new Promise((resolve, reject) => {
+        console.log("Dropping notifications...");
+        db.collections['notifications'].drop(function (err) {
+            console.log('notifications collection dropped');
+            resolve("done");
+          });
+      });
+    /***
+    Converting CSV files to JSON
+    ***/
+    }).then(function(result){ //Convert the actors csv file to json, store in actors_list
+      return new Promise((resolve, reject) => {
+        console.log("Reading actors list...");
+        CSVToJSON().fromFile('./input/actors.csv').then(function(json_array){
+          actors_list = json_array;
+          console.log("Finished getting the actors_list");
+          resolve("done");
+        });
+      });
+    }).then(function(result){ //Convert the posts csv file to json, store in posts_list
+      return new Promise((resolve, reject) => {
+        console.log("Reading posts list...");
+        CSVToJSON().fromFile('./input/posts.csv').then(function(json_array){
+          posts_list = json_array;
+          console.log("Finished getting the posts list");
+          resolve("done");
+        });
+      });
+    }).then(function(result){ //Convert the comments csv file to json, store in comment_list
+      return new Promise((resolve, reject) => {
+        console.log("Reading comment list...");
+        CSVToJSON().fromFile('./input/replies.csv').then(function(json_array){
+          comment_list = json_array;
+          console.log("Finished getting the comment list");
+          resolve("done");
+        });
+      });
+    }).then(function(result){ //Convert the comments csv file to json, store in comment_list\
+      return new Promise((resolve, reject) => {
+        console.log("Reading notification list...");
+        CSVToJSON().fromFile('./input/notifications.csv').then(function(json_array){
+          notification_list = json_array;
+          console.log("Finished getting the notification list");
+          resolve("done");
+        });
+      });
+    }).then(function(result){ //Convert the notification reply csv file to json, store in comment_list\
+      return new Promise((resolve, reject) => {
+        console.log("Reading notification reply list...");
+        CSVToJSON().fromFile('./input/actor_replies.csv').then(function(json_array){
+          notification_reply_list = json_array;
+          console.log("Finished getting the notification reply list");
+          resolve("done");
+        });
+      });
+    /*************************
+    Create all the Actors in the simulation
+    Must be done before creating any other instances
+    *************************/
+  }).then(function(result){
+        console.log("starting to populate actors...");
+        return new Promise((resolve, reject) => {
+          async.each(actors_list, function (actor_raw, callback) {
+              actordetail = {};
+              actordetail.profile = {};
+
+              actordetail.profile.name = actor_raw.name
+              actordetail.profile.location = actor_raw.location;
+              actordetail.profile.picture = actor_raw.picture;
+              actordetail.profile.bio = actor_raw.bio;
+              actordetail.profile.age = actor_raw.age;
+              actordetail.class = actor_raw.class;
+              actordetail.username = actor_raw.username;
+
+              var actor = new Actor(actordetail);
+
+              actor.save(function (err) {
+                  if (err) {
+                      console.log("Something went wrong!!!");
+                      return -1;
+                  }
+                  console.log('New Actor: ' + actor.username);
+                  callback();
+              });
+          },
+          function (err) {
+              //return response
+              console.log("All DONE WITH ACTORS!!!")
+              resolve("done");
+              return 'Loaded Actors'
+          }
+        );
+      });
+    /*************************
+    Create each post and upload it to the DB
+    Actors must be in DB first to add them correctly to the post
+    *************************/
+    }).then(function(result){
+          console.log("starting to populate posts...");
+          return new Promise((resolve, reject) => {
+            async.each(posts_list, function (new_post, callback) {
+                Actor.findOne({ username: new_post.actor }, (err, act) => {
+                    if (err) { console.log("createPostInstances error"); console.log(err); return; }
+                    if (act) {
+                        var postdetail = new Object();
+
+                        postdetail.likes =  getLikes();
+                        postdetail.experiment_group = new_post.experiment_group
+                        postdetail.post_id = new_post.id;
+                        postdetail.body = new_post.body;
+                        postdetail.class = new_post.class;
+                        postdetail.picture = new_post.picture;
+                        postdetail.lowread = getReads(6, 20);
+                        postdetail.highread = getReads(145, 203);
+                        postdetail.actor = act;
+                        postdetail.time = timeStringToNum(new_post.time);
+
+                        var script = new Script(postdetail);
+                        script.save(function (err) {
+                            if (err) {
+                                console.log("Something went wrong in Saving POST!!!");
+                                callback(err);
+                            }
+                            console.log('Saved New Post: ' + script.id);
+                            callback();
+                        });
+                    }
+                    else {
+                        //Else no ACTOR Found
+                        console.log("No Actor Found!!!");
+                        callback();
+                    }
+                });
+              },
+              function (err) {
+                  if (err) {
+                      console.log("END IS WRONG!!!");
+                      callback(err);
+                  }
+                  //return response
+                  console.log("All DONE WITH POSTS!!!")
+                  resolve("done");
+                  return 'Loaded Posts'
+              }
+            );
+        });
+    /*************************
+    actorNotifyInstances:
+    Creates each post and uploads it to the DB
+    Actors must be in DB first to add them correctly to the post
+    *************************/
+    }).then(function(result){
+      console.log("starting to do actor notify instances...");
+      return new Promise((resolve, reject) => {
+        async.each(notification_reply_list, function (new_notify, callback) {
+            Actor.findOne({ username: new_notify.actor }, (err, act) => {
+                if (err) { console.log("actorNotifyInstances error"); console.log(err); return; }
+                // console.log("start post for: "+new_post.id);
+                if (act) {
+                    //console.log('Looking up Actor ID is : ' + act._id);
+                    var notifydetail = new Object();
+                    notifydetail.userPost = new_notify.userPostId;
+                    notifydetail.actor = act;
+                    notifydetail.notificationType = 'reply';
+                    notifydetail.replyBody = new_notify.body;
+                    notifydetail.time = timeStringToNum(new_notify.time);
+
+                    var notify = new Notification(notifydetail);
+                    notify.save(function (err) {
+                        if (err) {
+                            console.log("Something went wrong in Saving Notify Actor reply!!!");
+                            // console.log(err);
+                            callback(err);
+                        }
+                        //console.log('Saved New Post: ' + script.id);
+                        console.log("saved a post");
+                        callback();
+                    });
+                }//if ACT
+
+                else {
+                    //Else no ACTOR Found
+                    console.log("No Actor Found!!!");
+                    callback();
+                }
+                // console.log("BOTTOM OF SAVE");
+            });
+          },
+              function (err) {
+                  if (err) {
+                      console.log("END IS WRONG!!!");
+                      // console.log(err);
+                      callback(err);
+                  }
+                  //return response
+                  console.log("All DONE WITH Notification Actor Replies!!!")
+                  resolve("done");
+                  return 'Loaded Notification Actor Replies'
+                  //mongoose.connection.close();
+              }
+          );
+      });
+  /*************************
+  createNotificationInstances:
+  Creates each post and uploads it to the DB
+  Actors must be in DB first to add them correctly to the post
+  *************************/
+  }).then(function(result){
+    console.log("starting notifiction instances...");
+    return new Promise((resolve, reject) => {
+      async.each(notification_list, function (new_notify, callback) {
+          Actor.findOne({ username: new_notify.actor }, (err, act) => {
+              if (err) { console.log("createNotificationInstances error"); console.log(err); return; }
+              // console.log("start post for: "+new_notify.id);
+              if (act) {
+
+                  var notifydetail = new Object();
+
+                  if (new_notify.userPost >= 0 && !(new_notify.userPost === ""))
+                  {
+                    notifydetail.userPost = new_notify.userPost;
+                    //console.log('User Post is : ' + notifydetail.userPost);
+                  }
+
+                  else if (new_notify.userReply >= 0 && !(new_notify.userReply === ""))
+                  {
+                    notifydetail.userReply = new_notify.userReply;
+                    //console.log('User Reply is : ' + notifydetail.userReply);
+                  }
+
+                  else if (new_notify.actorReply >= 0 && !(new_notify.actorReply === ""))
+                  {
+                    notifydetail.actorReply = new_notify.actorReply;
+                    //console.log('Actor Reply is : ' + notifydetail.actorReply);
+                  }
+
+                  notifydetail.actor = act;
+                  notifydetail.notificationType = new_notify.type;
+                  notifydetail.time = timeStringToNum(new_notify.time);
+
+                  var notify = new Notification(notifydetail);
+                  notify.save(function (err) {
+                      if (err) {
+                          console.log("Something went wrong in Saving Notify!!!");
+                          // console.log(err);
+                          callback(err);
+                      }
+                       //console.log('Saved New Post: ' + script.id);
+                       console.log("saved a post");
+                      callback();
+                  });
+              }//if ACT
+
+              else {
+                  //Else no ACTOR Found
+                  console.log("No Actor Found!!!");
+                  callback();
+              }
+              // console.log("BOTTOM OF SAVE");
+          });
+        },
+            function (err) {
+                if (err) {
+                    console.log("END IS WRONG!!!");
+                    // console.log(err);
+                    callback(err);
+                }
+                //return response
+                console.log("All DONE WITH Notification!!!");
+                resolve("done");
+                return 'Loaded Notification'
+
+                //mongoose.connection.close();
+            }
+      );
     });
-    db.collections['scripts'].drop(function (err) {
-        console.log('scripts collection dropped');
-    });
-    db.collections['notifications'].drop(function (err) {
-        console.log('notifications collection dropped');
-    });
+  /*************************
+  createPostRepliesInstances:
+  Creates inline comments for each post
+  Looks up actors and posts to insert the correct comment
+  Does this in series to insure comments are put in, in correct order
+  Takes a while because of this
+  *************************/
+  }).then(function(result){
+      console.log("starting post replies instances...");
+      return new Promise((resolve, reject) => {
+        async.eachSeries(comment_list, function (new_replies, callback) {
+
+            Actor.findOne({ username: new_replies.actor }, (err, act) => {
+
+                if (act) {
+                    Script.findOne({ post_id: new_replies.reply }, function (err, pr) {
+                        if (pr) {
+                            var comment_detail = new Object();
+
+                            comment_detail.body = new_replies.body
+                            comment_detail.commentID = new_replies.id;
+                            comment_detail.class = new_replies.class;
+                            comment_detail.module = new_replies.module;
+                            comment_detail.likes = getLikesComment();
+                            comment_detail.time = timeStringToNum(new_replies.time);
+                            comment_detail.actor = act;
+                            pr.comments.push(comment_detail);
+                            pr.comments.sort(function (a, b) { return a.time - b.time; });
+
+                            pr.save(function (err) {
+                                if (err) {
+                                    console.log("@@@@@@@@@@@@@@@@Something went wrong in Saving COMMENT!!!");
+                                    console.log("Error IN: " + new_replies.id);
+                                    callback(err);
+                                }
+                                console.log('Added new Comment to Post: ' + pr.id);
+                                callback();
+                            });
+                        }
+                        else {
+                            //Else no ACTOR Found
+                            console.log("############Error IN: " + new_replies.id);
+                            console.log("No POST Found!!!");
+                            callback();
+                        }
+                    });
+                  }
+
+                  else {
+                      //Else no ACTOR Found
+                      console.log("****************Error IN: " + new_replies.id);
+                      console.log("No Actor Found!!!");
+                      callback();
+                  }
+            });
+        },
+            function (err) {
+                if (err) {
+                    console.log("END IS WRONG!!!");
+                    console.log(err);
+                    callback(err);
+                }
+                //return response
+                console.log("All DONE WITH REPLIES/Comments!!!")
+                mongoose.connection.close();
+                resolve("done");
+                return 'Loaded Post Replies/Comments'
+
+            }
+        );
+
+      });
+  });
+//Done!
 }
 
 //capitalize a string
@@ -132,349 +469,5 @@ function getReads(min, max) {
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-/*************************
-createActorInstances:
-Creates all the Actors in the simulation
-Must be done first!
-*************************/
-function createActorInstances() {           
-    async.each(actors_list, function (actor_raw, callback) {
-        actordetail = {};
-        actordetail.profile = {};
-
-        actordetail.profile.name = actor_raw.name
-        actordetail.profile.location = actor_raw.location;
-        actordetail.profile.picture = actor_raw.picture;
-        actordetail.profile.bio = actor_raw.bio;
-        actordetail.profile.age = actor_raw.age;
-        actordetail.class = actor_raw.class;
-        actordetail.username = actor_raw.username;
-
-        var actor = new Actor(actordetail);
-
-        actor.save(function (err) {
-            if (err) {
-                console.log("Something went wrong!!!");
-                return -1;
-            }
-            console.log('New Actor: ' + actor.username);
-            callback();
-        });
-    },
-        function (err) {
-            //return response
-            console.log("All DONE WITH ACTORS!!!")
-            return 'Loaded Actors'
-        }
-    );
-}
-
-/*************************
-createPostInstances:
-Creates each post and uploads it to the DB
-Actors must be in DB first to add them correctly to the post
-*************************/
-function createPostInstances() {
-    async.each(posts_list, function (new_post, callback) {
-        Actor.findOne({ username: new_post.actor }, (err, act) => {
-            if (err) { console.log("createPostInstances error"); console.log(err); return; }
-            // console.log("start post for: "+new_post.id);
-            if (act) {  
-                var postdetail = new Object();
-                
-                postdetail.likes =  getLikes();
-
-                
-                postdetail.experiment_group = new_post.experiment_group
-                postdetail.post_id = new_post.id;
-                postdetail.body = new_post.body;
-                postdetail.class = new_post.class;
-                postdetail.picture = new_post.picture;
-                postdetail.lowread = getReads(6, 20);
-                postdetail.highread = getReads(145, 203);
-                postdetail.actor = act;
-                postdetail.time = timeStringToNum(new_post.time);
-
-                //console.log('Looking up Actor: ' + act.username);
-                //console.log(mongoose.Types.ObjectId.isValid(postdetail.actor.$oid));
-                //console.log(postdetail);
-
-                var script = new Script(postdetail);
-                script.save(function (err) {
-                    if (err) {
-                        console.log("Something went wrong in Saving POST!!!");
-                        // console.log(err);
-                        callback(err);
-                    }
-                    // console.log('Saved New Post: ' + script.id);
-                    callback();
-                });
-            }//if ACT
-
-            else {
-                //Else no ACTOR Found
-                console.log("No Actor Found!!!");
-                callback();
-            }
-            // console.log("BOTTOM OF SAVE");
-        });
-    },
-        function (err) {
-            if (err) {
-                console.log("END IS WRONG!!!");
-                // console.log(err);
-                callback(err);
-            }
-            //return response
-            console.log("All DONE WITH POSTS!!!")
-            return 'Loaded Posts'
-            //mongoose.connection.close();
-        }
-    );
-}
-
-/*************************
-actorNotifyInstances:
-Creates each post and uploads it to the DB
-Actors must be in DB first to add them correctly to the post
-*************************/
-function actorNotifyInstances() {
-    async.each(notification_reply_list, function (new_notify, callback) {
-        Actor.findOne({ username: new_notify.actor }, (err, act) => {
-            if (err) { console.log("actorNotifyInstances error"); console.log(err); return; }
-            // console.log("start post for: "+new_post.id);
-            if (act) {  
-                //console.log('Looking up Actor ID is : ' + act._id); 
-                var notifydetail = new Object();
-                notifydetail.userPost = new_notify.userPostId;
-                notifydetail.actor = act;
-                notifydetail.notificationType = 'reply';
-                notifydetail.replyBody = new_notify.body;
-                notifydetail.time = timeStringToNum(new_notify.time);
-
-                var notify = new Notification(notifydetail);
-                notify.save(function (err) {
-                    if (err) {
-                        console.log("Something went wrong in Saving Notify Actor reply!!!");
-                        // console.log(err);
-                        callback(err);
-                    }
-                    // console.log('Saved New Post: ' + script.id);
-                    callback();
-                });
-            }//if ACT
-
-            else {
-                //Else no ACTOR Found
-                console.log("No Actor Found!!!");
-                callback();
-            }
-            // console.log("BOTTOM OF SAVE");
-        });
-    },
-        function (err) {
-            if (err) {
-                console.log("END IS WRONG!!!");
-                // console.log(err);
-                callback(err);
-            }
-            //return response
-            console.log("All DONE WITH Notification Actor Replies!!!")
-            return 'Loaded Notification Actor Replies'
-            //mongoose.connection.close();
-        }
-    );
-}
-
-/*************************
-createNotificationInstances:
-Creates each post and uploads it to the DB
-Actors must be in DB first to add them correctly to the post
-*************************/
-function createNotificationInstances() {
-    async.each(notification_list, function (new_notify, callback) {
-        Actor.findOne({ username: new_notify.actor }, (err, act) => {
-            if (err) { console.log("createNotificationInstances error"); console.log(err); return; }
-            // console.log("start post for: "+new_notify.id);
-            if (act) {  
-                
-                var notifydetail = new Object();
-
-                if (new_notify.userPost >= 0 && !(new_notify.userPost === ""))
-                {
-                  notifydetail.userPost = new_notify.userPost;
-                  //console.log('User Post is : ' + notifydetail.userPost);
-                }
-
-                else if (new_notify.userReply >= 0 && !(new_notify.userReply === ""))
-                {
-                  notifydetail.userReply = new_notify.userReply;
-                  //console.log('User Reply is : ' + notifydetail.userReply);
-                }
-
-                else if (new_notify.actorReply >= 0 && !(new_notify.actorReply === ""))
-                {
-                  notifydetail.actorReply = new_notify.actorReply;
-                  //console.log('Actor Reply is : ' + notifydetail.actorReply);
-                }
-
-                notifydetail.actor = act;
-                notifydetail.notificationType = new_notify.type;
-                notifydetail.time = timeStringToNum(new_notify.time);
-
-                var notify = new Notification(notifydetail);
-                notify.save(function (err) {
-                    if (err) {
-                        console.log("Something went wrong in Saving Notify!!!");
-                        // console.log(err);
-                        callback(err);
-                    }
-                    // console.log('Saved New Post: ' + script.id);
-                    callback();
-                });
-            }//if ACT
-
-            else {
-                //Else no ACTOR Found
-                console.log("No Actor Found!!!");
-                callback();
-            }
-            // console.log("BOTTOM OF SAVE");
-        });
-    },
-        function (err) {
-            if (err) {
-                console.log("END IS WRONG!!!");
-                // console.log(err);
-                callback(err);
-            }
-            //return response
-            console.log("All DONE WITH Notificatio !!!")
-            return 'Loaded Notification'
-            //mongoose.connection.close();
-        }
-    );
-}
-
-/*************************
-createPostRepliesInstances:
-Creates inline comments for each post
-Looks up actors and posts to insert the correct comment
-Does this in series to insure comments are put in, in correct order
-Takes a while because of this
-*************************/
-function createPostRepliesInstances() {
-
-    async.eachSeries(comment_list, function (new_replies, callback) {
-
-        // console.log("start REPLY for: "+new_replies.id);
-        Actor.findOne({ username: new_replies.actor }, (err, act) => {
-
-
-            if (act) {
-                Script.findOne({ post_id: new_replies.reply }, function (err, pr) {
-                    if (pr) {
-                        // console.log('Looking up Actor ID is : ' + act._id); 
-                        // console.log('Looking up OP POST ID is : ' + pr._id); 
-                        var comment_detail = new Object();
-                        //postdetail.actor = {};
-                        comment_detail.body = new_replies.body
-                        comment_detail.commentID = new_replies.id;
-                        comment_detail.class = new_replies.class;
-                        comment_detail.module = new_replies.module;
-                        comment_detail.likes = getLikesComment();
-                        comment_detail.time = timeStringToNum(new_replies.time);
-                        comment_detail.actor = act;
-                        //pr.comments = insert_order(comment_detail, pr.comments);
-                        //console.log('Comment'+comment_detail.commentID+' on Post '+pr.post_id+' Length before: ' + pr.comments.length); 
-                        pr.comments.push(comment_detail);
-                        pr.comments.sort(function (a, b) { return a.time - b.time; });
-                        //console.log('Comment'+comment_detail.commentID+' on Post '+pr.post_id+' Length After: ' + pr.comments.length); 
-                        //var script = new Script(postdetail);
-
-                        pr.save(function (err) {
-                            if (err) {
-                                console.log("@@@@@@@@@@@@@@@@Something went wrong in Saving COMMENT!!!");
-                                console.log("Error IN: " + new_replies.id);
-                                // console.log('Looking up Actor: ' + act.username);
-                                // console.log('Looking up OP POST ID: ' + pr._id); 
-                                // console.log('Time is : ' + new_replies.time); 
-                                // console.log('NEW Time is : ' + comment_detail.time);
-                                // console.log(err);
-                                callback(err);
-                            }
-                            console.log('Added new Comment to Post: ' + pr.id);
-                            callback();
-                        });
-                    }// if PR
-                    else {
-                        //Else no ACTOR Found
-                        console.log("############Error IN: " + new_replies.id);
-                        console.log("No POST Found!!!");
-                        callback();
-                    }
-                });//Script.findOne
-            }//if ACT
-
-            else {
-                //Else no ACTOR Found
-                console.log("****************Error IN: " + new_replies.id);
-                console.log("No Actor Found!!!");
-                callback();
-            }
-            // console.log("BoTTom REPLY for: "+new_replies.id);
-            // console.log("BOTTOM OF SAVE");
-        });
-    },
-        function (err) {
-            if (err) {
-                console.log("END IS WRONG!!!");
-                console.log(err);
-                callback(err);
-            }
-            //return response
-            console.log("All DONE WITH REPLIES/Comments!!!")
-            mongoose.connection.close();
-            return 'Loaded Post Replies/Comments'
-        }
-    );
-}
-
-
-/*
-promisify function will convert a function call to promise 
-which will eventually resolve when function completes its execution,
-additionally it will wait for 2 seconds before starting.
-*/
-
-function promisify(inputFunction) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(inputFunction());
-        }, 2000);
-    });
-}
-
-/*
-TODO: Async function that runs 
-all these functions in serial, in this order
-Once all done, stop the program (Be sure to close the mongoose connection)
-*/
-async function loadDatabase() {
-    try {
-        await readData(); //read data from csv files and convert it to json for loading
-        await promisify(dropCollections); //drop existing collecions before loading data
-        await promisify(createActorInstances);
-        await promisify(createNotificationInstances);
-        await promisify(createPostInstances);
-        await promisify(createPostRepliesInstances);
-        await promisify(actorNotifyInstances);
-    } catch (err) {
-        console.log('Error occurred in Loading', err);
-    }
-}
-
-// createActorInstances()
-// createPostInstances()
-// createPostRepliesInstances()
-loadDatabase()
+//Call the function with the long chain of promises
+doPopulate();
