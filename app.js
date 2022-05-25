@@ -293,6 +293,12 @@ app.get('/test_comment', function (req, res) {
   });
 });
 
+app.get('/pri', function (req, res) {
+  res.render('pri', {
+    title: 'Test Privacy'
+  });
+});
+
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

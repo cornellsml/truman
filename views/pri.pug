@@ -1,0 +1,29 @@
+extends ui_layout_no
+block content  
+	.ui.tiny.post.pri
+		i.close.icon
+		.header Add a New Post
+		.content
+			//form#postform.ui.feed.form(action='/post/new', method='POST', enctype='multipart/form-data')
+			form()
+				//input(type='hidden', name='_csrf', value=_csrf)
+				.field
+					textarea(rows='2', placeholder='Share your meal', name='body', value="This Looks Great!!!!")
+				.field.image-upload
+					label(for='picinput')
+						.image.content
+							img#imgInp.ui.fluid.image(src="/post_pictures/IMG_20160625_113114.jpg")
+					//-input#picinput(type='file', accept='image/*', capture='camera', name='picinput')
+					input#picinput(type='file', accept='image/*', name='picinput')
+				.ui.error.message
+		.actions
+			input.ui.green.button#pri(type='submit', name="foo", value='Submit', form='postform')
+
+
+	.ui.tiny.nudge.modal
+		.header Are you sure?
+		.content
+			p Do you really want to submit this post?
+		.actions
+			.ui.approve.button Yes
+			.ui.cancel.button No

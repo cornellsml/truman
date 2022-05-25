@@ -90,6 +90,21 @@ $(window).on("load", function() {
         //return true;
         });
 
+  $('.ui.feed.form').submit(function(e) {
+        e.preventDefault();
+        console.log("Submit the junks!!!!")
+        //$('.ui.tiny.nudge.modal').modal('show'); 
+        //return true;
+        });
+
+  //Sign Up Button
+  $('input.ui.green.button#pri')
+  .on('click', function() {
+    console.log("Submit the junks!!!!")
+    $('.ui.tiny.nudge.modal').modal('show');
+  });
+
+
 
 //Picture Preview on Image Selection
 function readURL(input) {
