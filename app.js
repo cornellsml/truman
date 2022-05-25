@@ -294,8 +294,10 @@ app.get('/test_comment', function (req, res) {
 });
 
 app.get('/pri', function (req, res) {
+  console.log("@@@@@query    ",req.query.c);
   res.render('pri', {
-    title: 'Test Privacy'
+    title: 'Test Privacy',
+    condis: req.query.c
   });
 });
 
