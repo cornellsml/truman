@@ -14,7 +14,7 @@
     "test": "mocha --reporter spec"
   },
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^2.6.4",
     "@node-rs/bcrypt": "^1.6.0",
     
     "bluebird": "^3.5.5",
